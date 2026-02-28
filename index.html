@@ -7,16 +7,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Nueva Paleta: Dreamy Pink & Purple */
+            /* Paleta: Dreamy Pink & Purple */
             --bg-gradient: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #ede7f6 100%);
             --glass: rgba(255, 255, 255, 0.65);
             --glass-border: rgba(255, 255, 255, 0.8);
             --text: #5c4b51;
-            --accent: #ce93d8; /* Lavanda suave */
+            --accent: #ce93d8;
             --accent-hover: #ba68c8;
-            --danger: #ffab91; /* Coral suave para alertas */
-            --warning: #fff176; /* Amarillo pastel */
-            --secondary: #f48fb1; /* Rosa pastel */
+            --danger: #ffab91;
+            --warning: #fff176;
+            --secondary: #f48fb1;
+            --neon-glow: #f48fb1;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -34,12 +35,40 @@
         }
 
         header { margin-bottom: 35px; }
+
+        /* --- EFECTO NEÓN --- */
         .logo { 
-            font-size: 2.2rem; 
+            font-size: 2.8rem; 
             font-weight: 800; 
-            color: var(--secondary); 
-            letter-spacing: -1px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.03);
+            color: #fff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 
+                0 0 7px #fff,
+                0 0 10px #fff,
+                0 0 21px var(--neon-glow),
+                0 0 42px var(--neon-glow),
+                0 0 82px var(--neon-glow);
+            animation: pulsate 1.5s infinite alternate;
+        }
+
+        @keyframes pulsate {
+            100% {
+                text-shadow: 
+                0 0 4px #fff,
+                0 0 11px #fff,
+                0 0 19px var(--neon-glow),
+                0 0 40px var(--neon-glow),
+                0 0 60px var(--neon-glow);
+            }
+            0% {
+                text-shadow: 
+                0 0 2px #fff,
+                0 0 4px #fff,
+                0 0 6px var(--neon-glow),
+                0 0 10px var(--neon-glow),
+                0 0 15px var(--neon-glow);
+            }
         }
 
         .main-container {
@@ -48,6 +77,7 @@
             gap: 25px;
             width: 100%;
             max-width: 1100px;
+            align-items: stretch; /* Asegura que las columnas midan lo mismo */
         }
 
         .content-layout { display: flex; flex-direction: column; gap: 25px; }
@@ -76,33 +106,24 @@
         
         .mode-buttons { display: flex; gap: 10px; margin-top: 20px; }
         .btn-mode { 
-            flex: 1;
-            font-size: 0.75rem; 
-            padding: 12px; 
-            background: white; 
-            border: 1px solid var(--glass-border); 
-            color: var(--text); 
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            cursor: pointer;
+            flex: 1; font-size: 0.75rem; padding: 12px; background: white; 
+            border: 1px solid var(--glass-border); color: var(--text); 
+            border-radius: 15px; cursor: pointer;
         }
-        .btn-mode.active-deep { background: var(--secondary); color: white; border: none; box-shadow: 0 4px 12px rgba(244, 143, 177, 0.4); }
-        .btn-mode.active-prod { background: var(--warning); color: #5d4037; border: none; box-shadow: 0 4px 12px rgba(255, 241, 118, 0.4); }
+        .btn-mode.active-deep { background: var(--secondary); color: white; border: none; }
+        .btn-mode.active-prod { background: var(--warning); color: #5d4037; border: none; }
 
-        /* REPRODUCTOR DE MÚSICA */
+        /* MÚSICA */
         .music-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; display: block; color: var(--accent); }
         .music-select {
             width: 100%; padding: 12px; border-radius: 15px; border: none;
             background: #fff; color: var(--text); font-size: 0.9rem; margin-bottom: 20px; outline: none;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         .music-controls { display: flex; justify-content: center; align-items: center; gap: 15px; }
-        
         .btn-music-round { 
             width: 45px; height: 45px; border-radius: 50%; background: #fff; 
             display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer;
         }
         .btn-music-round.play-btn { background: var(--accent); color: white; width: 55px; height: 55px; font-size: 1.5rem; }
 
@@ -118,8 +139,7 @@
         /* TODO LIST */
         .todo-input { 
             width: 100%; padding: 15px; border: none; background: white; 
-            border-radius: 15px; margin-bottom: 15px; outline: none; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            border-radius: 15px; margin-bottom: 15px; outline: none;
         }
         .todo-item { display: flex; align-items: center; padding: 12px; background: rgba(255,255,255,0.5); border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); }
         .todo-item input[type="checkbox"] { margin-right: 12px; accent-color: var(--secondary); transform: scale(1.2); }
@@ -143,10 +163,21 @@
         .btn-s { background: white; color: var(--text); padding: 12px 25px; border: 1px solid #ddd; }
         .copy-btn { position: absolute; top: 20px; right: 20px; font-size: 0.7rem; background: var(--secondary); color: white; padding: 8px 15px; }
 
+        /* --- SIDEBAR AJUSTADA --- */
         .sidebar-ad { 
-            width: 300px; height: 600px; background: var(--glass); border: 2px solid var(--glass-border);
-            border-radius: 35px; display: flex; align-items: center; justify-content: center; 
-            color: #b39ddb; font-size: 0.8rem; letter-spacing: 2px; text-align: center;
+            width: 100%; /* Toma el ancho de la columna de 300px */
+            height: 100%; /* Se estira hasta el final del contenedor padre */
+            background: var(--glass); 
+            border: 2px solid var(--glass-border);
+            border-radius: 35px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #b39ddb; 
+            font-size: 0.8rem; 
+            letter-spacing: 2px; 
+            text-align: center;
+            padding: 20px;
         }
 
         @media (max-width: 900px) {
@@ -218,7 +249,11 @@
             </div>
         </div>
 
-        <div class="sidebar-ad">ESPACIO PARA<br>NOTAS EXTRAS<br>✨</div>
+        <div>
+            <div class="sidebar-ad">
+                ESPACIO PARA<br>NOTAS EXTRAS<br>O<br>PUBLICIDAD<br>✨
+            </div>
+        </div>
     </div>
 
     <div id="toast">¡Hecho!</div>
