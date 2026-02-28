@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus-Tap | Tu Espacio de Enfoque</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            --glass-bg: rgba(255, 255, 255, 0.2);
+            --glass-border: rgba(255, 255, 255, 0.4);
+            --text-color: #2d3436;
+            --accent-color: #6c5ce7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* Estilo Glassmorphism General */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        /* 1. SECCIÓN TEMPORIZADOR */
+        .timer-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #timer-display {
+            font-size: 80px;
+            font-weight: 600;
+            margin: 10px 0;
+            letter-spacing: -2px;
+        }
+
+        .controls button {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+            margin: 5px;
+        }
+
+        .controls button:hover {
+            transform: scale(1.05);
+            opacity: 0.9;
+        }
+
+        #motivation-quote {
+            margin-top: 20px;
+            font-style: italic;
+            font-size: 0.9rem;
+            min-height: 40px;
+            opacity: 0.8;
+        }
+
+        /* 2. SECCIÓN SONIDOS (MOOD) */
+        .mood-section h3 { margin-bottom: 15px; font-size: 1.1rem; }
+        .mood-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .mood-btn {
+            background: rgba(255,255,255,0.3);
+            border: 1px solid var(--glass-border);
+            padding: 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .mood-btn.active {
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* 3. SECCIÓN NOTAS VOLÁTILES */
+        .notes-section {
+            grid-column: 1 / -1;
+        }
+
+        #brain-dump {
+            width: 100%;
+            height: 120px;
+            background: rgba(255,255,255,0.1);
+            border: 1px dashed var(--glass-border);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 10px;
+            resize: none;
+            outline: none;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+
+        /* 4. RACHA DE ENFOQUE */
+        .streak-badge {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .container { grid-template-columns: 1fr; }
+            #timer-display { font-size: 60px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="streak-badge">
+        🔥 Racha: <span id="streak-count">0</span>
+    </div>
+
+    <div class="container">
+        <div class="glass-card timer-section">
+            <h3 id="timer-label">Sesión de Enfoque</h3>
+            <div id="timer-display">25:00</div>
+            <div class="controls">
+                <button id="start-btn">Empezar</button>
+                <button id="reset-btn" style="background: rgba(0,0,0,0.1); color: #2d3436;">Reset</button>
+            </div>
+            <p id="motivation-quote">"El éxito es la suma de pequeños esfuerzos."</p>
+        </div>
+
+        <div class="glass-card mood-section">
+            <h3>Sonido Ambiente</h3>
+            <div class="mood-grid">
+                <button class="mood-btn" onclick="toggleSound('rain')">🌧️ Lluvia</button>
+                <button class="mood-btn" onclick="toggleSound('cafe')">☕ Café</button>
+                <button class="mood-btn" onclick="toggleSound('white')">🌫️ Ruido Blanco</button>
+                <button class="mood-btn" onclick="toggleSound('nature')">🌲 Bosque</button>
+            </div>
+            <audio id="audio-rain" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio> </div>
+
+        <div class="glass-card notes-section">
+            <h3>🧠 Brain Dump (Notas que morirán al cerrar)</h3>
+            <p style="font-size: 0.8rem; opacity: 0.7;">Apunta esa idea que te acaba de distraer y olvídala hasta terminar.</p>
+            <textarea id="brain-dump" placeholder="Escribe aquí lo que te ronda la cabeza..."></textarea>
+        </div>
+    </div>
+
+    <script>
+        // LÓGICA DEL TEMPORIZADOR
+        let timeLeft = 25 * 60;
+        let timerId = null;
+        const display = document.getElementById('timer-display');
+        const startBtn = document.getElementById('start-btn');
+        const quotes = [
+            "¡No mires el móvil! Sigue un poco más.",
+            "Tu yo del futuro te agradecerá este esfuerzo.",
+            "Céntrate. El mundo puede esperar 25 minutos.",
+            "¿Te vas a rendir ahora? Solo faltan unos minutos.",
+            "Escribir ese párrafo es mejor que no escribir nada."
+        ];
+
+        function updateDisplay() {
+            let mins = Math.floor(timeLeft / 60);
+            let secs = timeLeft % 60;
+            display.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        startBtn.addEventListener('click', () => {
+            if (timerId) {
+                clearInterval(timerId);
+                timerId = null;
+                startBtn.textContent = 'Reanudar';
+            } else {
+                startBtn.textContent = 'Pausar';
+                timerId = setInterval(() => {
+                    timeLeft--;
+                    updateDisplay();
+                    if (timeLeft % 60 === 0) {
+                        document.getElementById('motivation-quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+                    }
+                    if (timeLeft === 0) {
+                        clearInterval(timerId);
+                        alert("¡Sesión terminada! Tómate un respiro.");
+                        updateStreak();
+                    }
+                }, 1000);
+            }
+        });
+
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            clearInterval(timerId);
+            timerId = null;
+            timeLeft = 25 * 60;
+            updateDisplay();
+            startBtn.textContent = 'Empezar';
+        });
+
+        // LÓGICA DE RACHA (LocalStorage)
+        function updateStreak() {
+            let currentStreak = parseInt(localStorage.getItem('focusStreak') || '0');
+            currentStreak++;
+            localStorage.setItem('focusStreak', currentStreak);
+            document.getElementById('streak-count').textContent = currentStreak;
+        }
+        document.getElementById('streak-count').textContent = localStorage.getItem('focusStreak') || '0';
+
+        // LÓGICA DE SONIDOS
+        function toggleSound(type) {
+            const btns = document.querySelectorAll('.mood-btn');
+            btns.forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            // Aquí integrarías la lógica de reproducción de audio real
+            console.log("Cambiando ambiente a: " + type);
+        }
+
+        // ANTI-DISTRACCIÓN (Detectar cambio de pestaña)
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && timerId) {
+                document.title = "⚠️ ¡Vuelve a concentrarte!";
+            } else {
+                document.title = "Focus-Tap | Activo";
+            }
+        });
+    </script>
+</body>
+</html>
