@@ -2,253 +2,261 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus-Tap | Concentración Extrema</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Focus-Tap | Enfoque Móvil & Desktop</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.5);
+            --bg-gradient: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            --glass-bg: rgba(255, 255, 255, 0.35);
+            --glass-border: rgba(255, 255, 255, 0.2);
             --text-color: #2d3436;
             --accent-color: #6c5ce7;
+            --success-color: #00b894;
             --danger-color: #ff7675;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
 
         body {
             background: var(--bg-gradient);
+            background-attachment: fixed;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
             color: var(--text-color);
-            transition: background 0.5s;
-        }
-
-        .container {
-            width: 95%;
-            max-width: 1100px;
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            gap: 20px;
             padding: 20px;
         }
 
+        /* CONTENEDOR FLEXIBLE */
+        .main-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 25px;
+            width: 100%;
+            max-width: 1200px;
+            justify-content: center;
+        }
+
+        .content-grid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .top-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 20px;
+        }
+
+        /* ESTILO GLASSMORPHISM */
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 24px;
+            border-radius: 30px;
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
-        /* 1. TIMER PERSONALIZABLE */
-        .timer-section { text-align: center; }
-        #timer-display { font-size: 100px; font-weight: 600; margin: 10px 0; }
-        
-        .time-input-group { margin-bottom: 20px; }
-        .time-input-group input {
-            width: 60px; padding: 8px; border-radius: 8px; border: 1px solid #ddd; text-align: center;
+        /* PUBLICIDAD RECEPTIVA */
+        .ad-sidebar {
+            width: 300px;
+            height: 600px;
+            background: rgba(255,255,255,0.15);
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(0,0,0,0.3);
+            font-size: 0.8rem;
+            position: sticky;
+            top: 20px;
         }
 
-        /* 3. SONIDOS Y VOLUMEN */
-        .mood-grid { display: grid; gap: 10px; margin-top: 15px; }
-        .sound-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.4); padding: 10px; border-radius: 12px; }
-        .sound-row button { border: none; background: none; cursor: pointer; font-size: 1.2rem; }
-        input[type="range"] { flex-grow: 1; accent-color: var(--accent-color); }
+        .ad-bottom {
+            width: 100%;
+            height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 20px;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(0,0,0,0.2);
+            font-size: 0.7rem;
+            border: 1px dashed rgba(0,0,0,0.1);
+        }
 
-        /* 2. NOTAS CON COPIADO */
-        .notes-section { grid-column: 1 / -1; position: relative; }
-        #brain-dump { width: 100%; height: 100px; border-radius: 15px; padding: 15px; border: 1px solid #ccc; margin-top: 10px; resize: none; }
-        .copy-btn { position: absolute; top: 25px; right: 25px; padding: 5px 12px; border-radius: 8px; border: none; background: var(--accent-color); color: white; cursor: pointer; font-size: 0.8rem; }
+        /* TIMER */
+        .timer-section { text-align: center; }
+        .timer-display { font-size: clamp(60px, 15vw, 100px); font-weight: 600; letter-spacing: -4px; margin: 10px 0; }
+        .config-time input { 
+            background: rgba(255,255,255,0.4); border: none; padding: 8px; border-radius: 10px; 
+            width: 60px; text-align: center; font-size: 1rem;
+        }
 
-        /* 4 & 5. CONCENTRACIÓN IMPUESTA Y PENALIZACIÓN */
-        .extreme-mode-btn { background: var(--danger-color) !important; color: white !important; margin-top: 15px; }
-        .penalty-warning { color: var(--danger-color); font-weight: bold; display: none; margin-top: 10px; font-size: 0.9rem; }
+        /* SONIDOS */
+        .sound-row {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .vol-slider { flex: 1; accent-color: var(--accent-color); cursor: pointer; height: 6px; }
 
-        /* 6. FRASES MOTIVADORAS */
-        #motivation-box { min-height: 50px; display: flex; align-items: center; justify-content: center; text-align: center; font-style: italic; font-weight: 300; margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 15px; }
+        /* NOTAS */
+        .notes-section { position: relative; }
+        #brain-dump {
+            width: 100%; height: 120px; background: rgba(255,255,255,0.1);
+            border: 1px dashed rgba(0,0,0,0.1); border-radius: 20px; padding: 15px;
+            margin-top: 10px; resize: none; outline: none; font-size: 1rem;
+        }
+        .copy-btn { position: absolute; top: 20px; right: 20px; background: var(--accent-color); color: white; padding: 6px 15px; border-radius: 12px; font-size: 0.75rem; border: none; cursor: pointer; }
 
-        .streak-badge { position: fixed; top: 20px; left: 20px; background: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        
-        button { cursor: pointer; transition: 0.2s; border-radius: 10px; border: none; padding: 10px 20px; font-weight: 600; }
-        button:hover { opacity: 0.8; transform: translateY(-2px); }
-        .btn-main { background: var(--accent-color); color: white; }
+        /* BOTONES */
+        button { border: none; cursor: pointer; font-weight: 600; transition: 0.2s; border-radius: 15px; }
+        .btn-main { background: var(--accent-color); color: white; padding: 15px 30px; font-size: 1rem; width: 100%; max-width: 200px; }
+        .btn-reset { background: rgba(0,0,0,0.05); padding: 15px 20px; }
+        .extreme-btn { background: var(--danger-color); color: white; width: 100%; margin-top: 20px; padding: 15px; font-size: 0.9rem; }
 
-        /* Estilo para penalización (pantalla roja rápida) */
-        .flash-red { animation: flash 0.5s; }
-        @keyframes flash { 0% { background: rgba(255,0,0,0.4); } 100% { background: var(--bg-gradient); } }
+        .streak-badge { margin-bottom: 20px; background: white; padding: 8px 20px; border-radius: 50px; font-weight: bold; align-self: flex-start; }
+
+        /* MEDIA QUERIES PARA MÓVIL */
+        @media (max-width: 850px) {
+            .main-wrapper { flex-direction: column; }
+            .top-row { grid-template-columns: 1fr; }
+            .ad-sidebar { display: none; } /* En móvil no cabe el lateral */
+            .timer-display { font-size: 80px; }
+            body { padding: 15px; }
+            .glass-card { padding: 20px; }
+        }
     </style>
 </head>
-<body id="main-body">
+<body id="body">
 
-    <div class="streak-badge">🔥 Enfoque: <span id="streak-count">0</span></div>
+    <div class="streak-badge">🔥 Racha: <span id="stk">0</span></div>
 
-    <div class="container">
-        <div class="glass-card timer-section">
-            <div class="time-input-group">
-                <label>Minutos: </label>
-                <input type="number" id="minutes-input" value="25" min="1" max="120">
-            </div>
-            <div id="timer-display">25:00</div>
+    <div class="main-wrapper">
+        <div class="content-grid">
             
-            <div style="display: flex; justify-content: center; gap: 10px;">
-                <button id="start-btn" class="btn-main">Iniciar Sesión</button>
-                <button id="reset-btn">Reset</button>
+            <div class="top-row">
+                <div class="glass-card timer-section">
+                    <div class="config-time">
+                        <label>Minutos: </label>
+                        <input type="number" id="min-in" value="25">
+                    </div>
+                    <div class="timer-display" id="clock">25:00</div>
+                    <div style="display: flex; justify-content: center; gap: 10px;">
+                        <button class="btn-main" id="start">Empezar</button>
+                        <button class="btn-reset" id="reset">Reset</button>
+                    </div>
+                    <button class="extreme-btn" id="ext-btn">MODO EXTREMO</button>
+                    <p id="quote" style="margin-top:15px; font-size:0.8rem; font-style:italic; opacity:0.6;">"Céntrate en el proceso."</p>
+                </div>
+
+                <div class="glass-card">
+                    <h3 style="margin-bottom:15px">Ambiente</h3>
+                    <div class="sound-row">
+                        <span>🌧️</span>
+                        <button class="btn-reset" onclick="audio('rain')" style="padding:8px 12px">Play/Pausa</button>
+                        <input type="range" class="vol-slider" id="v-rain" min="0" max="1" step="0.1" value="0.5" oninput="setV('rain')">
+                    </div>
+                    <div class="sound-row">
+                        <span>🌲</span>
+                        <button class="btn-reset" onclick="audio('forest')" style="padding:8px 12px">Play/Pausa</button>
+                        <input type="range" class="vol-slider" id="v-forest" min="0" max="1" step="0.1" value="0.5" oninput="setV('forest')">
+                    </div>
+                </div>
             </div>
 
-            <button id="extreme-btn" class="extreme-mode-btn">⚠️ Activar Concentración Impuesta</button>
-            <p id="penalty-msg" class="penalty-warning">¡PENALIZACIÓN! Te has distraído. -10 segundos.</p>
-            
-            <div id="motivation-box">"Hazlo hoy, o arrepiéntete mañana."</div>
-        </div>
-
-        <div class="glass-card">
-            <h3>🎧 Ambiente de Trabajo</h3>
-            <div class="mood-grid">
-                <div class="sound-row">
-                    <button onclick="playTrack('rain')">🌧️</button>
-                    <input type="range" id="vol-rain" min="0" max="1" step="0.1" value="0.5">
-                </div>
-                <div class="sound-row">
-                    <button onclick="playTrack('forest')">🌲</button>
-                    <input type="range" id="vol-forest" min="0" max="1" step="0.1" value="0.5">
-                </div>
-                <div class="sound-row">
-                    <button onclick="playTrack('cafe')">☕</button>
-                    <input type="range" id="vol-cafe" min="0" max="1" step="0.1" value="0.5">
-                </div>
+            <div class="glass-card notes-section">
+                <button class="copy-btn" id="copy" onclick="copy()">Copiar</button>
+                <h3>Brain Dump</h3>
+                <textarea id="notes" placeholder="Escribe aquí tus ideas..."></textarea>
             </div>
-            <p style="font-size: 0.7rem; margin-top: 15px; opacity: 0.6;">Pulsa el icono para Play/Pausa</p>
+
+            <div class="ad-bottom">PUBLICIDAD (Banner 728x90 / 320x50)</div>
+
         </div>
 
-        <div class="glass-card notes-section">
-            <h3>📝 Notas Rápidas (Brain Dump)</h3>
-            <button class="copy-btn" onclick="copyNotes()">Copiar Texto</button>
-            <textarea id="brain-dump" placeholder="Vuelca aquí tus pensamientos para no olvidarlos..."></textarea>
-        </div>
+        <div class="ad-sidebar">ANUNCIO LATERAL (300x600)</div>
     </div>
 
-    <audio id="audio-rain" loop src="https://actions.google.com/sounds/v1/water/rain_on_roof.ogg"></audio>
-    <audio id="audio-forest" loop src="https://actions.google.com/sounds/v1/ambiences/forest_morning_birds.ogg"></audio>
-    <audio id="audio-cafe" loop src="https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg"></audio>
+    <audio id="a-rain" loop src=""></audio>
+    <audio id="a-forest" loop src=""></audio>
 
     <script>
-        let timeLeft = 25 * 60;
-        let timerId = null;
-        let extremeMode = false;
-        let penalties = 0;
-
-        const display = document.getElementById('timer-display');
-        const startBtn = document.getElementById('start-btn');
-        const minutesInput = document.getElementById('minutes-input');
-        const motivationBox = document.getElementById('motivation-box');
-        const body = document.getElementById('main-body');
-
-        const phrases = [
-            "El trabajo duro vence al talento cuando el talento no trabaja duro.",
-            "Solo un poco más, estás cerca del descanso.",
-            "Ignora las notificaciones, no valen tu tiempo.",
-            "La disciplina es hacer lo que debes aunque no quieras.",
-            "Tu mente es un músculo, entrénala para enfocarse.",
-            "No pares cuando estés cansado, para cuando hayas terminado."
-        ];
-
-        // 1. MODIFICAR TIEMPO
-        minutesInput.addEventListener('change', () => {
-            if (!timerId) {
-                timeLeft = minutesInput.value * 60;
-                updateDisplay();
-            }
-        });
-
-        function updateDisplay() {
-            let mins = Math.floor(Math.round(timeLeft) / 60);
-            let secs = Math.round(timeLeft) % 60;
-            display.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        let t = null, left = 25*60, ext = false;
+        const clk = document.getElementById('clock'), st = document.getElementById('start');
+        
+        // Timer
+        document.getElementById('min-in').onchange = (e) => { if(!t){ left = e.target.value*60; upd(); }};
+        function upd() { 
+            let m=Math.floor(left/60), s=left%60; 
+            clk.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
         }
 
-        // 2. COPIAR NOTAS
-        function copyNotes() {
-            const area = document.getElementById('brain-dump');
-            area.select();
-            document.execCommand('copy');
-            alert("¡Notas copiadas al portapapeles!");
-        }
-
-        // 3. SONIDOS Y VOLUMEN
-        function playTrack(id) {
-            const audio = document.getElementById('audio-' + id);
-            const vol = document.getElementById('vol-' + id).value;
-            audio.volume = vol;
-            if (audio.paused) audio.play(); else audio.pause();
-        }
-
-        // 4. CONCENTRACIÓN IMPUESTA (MODO EXTREMO)
-        document.getElementById('extreme-btn').addEventListener('click', () => {
-            const confirm1 = confirm("⚠️ ADVERTENCIA 1: Vas a activar el Modo Extremo. No deberías cerrar esta página hasta terminar.");
-            const confirm2 = confirm("⚠️ ADVERTENCIA 2: La página intentará bloquear tu salida y te penalizará si cambias de pestaña. ¿Estás SEGURO?");
-            if (confirm1 && confirm2) {
-                extremeMode = true;
-                document.documentElement.requestFullscreen();
-                document.getElementById('extreme-btn').textContent = "🛡️ MODO EXTREMO ACTIVO";
-                document.getElementById('extreme-btn').style.background = "#2d3436";
-            }
-        });
-
-        // 5. PENALIZACIÓN POR DISTRACCIÓN
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden && timerId) {
-                penalties++;
-                timeLeft = Math.max(0, timeLeft - 10); // Quita 10 segundos
-                body.classList.add('flash-red');
-                document.getElementById('penalty-msg').style.display = 'block';
-                setTimeout(() => {
-                    body.classList.remove('flash-red');
-                    document.getElementById('penalty-msg').style.display = 'none';
-                }, 2000);
-            }
-        });
-
-        // 6. FRASES ALEATORIAS CADA MINUTO
-        setInterval(() => {
-            motivationBox.textContent = `"${phrases[Math.floor(Math.random() * phrases.length)]}"`;
-        }, 60000);
-
-        // LÓGICA GENERAL TIMER
-        startBtn.addEventListener('click', () => {
-            if (timerId) {
-                clearInterval(timerId);
-                timerId = null;
-                startBtn.textContent = 'Reanudar';
-            } else {
-                startBtn.textContent = 'Pausar';
-                timerId = setInterval(() => {
-                    timeLeft--;
-                    updateDisplay();
-                    if (timeLeft <= 0) {
-                        clearInterval(timerId);
-                        alert("¡Misión cumplida!");
-                        if (document.fullscreenElement) document.exitFullscreen();
-                    }
+        st.onclick = () => {
+            if(t) { clearInterval(t); t=null; st.innerText="Reanudar"; }
+            else {
+                st.innerText="Pausar";
+                t = setInterval(() => { 
+                    left--; upd(); 
+                    if(left<=0){ clearInterval(t); alert("¡Terminado!"); stk(); }
                 }, 1000);
             }
+        };
+
+        document.getElementById('reset').onclick = () => {
+            clearInterval(t); t=null; left=document.getElementById('min-in').value*60; upd(); st.innerText="Empezar";
+        };
+
+        // Audio
+        function audio(id) {
+            const a = document.getElementById('a-'+id);
+            a.volume = document.getElementById('v-'+id).value;
+            a.paused ? a.play() : a.pause();
+        }
+        function setV(id) { document.getElementById('a-'+id).volume = document.getElementById('v-'+id).value; }
+
+        // Notas
+        function copy() {
+            const n = document.getElementById('notes'), b = document.getElementById('copy');
+            n.select(); document.execCommand('copy');
+            b.innerText = "¡Copiado! ✅"; b.style.background = "var(--success-color)";
+            setTimeout(() => { b.innerText="Copiar"; b.style.background="var(--accent-color)"; }, 2000);
+        }
+
+        // Penalización
+        document.addEventListener("visibilitychange", () => {
+            if(document.hidden && t) {
+                left = Math.max(0, left - 10); upd();
+                document.getElementById('body').style.background = "rgba(255,0,0,0.15)";
+                setTimeout(() => document.getElementById('body').style.background = "var(--bg-gradient)", 800);
+            }
         });
 
-        document.getElementById('reset-btn').addEventListener('click', () => {
-            clearInterval(timerId);
-            timerId = null;
-            timeLeft = minutesInput.value * 60;
-            updateDisplay();
-            startBtn.textContent = 'Iniciar Sesión';
-        });
+        // Racha
+        function stk() {
+            let s = parseInt(localStorage.getItem('f_stk') || 0) + 1;
+            localStorage.setItem('f_stk', s); document.getElementById('stk').innerText = s;
+        }
+        document.getElementById('stk').innerText = localStorage.getItem('f_stk') || 0;
 
-        // Bloqueo de salida (Solo funciona si hay interacción previa)
-        window.onbeforeunload = function() {
-            if (extremeMode && timeLeft > 0) return "¡Estás en modo extremo! No abandones tu meta.";
+        // Modo Extremo
+        document.getElementById('ext-btn').onclick = () => {
+            if(confirm("¿Activar Modo Extremo? No podrás salir sin penalizar.") && confirm("¿Seguro?")) {
+                ext = true; document.documentElement.requestFullscreen();
+            }
         };
     </script>
 </body>
