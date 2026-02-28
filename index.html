@@ -3,23 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus-Tap | Tu Espacio de Enfoque</title>
+    <title>Focus-Tap | Concentración Extrema</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-gradient: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-            --glass-bg: rgba(255, 255, 255, 0.2);
-            --glass-border: rgba(255, 255, 255, 0.4);
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
             --text-color: #2d3436;
             --accent-color: #6c5ce7;
+            --danger-color: #ff7675;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
             background: var(--bg-gradient);
@@ -28,187 +24,201 @@
             justify-content: center;
             align-items: center;
             color: var(--text-color);
-            overflow-x: hidden;
+            transition: background 0.5s;
         }
 
         .container {
-            width: 90%;
-            max-width: 1000px;
+            width: 95%;
+            max-width: 1100px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.5fr 1fr;
             gap: 20px;
             padding: 20px;
         }
 
-        /* Estilo Glassmorphism General */
         .glass-card {
             background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            backdrop-filter: blur(10px);
             border: 1px solid var(--glass-border);
             border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
-        /* 1. SECCIÓN TEMPORIZADOR */
-        .timer-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
+        /* 1. TIMER PERSONALIZABLE */
+        .timer-section { text-align: center; }
+        #timer-display { font-size: 100px; font-weight: 600; margin: 10px 0; }
+        
+        .time-input-group { margin-bottom: 20px; }
+        .time-input-group input {
+            width: 60px; padding: 8px; border-radius: 8px; border: 1px solid #ddd; text-align: center;
         }
 
-        #timer-display {
-            font-size: 80px;
-            font-weight: 600;
-            margin: 10px 0;
-            letter-spacing: -2px;
-        }
+        /* 3. SONIDOS Y VOLUMEN */
+        .mood-grid { display: grid; gap: 10px; margin-top: 15px; }
+        .sound-row { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.4); padding: 10px; border-radius: 12px; }
+        .sound-row button { border: none; background: none; cursor: pointer; font-size: 1.2rem; }
+        input[type="range"] { flex-grow: 1; accent-color: var(--accent-color); }
 
-        .controls button {
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s;
-            margin: 5px;
-        }
+        /* 2. NOTAS CON COPIADO */
+        .notes-section { grid-column: 1 / -1; position: relative; }
+        #brain-dump { width: 100%; height: 100px; border-radius: 15px; padding: 15px; border: 1px solid #ccc; margin-top: 10px; resize: none; }
+        .copy-btn { position: absolute; top: 25px; right: 25px; padding: 5px 12px; border-radius: 8px; border: none; background: var(--accent-color); color: white; cursor: pointer; font-size: 0.8rem; }
 
-        .controls button:hover {
-            transform: scale(1.05);
-            opacity: 0.9;
-        }
+        /* 4 & 5. CONCENTRACIÓN IMPUESTA Y PENALIZACIÓN */
+        .extreme-mode-btn { background: var(--danger-color) !important; color: white !important; margin-top: 15px; }
+        .penalty-warning { color: var(--danger-color); font-weight: bold; display: none; margin-top: 10px; font-size: 0.9rem; }
 
-        #motivation-quote {
-            margin-top: 20px;
-            font-style: italic;
-            font-size: 0.9rem;
-            min-height: 40px;
-            opacity: 0.8;
-        }
+        /* 6. FRASES MOTIVADORAS */
+        #motivation-box { min-height: 50px; display: flex; align-items: center; justify-content: center; text-align: center; font-style: italic; font-weight: 300; margin-top: 20px; border-top: 1px solid rgba(0,0,0,0.05); padding-top: 15px; }
 
-        /* 2. SECCIÓN SONIDOS (MOOD) */
-        .mood-section h3 { margin-bottom: 15px; font-size: 1.1rem; }
-        .mood-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
+        .streak-badge { position: fixed; top: 20px; left: 20px; background: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        button { cursor: pointer; transition: 0.2s; border-radius: 10px; border: none; padding: 10px 20px; font-weight: 600; }
+        button:hover { opacity: 0.8; transform: translateY(-2px); }
+        .btn-main { background: var(--accent-color); color: white; }
 
-        .mood-btn {
-            background: rgba(255,255,255,0.3);
-            border: 1px solid var(--glass-border);
-            padding: 15px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: 0.3s;
-        }
-
-        .mood-btn.active {
-            background: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        /* 3. SECCIÓN NOTAS VOLÁTILES */
-        .notes-section {
-            grid-column: 1 / -1;
-        }
-
-        #brain-dump {
-            width: 100%;
-            height: 120px;
-            background: rgba(255,255,255,0.1);
-            border: 1px dashed var(--glass-border);
-            border-radius: 15px;
-            padding: 15px;
-            margin-top: 10px;
-            resize: none;
-            outline: none;
-            color: var(--text-color);
-            font-size: 1rem;
-        }
-
-        /* 4. RACHA DE ENFOQUE */
-        .streak-badge {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            padding: 10px 20px;
-            border-radius: 50px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        @media (max-width: 768px) {
-            .container { grid-template-columns: 1fr; }
-            #timer-display { font-size: 60px; }
-        }
+        /* Estilo para penalización (pantalla roja rápida) */
+        .flash-red { animation: flash 0.5s; }
+        @keyframes flash { 0% { background: rgba(255,0,0,0.4); } 100% { background: var(--bg-gradient); } }
     </style>
 </head>
-<body>
+<body id="main-body">
 
-    <div class="streak-badge">
-        🔥 Racha: <span id="streak-count">0</span>
-    </div>
+    <div class="streak-badge">🔥 Enfoque: <span id="streak-count">0</span></div>
 
     <div class="container">
         <div class="glass-card timer-section">
-            <h3 id="timer-label">Sesión de Enfoque</h3>
-            <div id="timer-display">25:00</div>
-            <div class="controls">
-                <button id="start-btn">Empezar</button>
-                <button id="reset-btn" style="background: rgba(0,0,0,0.1); color: #2d3436;">Reset</button>
+            <div class="time-input-group">
+                <label>Minutos: </label>
+                <input type="number" id="minutes-input" value="25" min="1" max="120">
             </div>
-            <p id="motivation-quote">"El éxito es la suma de pequeños esfuerzos."</p>
+            <div id="timer-display">25:00</div>
+            
+            <div style="display: flex; justify-content: center; gap: 10px;">
+                <button id="start-btn" class="btn-main">Iniciar Sesión</button>
+                <button id="reset-btn">Reset</button>
+            </div>
+
+            <button id="extreme-btn" class="extreme-mode-btn">⚠️ Activar Concentración Impuesta</button>
+            <p id="penalty-msg" class="penalty-warning">¡PENALIZACIÓN! Te has distraído. -10 segundos.</p>
+            
+            <div id="motivation-box">"Hazlo hoy, o arrepiéntete mañana."</div>
         </div>
 
-        <div class="glass-card mood-section">
-            <h3>Sonido Ambiente</h3>
+        <div class="glass-card">
+            <h3>🎧 Ambiente de Trabajo</h3>
             <div class="mood-grid">
-                <button class="mood-btn" onclick="toggleSound('rain')">🌧️ Lluvia</button>
-                <button class="mood-btn" onclick="toggleSound('cafe')">☕ Café</button>
-                <button class="mood-btn" onclick="toggleSound('white')">🌫️ Ruido Blanco</button>
-                <button class="mood-btn" onclick="toggleSound('nature')">🌲 Bosque</button>
+                <div class="sound-row">
+                    <button onclick="playTrack('rain')">🌧️</button>
+                    <input type="range" id="vol-rain" min="0" max="1" step="0.1" value="0.5">
+                </div>
+                <div class="sound-row">
+                    <button onclick="playTrack('forest')">🌲</button>
+                    <input type="range" id="vol-forest" min="0" max="1" step="0.1" value="0.5">
+                </div>
+                <div class="sound-row">
+                    <button onclick="playTrack('cafe')">☕</button>
+                    <input type="range" id="vol-cafe" min="0" max="1" step="0.1" value="0.5">
+                </div>
             </div>
-            <audio id="audio-rain" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio> </div>
+            <p style="font-size: 0.7rem; margin-top: 15px; opacity: 0.6;">Pulsa el icono para Play/Pausa</p>
+        </div>
 
         <div class="glass-card notes-section">
-            <h3>🧠 Brain Dump (Notas que morirán al cerrar)</h3>
-            <p style="font-size: 0.8rem; opacity: 0.7;">Apunta esa idea que te acaba de distraer y olvídala hasta terminar.</p>
-            <textarea id="brain-dump" placeholder="Escribe aquí lo que te ronda la cabeza..."></textarea>
+            <h3>📝 Notas Rápidas (Brain Dump)</h3>
+            <button class="copy-btn" onclick="copyNotes()">Copiar Texto</button>
+            <textarea id="brain-dump" placeholder="Vuelca aquí tus pensamientos para no olvidarlos..."></textarea>
         </div>
     </div>
 
+    <audio id="audio-rain" loop src="https://actions.google.com/sounds/v1/water/rain_on_roof.ogg"></audio>
+    <audio id="audio-forest" loop src="https://actions.google.com/sounds/v1/ambiences/forest_morning_birds.ogg"></audio>
+    <audio id="audio-cafe" loop src="https://actions.google.com/sounds/v1/ambiences/coffee_shop.ogg"></audio>
+
     <script>
-        // LÓGICA DEL TEMPORIZADOR
         let timeLeft = 25 * 60;
         let timerId = null;
+        let extremeMode = false;
+        let penalties = 0;
+
         const display = document.getElementById('timer-display');
         const startBtn = document.getElementById('start-btn');
-        const quotes = [
-            "¡No mires el móvil! Sigue un poco más.",
-            "Tu yo del futuro te agradecerá este esfuerzo.",
-            "Céntrate. El mundo puede esperar 25 minutos.",
-            "¿Te vas a rendir ahora? Solo faltan unos minutos.",
-            "Escribir ese párrafo es mejor que no escribir nada."
+        const minutesInput = document.getElementById('minutes-input');
+        const motivationBox = document.getElementById('motivation-box');
+        const body = document.getElementById('main-body');
+
+        const phrases = [
+            "El trabajo duro vence al talento cuando el talento no trabaja duro.",
+            "Solo un poco más, estás cerca del descanso.",
+            "Ignora las notificaciones, no valen tu tiempo.",
+            "La disciplina es hacer lo que debes aunque no quieras.",
+            "Tu mente es un músculo, entrénala para enfocarse.",
+            "No pares cuando estés cansado, para cuando hayas terminado."
         ];
 
+        // 1. MODIFICAR TIEMPO
+        minutesInput.addEventListener('change', () => {
+            if (!timerId) {
+                timeLeft = minutesInput.value * 60;
+                updateDisplay();
+            }
+        });
+
         function updateDisplay() {
-            let mins = Math.floor(timeLeft / 60);
-            let secs = timeLeft % 60;
+            let mins = Math.floor(Math.round(timeLeft) / 60);
+            let secs = Math.round(timeLeft) % 60;
             display.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
+        // 2. COPIAR NOTAS
+        function copyNotes() {
+            const area = document.getElementById('brain-dump');
+            area.select();
+            document.execCommand('copy');
+            alert("¡Notas copiadas al portapapeles!");
+        }
+
+        // 3. SONIDOS Y VOLUMEN
+        function playTrack(id) {
+            const audio = document.getElementById('audio-' + id);
+            const vol = document.getElementById('vol-' + id).value;
+            audio.volume = vol;
+            if (audio.paused) audio.play(); else audio.pause();
+        }
+
+        // 4. CONCENTRACIÓN IMPUESTA (MODO EXTREMO)
+        document.getElementById('extreme-btn').addEventListener('click', () => {
+            const confirm1 = confirm("⚠️ ADVERTENCIA 1: Vas a activar el Modo Extremo. No deberías cerrar esta página hasta terminar.");
+            const confirm2 = confirm("⚠️ ADVERTENCIA 2: La página intentará bloquear tu salida y te penalizará si cambias de pestaña. ¿Estás SEGURO?");
+            if (confirm1 && confirm2) {
+                extremeMode = true;
+                document.documentElement.requestFullscreen();
+                document.getElementById('extreme-btn').textContent = "🛡️ MODO EXTREMO ACTIVO";
+                document.getElementById('extreme-btn').style.background = "#2d3436";
+            }
+        });
+
+        // 5. PENALIZACIÓN POR DISTRACCIÓN
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && timerId) {
+                penalties++;
+                timeLeft = Math.max(0, timeLeft - 10); // Quita 10 segundos
+                body.classList.add('flash-red');
+                document.getElementById('penalty-msg').style.display = 'block';
+                setTimeout(() => {
+                    body.classList.remove('flash-red');
+                    document.getElementById('penalty-msg').style.display = 'none';
+                }, 2000);
+            }
+        });
+
+        // 6. FRASES ALEATORIAS CADA MINUTO
+        setInterval(() => {
+            motivationBox.textContent = `"${phrases[Math.floor(Math.random() * phrases.length)]}"`;
+        }, 60000);
+
+        // LÓGICA GENERAL TIMER
         startBtn.addEventListener('click', () => {
             if (timerId) {
                 clearInterval(timerId);
@@ -219,13 +229,10 @@
                 timerId = setInterval(() => {
                     timeLeft--;
                     updateDisplay();
-                    if (timeLeft % 60 === 0) {
-                        document.getElementById('motivation-quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
-                    }
-                    if (timeLeft === 0) {
+                    if (timeLeft <= 0) {
                         clearInterval(timerId);
-                        alert("¡Sesión terminada! Tómate un respiro.");
-                        updateStreak();
+                        alert("¡Misión cumplida!");
+                        if (document.fullscreenElement) document.exitFullscreen();
                     }
                 }, 1000);
             }
@@ -234,37 +241,15 @@
         document.getElementById('reset-btn').addEventListener('click', () => {
             clearInterval(timerId);
             timerId = null;
-            timeLeft = 25 * 60;
+            timeLeft = minutesInput.value * 60;
             updateDisplay();
-            startBtn.textContent = 'Empezar';
+            startBtn.textContent = 'Iniciar Sesión';
         });
 
-        // LÓGICA DE RACHA (LocalStorage)
-        function updateStreak() {
-            let currentStreak = parseInt(localStorage.getItem('focusStreak') || '0');
-            currentStreak++;
-            localStorage.setItem('focusStreak', currentStreak);
-            document.getElementById('streak-count').textContent = currentStreak;
-        }
-        document.getElementById('streak-count').textContent = localStorage.getItem('focusStreak') || '0';
-
-        // LÓGICA DE SONIDOS
-        function toggleSound(type) {
-            const btns = document.querySelectorAll('.mood-btn');
-            btns.forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            // Aquí integrarías la lógica de reproducción de audio real
-            console.log("Cambiando ambiente a: " + type);
-        }
-
-        // ANTI-DISTRACCIÓN (Detectar cambio de pestaña)
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden && timerId) {
-                document.title = "⚠️ ¡Vuelve a concentrarte!";
-            } else {
-                document.title = "Focus-Tap | Activo";
-            }
-        });
+        // Bloqueo de salida (Solo funciona si hay interacción previa)
+        window.onbeforeunload = function() {
+            if (extremeMode && timeLeft > 0) return "¡Estás en modo extremo! No abandones tu meta.";
+        };
     </script>
 </body>
 </html>
