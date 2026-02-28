@@ -120,7 +120,7 @@
                         <button class="btn-p" id="start">Empezar</button>
                         <button class="btn-s" id="reset">Reset</button>
                     </div>
-                    <button class="btn-ex" id="extreme">MODO EXTREMO</button>
+                    <button class="btn-ex" id="extreme">CONCENTRACIÓN PROFUNDA</button>
                     
                     <div class="quote-container">
                         <p id="motivation-quote">"Céntrate en el proceso, no en el resultado."</p>
@@ -259,7 +259,7 @@
         // Penalización por salir de la pestaña
         document.addEventListener("visibilitychange", () => {
             if (document.hidden && extremeActive) {
-                left = Math.max(0, left - 60); // Resta 1 minuto de golpe
+                left = Math.max(0, left + 60); // Aumenta 1 minuto de golpe
                 upd();
                 document.body.style.background = "#ff7675";
                 setTimeout(() => document.body.style.background = "var(--bg-gradient)", 1000);
