@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus-Tap | Centro de Productividad</title>
+    <title>Focus-Tap | Minimalist Productivity</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
-            --glass: rgba(255, 255, 255, 0.35);
+            --glass: rgba(255, 255, 255, 0.4);
             --glass-border: rgba(255, 255, 255, 0.2);
             --text: #2d3436;
             --accent: #6c5ce7;
-            --success: #00b894;
             --danger: #ff7675;
         }
 
@@ -29,243 +28,216 @@
             align-items: center;
         }
 
-        header { margin-bottom: 30px; text-align: center; }
-        .logo { font-size: 2.5rem; font-weight: 800; letter-spacing: -1px; color: white; text-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        header { margin-bottom: 25px; }
+        .logo { font-size: 2rem; font-weight: 800; color: white; text-shadow: 0 4px 10px rgba(0,0,0,0.1); }
 
         .main-container {
             display: grid;
             grid-template-columns: 1fr 300px;
-            gap: 25px;
+            gap: 20px;
             width: 100%;
-            max-width: 1300px;
+            max-width: 1100px;
         }
 
         .content-layout { display: flex; flex-direction: column; gap: 20px; }
-        .top-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
         .glass-card {
             background: var(--glass);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            padding: 25px;
+            border-radius: 25px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
-        /* TIMER */
-        .timer-display { font-size: 80px; font-weight: 600; text-align: center; margin: 10px 0; letter-spacing: -3px; }
-        .timer-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
-
-        /* MIXES (Estilo Imagen 2) */
-        .mixes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; }
-        .mix-card {
-            background: rgba(0,0,0,0.05);
-            border-radius: 15px;
-            overflow: hidden;
+        /* TIMER & MUSIC ROW */
+        .top-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .timer-display { font-size: 60px; font-weight: 600; text-align: center; margin: 5px 0; }
+        
+        /* MÚSICA DESPLEGABLE */
+        .music-select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: white;
+            color: var(--text);
+            font-size: 0.9rem;
+            margin-top: 10px;
             cursor: pointer;
-            transition: 0.3s;
-            border: 2px solid transparent;
-            text-align: center;
-            padding-bottom: 10px;
+            outline: none;
         }
-        .mix-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.4); }
-        .mix-card.active { border-color: var(--accent); background: white; }
-        .mix-img { width: 100%; height: 80px; background: #2d3436; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
 
-        /* BRAIN DUMP XL */
+        /* TAREAS MINIMALISTAS */
+        .todo-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            outline: none;
+            font-size: 0.95rem;
+        }
+        .todo-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .todo-item input[type="checkbox"] { margin-right: 10px; accent-color: var(--accent); }
+        .todo-item span { flex: 1; }
+        .todo-item.done span { text-decoration: line-through; opacity: 0.4; }
+        .del-todo { opacity: 0.3; cursor: pointer; background: none; border: none; font-size: 0.8rem; }
+        .del-todo:hover { opacity: 1; color: var(--danger); }
+
+        /* BRAIN DUMP (REDUCIDO A LA MITAD) */
         .brain-dump-section { position: relative; }
         #notes-area {
-            width: 100%; height: 350px; /* Tamaño mucho más grande */
-            background: rgba(255,255,255,0.2);
+            width: 100%;
+            height: 180px; /* Reducido a la mitad aprox */
+            background: rgba(255,255,255,0.15);
             border: 1px dashed rgba(0,0,0,0.1);
-            border-radius: 20px;
-            padding: 20px;
-            margin-top: 15px;
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 10px;
             resize: none;
             outline: none;
-            font-size: 1.1rem;
-            line-height: 1.6;
+            font-size: 1rem;
         }
-
-        /* TO-DO LIST */
-        .todo-input-group { display: flex; gap: 10px; margin-top: 15px; }
-        .todo-input-group input { flex: 1; padding: 12px; border-radius: 12px; border: none; outline: none; background: rgba(255,255,255,0.5); }
-        .todo-list { list-style: none; margin-top: 15px; max-height: 200px; overflow-y: auto; }
-        .todo-item {
-            display: flex; align-items: center; justify-content: space-between;
-            background: rgba(255,255,255,0.2);
-            padding: 10px 15px;
-            border-radius: 12px;
-            margin-bottom: 8px;
-            transition: 0.2s;
-        }
-        .todo-item.done span { text-decoration: line-through; opacity: 0.5; }
-        .todo-item span { cursor: pointer; flex: 1; }
-        .delete-btn { background: none; border: none; color: var(--danger); cursor: pointer; font-weight: bold; padding: 5px; }
 
         /* BOTONES */
         button { border: none; cursor: pointer; font-weight: 600; transition: 0.2s; border-radius: 12px; }
-        .btn-primary { background: var(--accent); color: white; padding: 12px 20px; }
-        .btn-ghost { background: rgba(0,0,0,0.05); padding: 12px 20px; }
-        .btn-extreme { width: 100%; background: var(--danger); color: white; padding: 15px; margin-top: 10px; }
-        .copy-btn { position: absolute; top: 25px; right: 25px; font-size: 0.8rem; }
+        .btn-p { background: var(--accent); color: white; padding: 10px 18px; }
+        .btn-s { background: rgba(0,0,0,0.05); padding: 10px 18px; }
+        .btn-ex { width: 100%; background: var(--danger); color: white; padding: 12px; margin-top: 10px; }
+        .copy-btn { position: absolute; top: 20px; right: 20px; font-size: 0.75rem; padding: 5px 12px; }
 
         /* ADS */
-        .sidebar-ad { width: 300px; height: 600px; background: rgba(255,255,255,0.1); border: 2px dashed rgba(255,255,255,0.2); border-radius: 30px; display: flex; align-items: center; justify-content: center; color: rgba(0,0,0,0.2); font-size: 0.8rem; position: sticky; top: 20px; }
+        .sidebar-ad { width: 300px; height: 600px; background: rgba(255,255,255,0.1); border: 1px dashed rgba(255,255,255,0.3); border-radius: 25px; display: flex; align-items: center; justify-content: center; color: rgba(0,0,0,0.2); font-size: 0.8rem; position: sticky; top: 20px; }
 
-        @media (max-width: 1000px) {
+        @media (max-width: 900px) {
             .main-container { grid-template-columns: 1fr; }
             .top-row { grid-template-columns: 1fr; }
             .sidebar-ad { display: none; }
         }
     </style>
 </head>
-<body id="body">
+<body>
 
-    <header>
-        <h1 class="logo">FOCUS-TAP</h1>
-    </header>
+    <header><h1 class="logo">FOCUS-TAP</h1></header>
 
     <div class="main-container">
         <div class="content-layout">
             
             <div class="top-row">
-                <div class="glass-card">
-                    <div style="text-align:center">
-                        <input type="number" id="min-val" value="25" style="width:50px; border:none; background:none; text-align:center; font-weight:bold"> min
+                <div class="glass-card" style="text-align: center;">
+                    <div style="font-size: 0.8rem; opacity: 0.7;">
+                        <input type="number" id="m-in" value="25" style="width:35px; border:none; background:none; font-weight:bold"> min
                     </div>
                     <div class="timer-display" id="clock">25:00</div>
-                    <div class="timer-controls">
-                        <button class="btn-primary" id="start-btn">Empezar</button>
-                        <button class="btn-ghost" id="reset-btn">Reset</button>
+                    <div style="display: flex; justify-content: center; gap: 8px;">
+                        <button class="btn-p" id="start">Empezar</button>
+                        <button class="btn-s" id="reset">Reset</button>
                     </div>
-                    <button class="btn-extreme" id="ext-btn">MODO EXTREMO</button>
+                    <button class="btn-ex" id="extreme">MODO EXTREMO</button>
                 </div>
 
                 <div class="glass-card">
-                    <h3>Mixes de Enfoque</h3>
-                    <div class="mixes-grid">
-                        <div class="mix-card" onclick="selectMix('lofi')">
-                            <div class="mix-img">🎧</div>
-                            <p>Lofi</p>
-                        </div>
-                        <div class="mix-card" onclick="selectMix('nature')">
-                            <div class="mix-img">🌲</div>
-                            <p>Nature</p>
-                        </div>
-                        <div class="mix-card" onclick="selectMix('trap')">
-                            <div class="mix-img">🔥</div>
-                            <p>Trap 4</p>
-                        </div>
+                    <h3 style="font-size: 1rem;">Música de Fondo</h3>
+                    <select class="music-select" id="music-menu" onchange="changeMusic()">
+                        <option value="">Selecciona un estilo...</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">🎹 Lofi Hip Hop</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">🌲 Sonidos de la Naturaleza</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">🔥 Trap Focus</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3">🌊 Olas del Mar</option>
+                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3">☕ Ambiente Cafetería</option>
+                    </select>
+                    <div style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.2rem;">🔊</span>
+                        <input type="range" style="width:100%; accent-color:var(--accent)" min="0" max="1" step="0.1" value="0.5" oninput="vSet(this.value)">
                     </div>
-                    <div style="margin-top:15px">
-                        <input type="range" style="width:100%; accent-color:var(--accent)" min="0" max="1" step="0.1" value="0.5" oninput="setGlobalVol(this.value)">
-                        <p style="font-size:0.7rem; text-align:center; margin-top:5px; opacity:0.6">Volumen General</p>
-                    </div>
+                    <p style="font-size: 0.7rem; text-align: center; margin-top: 10px; opacity: 0.5;">Puedes añadir más enlaces de música en el código.</p>
                 </div>
             </div>
 
             <div class="glass-card">
-                <h3>Tareas de hoy</h3>
-                <div class="todo-input-group">
-                    <input type="text" id="todo-in" placeholder="Añadir nueva tarea y pulsa Enter...">
-                </div>
-                <ul class="todo-list" id="todo-list">
-                    </ul>
+                <h3 style="font-size: 1rem; margin-bottom: 10px;">Tareas Pendientes</h3>
+                <input type="text" id="todo-in" class="todo-input" placeholder="+ Añadir tarea y pulsa Enter">
+                <div id="todo-list"></div>
             </div>
 
             <div class="glass-card brain-dump-section">
-                <h3>Brain Dump (Espacio Extendido)</h3>
-                <button class="btn-primary copy-btn" onclick="copyNotes()">Copiar Todo</button>
-                <textarea id="notes-area" placeholder="Vuelca aquí todo lo que pase por tu cabeza para liberar espacio mental..."></textarea>
+                <h3 style="font-size: 1rem;">Brain Dump</h3>
+                <button class="btn-p copy-btn" onclick="copy()">Copiar</button>
+                <textarea id="notes-area" placeholder="Escribe aquí tus ideas rápidas..."></textarea>
             </div>
 
         </div>
 
-        <div class="sidebar-ad">ANUNCIO LATERAL (300x600)</div>
+        <div class="sidebar-ad">ESPACIO PUBLICITARIO</div>
     </div>
 
-    <audio id="player" loop src=""></audio>
+    <audio id="player" loop></audio>
 
     <script>
         let t = null, left = 25*60;
-        const clock = document.getElementById('clock'), start = document.getElementById('start-btn');
+        const clk = document.getElementById('clock'), st = document.getElementById('start');
         const player = document.getElementById('player');
 
-        // TIMER
-        document.getElementById('min-val').onchange = (e) => { if(!t){ left = e.target.value*60; upd(); }};
+        // Timer
+        document.getElementById('m-in').onchange = (e) => { if(!t){ left = e.target.value*60; upd(); }};
         function upd() { 
             let m=Math.floor(left/60), s=left%60; 
-            clock.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
+            clk.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
         }
 
-        start.onclick = () => {
-            if(t) { clearInterval(t); t=null; start.innerText="Reanudar"; }
+        st.onclick = () => {
+            if(t) { clearInterval(t); t=null; st.innerText="Reanudar"; }
             else {
-                start.innerText="Pausar";
-                t = setInterval(() => { 
-                    left--; upd(); 
-                    if(left<=0){ clearInterval(t); alert("¡Sesión completada!"); }
-                }, 1000);
+                st.innerText="Pausar";
+                t = setInterval(() => { left--; upd(); if(left<=0){ clearInterval(t); alert("¡Terminado!"); }}, 1000);
             }
         };
 
-        document.getElementById('reset-btn').onclick = () => {
-            clearInterval(t); t=null; left=document.getElementById('min-val').value*60; upd(); start.innerText="Empezar";
+        document.getElementById('reset').onclick = () => {
+            clearInterval(t); t=null; left=document.getElementById('m-in').value*60; upd(); st.innerText="Empezar";
         };
 
-        // MIXES DE MÚSICA (Lógica)
-        const tracks = {
-            lofi: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", // Reemplazar con tus links reales
-            nature: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-            trap: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-        };
-
-        function selectMix(type) {
-            document.querySelectorAll('.mix-card').forEach(c => c.classList.remove('active'));
-            event.currentTarget.classList.add('active');
-            player.src = tracks[type];
-            player.play();
+        // Música
+        function changeMusic() {
+            const val = document.getElementById('music-menu').value;
+            if(val) { player.src = val; player.play(); } else { player.pause(); }
         }
+        function vSet(v) { player.volume = v; }
 
-        function setGlobalVol(v) { player.volume = v; }
-
-        // TAREAS (Lógica)
+        // Tareas
         const todoIn = document.getElementById('todo-in'), todoList = document.getElementById('todo-list');
-
         todoIn.addEventListener('keypress', (e) => {
             if(e.key === 'Enter' && todoIn.value !== "") {
-                addItem(todoIn.value);
+                const div = document.createElement('div');
+                div.className = 'todo-item';
+                div.innerHTML = `<input type="checkbox" onchange="this.parentElement.classList.toggle('done')">
+                                 <span>${todoIn.value}</span>
+                                 <button class="del-todo" onclick="this.parentElement.remove()">✕</button>`;
+                todoList.appendChild(div);
                 todoIn.value = "";
             }
         });
 
-        function addItem(text) {
-            const li = document.createElement('li');
-            li.className = 'todo-item';
-            li.innerHTML = `<span onclick="this.parentElement.classList.toggle('done')">${text}</span>
-                            <button class="delete-btn" onclick="this.parentElement.remove()">✕</button>`;
-            todoList.appendChild(li);
-        }
-
-        // COPIAR NOTAS
-        function copyNotes() {
+        // Copiar
+        function copy() {
             const area = document.getElementById('notes-area');
             area.select(); document.execCommand('copy');
-            const btn = document.querySelector('.copy-btn');
-            btn.innerText = "¡Copiado! ✅";
-            setTimeout(() => btn.innerText = "Copiar Todo", 2000);
+            alert("Notas copiadas");
         }
 
-        // MODO EXTREMO (Penalización)
-        document.addEventListener("visibilitychange", () => {
-            if(document.hidden && t) {
-                left = Math.max(0, left - 10); upd();
-                document.getElementById('body').style.background = "rgba(255,0,0,0.1)";
-                setTimeout(() => document.getElementById('body').style.background = "var(--bg-gradient)", 800);
-            }
-        });
+        // Modo Extremo
+        document.getElementById('extreme').onclick = () => {
+            if(confirm("Activar modo extremo?")) document.documentElement.requestFullscreen();
+        };
     </script>
 </body>
 </html>
