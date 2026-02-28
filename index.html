@@ -13,6 +13,7 @@
             --text: #2d3436;
             --accent: #6c5ce7;
             --danger: #ff7675;
+            --success: #00b894;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -26,6 +27,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: background 0.5s ease;
         }
 
         header { margin-bottom: 25px; }
@@ -49,63 +51,39 @@
             border-radius: 25px;
             padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            position: relative;
         }
 
-        /* TIMER & MUSIC ROW */
+        /* TIMER */
         .top-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .timer-display { font-size: 60px; font-weight: 600; text-align: center; margin: 5px 0; }
         
-        /* MÚSICA DESPLEGABLE */
+        /* MÚSICA */
         .music-select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
-            background: white;
-            color: var(--text);
-            font-size: 0.9rem;
-            margin-top: 10px;
-            cursor: pointer;
-            outline: none;
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border);
+            background: white; color: var(--text); font-size: 0.9rem; margin-top: 10px; outline: none;
         }
+        .music-controls { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+        .btn-music { background: white; padding: 8px 15px; font-size: 0.8rem; border: 1px solid var(--glass-border); }
 
-        /* TAREAS MINIMALISTAS */
-        .todo-input {
-            width: 100%;
-            padding: 10px;
-            border: none;
-            background: transparent;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
-            margin-bottom: 15px;
-            outline: none;
-            font-size: 0.95rem;
-        }
-        .todo-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-            font-size: 0.9rem;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-        }
-        .todo-item input[type="checkbox"] { margin-right: 10px; accent-color: var(--accent); }
-        .todo-item span { flex: 1; }
+        /* TAREAS */
+        .todo-input { width: 100%; padding: 10px; border: none; background: transparent; border-bottom: 1px solid rgba(0,0,0,0.1); margin-bottom: 15px; outline: none; }
+        .todo-item { display: flex; align-items: center; padding: 8px 0; font-size: 0.9rem; }
         .todo-item.done span { text-decoration: line-through; opacity: 0.4; }
-        .del-todo { opacity: 0.3; cursor: pointer; background: none; border: none; font-size: 0.8rem; }
-        .del-todo:hover { opacity: 1; color: var(--danger); }
+        .del-todo { margin-left: auto; opacity: 0.3; cursor: pointer; background: none; border: none; }
 
-        /* BRAIN DUMP (REDUCIDO A LA MITAD) */
-        .brain-dump-section { position: relative; }
-        #notes-area {
-            width: 100%;
-            height: 180px; /* Reducido a la mitad aprox */
-            background: rgba(255,255,255,0.15);
-            border: 1px dashed rgba(0,0,0,0.1);
-            border-radius: 15px;
-            padding: 15px;
-            margin-top: 10px;
-            resize: none;
-            outline: none;
-            font-size: 1rem;
+        /* BRAIN DUMP */
+        #notes-area { width: 100%; height: 120px; background: rgba(255,255,255,0.15); border: 1px dashed rgba(0,0,0,0.1); border-radius: 15px; padding: 15px; margin-top: 10px; resize: none; outline: none; }
+
+        /* FRASES MOTIVADORAS */
+        .quote-container { text-align: center; margin-top: 15px; min-height: 40px; }
+        #motivation-quote { font-style: italic; font-size: 0.85rem; opacity: 0.8; transition: opacity 0.5s; }
+
+        /* NOTIFICACIÓN INTEGRADA */
+        #toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--text); color: white; padding: 10px 25px; border-radius: 50px;
+            font-size: 0.9rem; opacity: 0; transition: 0.3s; pointer-events: none; z-index: 1000;
         }
 
         /* BOTONES */
@@ -113,9 +91,9 @@
         .btn-p { background: var(--accent); color: white; padding: 10px 18px; }
         .btn-s { background: rgba(0,0,0,0.05); padding: 10px 18px; }
         .btn-ex { width: 100%; background: var(--danger); color: white; padding: 12px; margin-top: 10px; }
+        .btn-ex.active { background: #d63031; box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
         .copy-btn { position: absolute; top: 20px; right: 20px; font-size: 0.75rem; padding: 5px 12px; }
 
-        /* ADS */
         .sidebar-ad { width: 300px; height: 600px; background: rgba(255,255,255,0.1); border: 1px dashed rgba(255,255,255,0.3); border-radius: 25px; display: flex; align-items: center; justify-content: center; color: rgba(0,0,0,0.2); font-size: 0.8rem; position: sticky; top: 20px; }
 
         @media (max-width: 900px) {
@@ -143,23 +121,30 @@
                         <button class="btn-s" id="reset">Reset</button>
                     </div>
                     <button class="btn-ex" id="extreme">MODO EXTREMO</button>
+                    
+                    <div class="quote-container">
+                        <p id="motivation-quote">"Céntrate en el proceso, no en el resultado."</p>
+                    </div>
                 </div>
 
                 <div class="glass-card">
                     <h3 style="font-size: 1rem;">Música de Fondo</h3>
-                    <select class="music-select" id="music-menu" onchange="changeMusic()">
-                        <option value="">Selecciona un estilo...</option>
-                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">🎹 Lofi Hip Hop</option>
-                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">🌲 Sonidos de la Naturaleza</option>
-                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">🔥 Trap Focus</option>
-                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3">🌊 Olas del Mar</option>
-                        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3">☕ Ambiente Cafetería</option>
+                    <select class="music-select" id="music-menu">
+                        <option value="lofi">🎹 Lofi Hip Hop (2 tracks)</option>
+                        <option value="nature">🌲 Naturaleza (2 tracks)</option>
+                        <option value="coffee">☕ Cafetería (2 tracks)</option>
                     </select>
+                    
+                    <div class="music-controls">
+                        <button class="btn-music" onclick="musicPrev()">⏮</button>
+                        <button class="btn-music" onclick="musicToggle()" id="play-pause">▶</button>
+                        <button class="btn-music" onclick="musicNext()">⏭</button>
+                    </div>
+
                     <div style="margin-top: 15px; display: flex; align-items: center; gap: 10px;">
-                        <span style="font-size: 1.2rem;">🔊</span>
+                        <span>🔊</span>
                         <input type="range" style="width:100%; accent-color:var(--accent)" min="0" max="1" step="0.1" value="0.5" oninput="vSet(this.value)">
                     </div>
-                    <p style="font-size: 0.7rem; text-align: center; margin-top: 10px; opacity: 0.5;">Puedes añadir más enlaces de música en el código.</p>
                 </div>
             </div>
 
@@ -172,22 +157,124 @@
             <div class="glass-card brain-dump-section">
                 <h3 style="font-size: 1rem;">Brain Dump</h3>
                 <button class="btn-p copy-btn" onclick="copy()">Copiar</button>
-                <textarea id="notes-area" placeholder="Escribe aquí tus ideas rápidas..."></textarea>
+                <textarea id="notes-area" placeholder="Vuelca aquí tus pensamientos..."></textarea>
             </div>
-
         </div>
 
         <div class="sidebar-ad">ESPACIO PUBLICITARIO</div>
     </div>
 
-    <audio id="player" loop></audio>
+    <div id="toast">Texto copiado al portapapeles</div>
+    <audio id="player"></audio>
 
     <script>
+        // --- CONFIGURACIÓN DE MÚSICA ---
+        const playlists = {
+            lofi: [
+                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+            ],
+            nature: [
+                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
+                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"
+            ],
+            coffee: [
+                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
+                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"
+            ]
+        };
+        let currentTrackIdx = 0;
+        const player = document.getElementById('player');
+        const playBtn = document.getElementById('play-pause');
+
+        function loadTrack() {
+            const genre = document.getElementById('music-menu').value;
+            player.src = playlists[genre][currentTrackIdx];
+        }
+
+        function musicToggle() {
+            if (!player.src) loadTrack();
+            if (player.paused) {
+                player.play();
+                playBtn.innerText = "⏸";
+            } else {
+                player.pause();
+                playBtn.innerText = "▶";
+            }
+        }
+
+        function musicNext() {
+            currentTrackIdx = (currentTrackIdx + 1) % 2;
+            loadTrack();
+            player.play();
+            playBtn.innerText = "⏸";
+        }
+
+        function musicPrev() {
+            currentTrackIdx = (currentTrackIdx - 1 + 2) % 2;
+            loadTrack();
+            player.play();
+            playBtn.innerText = "⏸";
+        }
+
+        function vSet(v) { player.volume = v; }
+
+        // --- FRASES MOTIVADORAS ---
+        const quotes = [
+            "\"La disciplina es hacer lo que hay que hacer, incluso cuando no quieres.\"",
+            "\"Tu mente es un músculo, entrénala para enfocarse.\"",
+            "\"No te detengas hasta que te sientas orgulloso.\"",
+            "\"Pequeños pasos llevan a grandes metas.\"",
+            "\"El enfoque es el secreto de la eficiencia.\""
+        ];
+        setInterval(() => {
+            const qElem = document.getElementById('motivation-quote');
+            qElem.style.opacity = 0;
+            setTimeout(() => {
+                qElem.innerText = quotes[Math.floor(Math.random() * quotes.length)];
+                qElem.style.opacity = 0.8;
+            }, 500);
+        }, 60000);
+
+        // --- MODO EXTREMO (Anti-distracción) ---
+        let extremeActive = false;
+        const extremeBtn = document.getElementById('extreme');
+
+        extremeBtn.onclick = () => {
+            if(!extremeActive) {
+                if(confirm("¿Activar Modo Extremo? Se bloqueará la salida y habrá penalización por cambiar de pestaña.")) {
+                    extremeActive = true;
+                    extremeBtn.classList.add('active');
+                    extremeBtn.innerText = "MODO EXTREMO ACTIVO";
+                    document.documentElement.requestFullscreen().catch(() => {});
+                }
+            } else {
+                extremeActive = false;
+                extremeBtn.classList.remove('active');
+                extremeBtn.innerText = "MODO EXTREMO";
+                if(document.fullscreenElement) document.exitFullscreen();
+            }
+        };
+
+        // Penalización por salir de la pestaña
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && extremeActive) {
+                left = Math.max(0, left - 60); // Resta 1 minuto de golpe
+                upd();
+                document.body.style.background = "#ff7675";
+                setTimeout(() => document.body.style.background = "var(--bg-gradient)", 1000);
+            }
+        });
+
+        // Bloqueo de cierre accidental
+        window.onbeforeunload = () => {
+            if (extremeActive) return "¡El Modo Extremo está activo! No deberías irte.";
+        };
+
+        // --- TIMER ---
         let t = null, left = 25*60;
         const clk = document.getElementById('clock'), st = document.getElementById('start');
-        const player = document.getElementById('player');
 
-        // Timer
         document.getElementById('m-in').onchange = (e) => { if(!t){ left = e.target.value*60; upd(); }};
         function upd() { 
             let m=Math.floor(left/60), s=left%60; 
@@ -198,7 +285,10 @@
             if(t) { clearInterval(t); t=null; st.innerText="Reanudar"; }
             else {
                 st.innerText="Pausar";
-                t = setInterval(() => { left--; upd(); if(left<=0){ clearInterval(t); alert("¡Terminado!"); }}, 1000);
+                t = setInterval(() => { 
+                    if(left > 0) { left--; upd(); }
+                    else { clearInterval(t); showToast("¡Tiempo cumplido!"); }
+                }, 1000);
             }
         };
 
@@ -206,14 +296,7 @@
             clearInterval(t); t=null; left=document.getElementById('m-in').value*60; upd(); st.innerText="Empezar";
         };
 
-        // Música
-        function changeMusic() {
-            const val = document.getElementById('music-menu').value;
-            if(val) { player.src = val; player.play(); } else { player.pause(); }
-        }
-        function vSet(v) { player.volume = v; }
-
-        // Tareas
+        // --- TAREAS ---
         const todoIn = document.getElementById('todo-in'), todoList = document.getElementById('todo-list');
         todoIn.addEventListener('keypress', (e) => {
             if(e.key === 'Enter' && todoIn.value !== "") {
@@ -227,17 +310,21 @@
             }
         });
 
-        // Copiar
-        function copy() {
-            const area = document.getElementById('notes-area');
-            area.select(); document.execCommand('copy');
-            alert("Notas copiadas");
+        // --- NOTIFICACIÓN Y COPIAR ---
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.opacity = 1;
+            setTimeout(() => toast.style.opacity = 0, 2500);
         }
 
-        // Modo Extremo
-        document.getElementById('extreme').onclick = () => {
-            if(confirm("Activar modo extremo?")) document.documentElement.requestFullscreen();
-        };
+        function copy() {
+            const area = document.getElementById('notes-area');
+            if(area.value.trim() === "") return;
+            area.select();
+            document.execCommand('copy');
+            showToast("Notas copiadas al portapapeles");
+        }
     </script>
 </body>
 </html>
