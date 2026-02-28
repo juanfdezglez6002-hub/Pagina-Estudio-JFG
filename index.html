@@ -70,7 +70,10 @@
             width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border);
             background: white; color: var(--text); font-size: 0.9rem; margin-top: 10px; outline: none;
         }
-        .music-controls { display: flex; justify-content: center; gap: 10px; margin-top: 15px; }
+        .music-info { text-align: center; margin-top: 15px; min-height: 45px; }
+        .track-name { font-weight: 600; font-size: 0.9rem; display: block; color: var(--accent); }
+        .track-author { font-size: 0.75rem; opacity: 0.7; }
+        .music-controls { display: flex; justify-content: center; gap: 10px; margin-top: 10px; }
         .btn-music { background: white; padding: 8px 15px; font-size: 0.8rem; border: 1px solid var(--glass-border); }
 
         /* TAREAS */
@@ -138,11 +141,16 @@
 
                 <div class="glass-card">
                     <h3 style="font-size: 1rem;">Música de Fondo</h3>
-                    <select class="music-select" id="music-menu">
-                        <option value="lofi">🎹 Lofi Hip Hop (2 tracks)</option>
-                        <option value="nature">🌲 Naturaleza (2 tracks)</option>
-                        <option value="coffee">☕ Cafetería (2 tracks)</option>
+                    <select class="music-select" id="music-menu" onchange="loadTrack()">
+                        <option value="lofi">🎹 Lofi Hip Hop</option>
+                        <option value="nature">🌲 Naturaleza</option>
+                        <option value="coffee">☕ Cafetería</option>
                     </select>
+
+                    <div class="music-info">
+                        <span class="track-name" id="track-title">Selecciona música</span>
+                        <span class="track-author" id="track-author">Artista</span>
+                    </div>
                     
                     <div class="music-controls">
                         <button class="btn-music" onclick="musicPrev()">⏮</button>
@@ -178,7 +186,7 @@
 
     <script>
         // --- VARIABLES GLOBALES ---
-        let currentMode = null; // 'deep', 'prod' o null
+        let currentMode = null;
         let leaveTime = null;
         let t = null, left = 25*60;
         const clk = document.getElementById('clock'), st = document.getElementById('start');
@@ -189,7 +197,6 @@
         function toggleMode(mode) {
             const btnDeep = document.getElementById('btn-deep');
             const btnProd = document.getElementById('btn-prod');
-
             if (currentMode === mode) {
                 currentMode = null;
                 btnDeep.className = "btn-mode";
@@ -199,41 +206,28 @@
                 currentMode = mode;
                 btnDeep.className = mode === 'deep' ? "btn-mode active-deep" : "btn-mode";
                 btnProd.className = mode === 'prod' ? "btn-mode active-prod" : "btn-mode";
-                
-                if(mode === 'deep') {
-                    document.documentElement.requestFullscreen().catch(() => {});
-                }
+                if(mode === 'deep') document.documentElement.requestFullscreen().catch(() => {});
             }
         }
 
-        // --- LÓGICA DE VISIBILIDAD (EL CORAZÓN DE TU PETICIÓN) ---
+        // --- VISIBILIDAD ---
         document.addEventListener("visibilitychange", () => {
             if (document.hidden) {
-                // Si el usuario sale de la pestaña y hay un modo activo
                 if (currentMode && t) {
-                    leaveTime = Date.now(); // Guardamos el momento exacto en que se fue
-                    // Pausamos el temporizador
-                    clearInterval(t);
-                    t = null;
+                    leaveTime = Date.now();
+                    clearInterval(t); t = null;
                     st.innerText = "Reanudar";
                     showToast("Enfoque perdido: Temporizador pausado");
                 }
             } else {
-                // El usuario vuelve a la pestaña
                 if (leaveTime && currentMode) {
                     const returnTime = Date.now();
                     const secondsAway = Math.floor((returnTime - leaveTime) / 1000);
-                    
                     if (currentMode === 'deep') {
-                        // Modo Concentración Profunda: Sumamos el tiempo perdido
-                        left += secondsAway;
-                        upd();
+                        left += secondsAway; upd();
                         showToast(`Penalización: +${secondsAway}s añadidos`);
                         document.body.style.background = "#ff7675";
                         setTimeout(() => document.body.style.background = "var(--bg-gradient)", 1000);
-                    } else if (currentMode === 'prod') {
-                        // Modo Productividad: Solo se pausó, no hacemos nada más
-                        showToast("Sesión pausada. Haz clic en Reanudar.");
                     }
                     leaveTime = null;
                 }
@@ -246,11 +240,9 @@
             let m=Math.floor(left/60), s=left%60; 
             clk.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
         }
-
         st.onclick = () => {
-            if(t) { 
-                clearInterval(t); t=null; st.innerText="Reanudar"; 
-            } else {
+            if(t) { clearInterval(t); t=null; st.innerText="Reanudar"; }
+            else {
                 st.innerText="Pausar";
                 t = setInterval(() => { 
                     if(left > 0) { left--; upd(); }
@@ -258,23 +250,34 @@
                 }, 1000);
             }
         };
-
         document.getElementById('reset').onclick = () => {
             clearInterval(t); t=null; left=document.getElementById('m-in').value*60; upd(); st.innerText="Empezar";
-            leaveTime = null;
         };
 
-        // --- MÚSICA ---
+        // --- MÚSICA ACTUALIZADA CON NOMBRES ---
         const playlists = {
-            lofi: ["onetent-epic-relaxing-flute-music-144009.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"],
-            nature: ["https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"],
-            coffee: ["https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"]
+            lofi: [
+                { title: "Epic Relaxing Flute", author: "Onetent", url: "onetent-epic-relaxing-flute-music-144009.mp3" },
+                { title: "Chill Study Beats", author: "Lofi Girl", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" }
+            ],
+            nature: [
+                { title: "Forest Rain", author: "Nature Sounds", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
+                { title: "Ocean Waves", author: "Zen Master", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
+            ],
+            coffee: [
+                { title: "Jazz Cafe", author: "Smooth Vibes", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" },
+                { title: "Morning Brew", author: "Coffee House", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3" }
+            ]
         };
         let currentTrackIdx = 0;
 
         function loadTrack() {
             const genre = document.getElementById('music-menu').value;
-            player.src = playlists[genre][currentTrackIdx];
+            const track = playlists[genre][currentTrackIdx];
+            player.src = track.url;
+            document.getElementById('track-title').innerText = track.title;
+            document.getElementById('track-author').innerText = track.author;
+            if (!player.paused) player.play(); // Auto-play si ya estaba sonando
         }
 
         function musicToggle() {
@@ -283,9 +286,22 @@
             else { player.pause(); playBtn.innerText = "▶"; }
         }
 
-        function musicNext() { currentTrackIdx = (currentTrackIdx + 1) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
-        function musicPrev() { currentTrackIdx = (currentTrackIdx - 1 + 2) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
+        function musicNext() { 
+            currentTrackIdx = (currentTrackIdx + 1) % 2; 
+            loadTrack(); 
+            player.play(); playBtn.innerText = "⏸"; 
+        }
+
+        function musicPrev() { 
+            currentTrackIdx = (currentTrackIdx - 1 + 2) % 2; 
+            loadTrack(); 
+            player.play(); playBtn.innerText = "⏸"; 
+        }
+
         function vSet(v) { player.volume = v; }
+
+        // Inicializar nombres al cargar
+        window.onload = loadTrack;
 
         // --- TAREAS ---
         const todoIn = document.getElementById('todo-in'), todoList = document.getElementById('todo-list');
@@ -301,34 +317,19 @@
             }
         });
 
-        // --- FRASES ---
-        const quotes = ["\"La disciplina es hacer lo que hay que hacer.\"", "\"Tu mente es un músculo.\"", "\"No te detengas.\"", "\"Pequeños pasos.\"", "\"El enfoque es secreto.\""];
-        setInterval(() => {
-            const qElem = document.getElementById('motivation-quote');
-            qElem.style.opacity = 0;
-            setTimeout(() => {
-                qElem.innerText = quotes[Math.floor(Math.random() * quotes.length)];
-                qElem.style.opacity = 0.8;
-            }, 500);
-        }, 60000);
-
         // --- UTILIDADES ---
         function showToast(msg) {
             const toast = document.getElementById('toast');
-            toast.innerText = msg;
-            toast.style.opacity = 1;
+            toast.innerText = msg; toast.style.opacity = 1;
             setTimeout(() => toast.style.opacity = 0, 3000);
         }
 
         function copy() {
             const area = document.getElementById('notes-area');
             if(area.value.trim() === "") return;
-            area.select();
-            document.execCommand('copy');
-            showToast("Notas copiadas al portapapeles");
+            area.select(); document.execCommand('copy');
+            showToast("Notas copiadas");
         }
-
-        window.onbeforeunload = () => { if (currentMode) return "Modo activo"; };
     </script>
 </body>
 </html>
