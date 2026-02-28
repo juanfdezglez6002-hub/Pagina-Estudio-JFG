@@ -7,16 +7,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Paleta: Soft Pastel Nature (Fomenta concentración y calma) */
-            --bg-gradient: linear-gradient(135deg, #f3f9f1 0%, #e8f5e9 50%, #e1f5fe 100%);
-            --glass: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.5);
-            --text: #37474f;
-            --accent: #66bb6a; /* Verde relajante */
-            --accent-hover: #43a047;
-            --danger: #ef9a9a;
-            --warning: #ffe082;
-            --secondary: #9575cd; /* Lavanda para creatividad */
+            /* Nueva Paleta: Dreamy Pink & Purple */
+            --bg-gradient: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #ede7f6 100%);
+            --glass: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --text: #5c4b51;
+            --accent: #ce93d8; /* Lavanda suave */
+            --accent-hover: #ba68c8;
+            --danger: #ffab91; /* Coral suave para alertas */
+            --warning: #fff176; /* Amarillo pastel */
+            --secondary: #f48fb1; /* Rosa pastel */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -37,9 +37,9 @@
         .logo { 
             font-size: 2.2rem; 
             font-weight: 800; 
-            color: var(--accent); 
+            color: var(--secondary); 
             letter-spacing: -1px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.03);
         }
 
         .main-container {
@@ -54,12 +54,12 @@
 
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 2px solid var(--glass-border);
-            border-radius: 30px;
+            border-radius: 35px;
             padding: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
             position: relative;
         }
 
@@ -70,11 +70,10 @@
             font-weight: 800; 
             text-align: center; 
             margin: 10px 0; 
-            color: var(--accent);
-            text-shadow: 0 5px 15px rgba(102, 187, 106, 0.2);
+            color: var(--secondary);
+            text-shadow: 0 5px 15px rgba(244, 143, 177, 0.2);
         }
         
-        /* BOTONES DE MODO MODERNOS */
         .mode-buttons { display: flex; gap: 10px; margin-top: 20px; }
         .btn-mode { 
             flex: 1;
@@ -85,12 +84,13 @@
             color: var(--text); 
             border-radius: 15px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            cursor: pointer;
         }
-        .btn-mode.active-deep { background: var(--danger); color: white; border: none; box-shadow: 0 4px 12px rgba(239, 154, 154, 0.4); }
-        .btn-mode.active-prod { background: var(--warning); color: #5d4037; border: none; box-shadow: 0 4px 12px rgba(255, 224, 130, 0.4); }
+        .btn-mode.active-deep { background: var(--secondary); color: white; border: none; box-shadow: 0 4px 12px rgba(244, 143, 177, 0.4); }
+        .btn-mode.active-prod { background: var(--warning); color: #5d4037; border: none; box-shadow: 0 4px 12px rgba(255, 241, 118, 0.4); }
 
-        /* REPRODUCTOR DE MÚSICA MODERNIZADO */
-        .music-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; display: block; color: var(--secondary); }
+        /* REPRODUCTOR DE MÚSICA */
+        .music-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; display: block; color: var(--accent); }
         .music-select {
             width: 100%; padding: 12px; border-radius: 15px; border: none;
             background: #fff; color: var(--text); font-size: 0.9rem; margin-bottom: 20px; outline: none;
@@ -102,20 +102,17 @@
             width: 45px; height: 45px; border-radius: 50%; background: #fff; 
             display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            cursor: pointer;
         }
-        .btn-music-round.play-btn { background: var(--secondary); color: white; width: 55px; height: 55px; font-size: 1.5rem; }
+        .btn-music-round.play-btn { background: var(--accent); color: white; width: 55px; height: 55px; font-size: 1.5rem; }
 
-        /* VOLUMEN CUSTOM SLIDER */
+        /* VOLUMEN */
         .volume-container { margin-top: 25px; display: flex; align-items: center; gap: 15px; }
-        input[type=range] {
-            -webkit-appearance: none; width: 100%; background: transparent;
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 6px; background: #e0e0e0; border-radius: 10px;
-        }
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #eee; border-radius: 10px; }
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
-            background: var(--secondary); cursor: pointer; margin-top: -6px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            background: var(--secondary); cursor: pointer; margin-top: -6px;
         }
 
         /* TODO LIST */
@@ -124,15 +121,15 @@
             border-radius: 15px; margin-bottom: 15px; outline: none; 
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
         }
-        .todo-item { display: flex; align-items: center; padding: 12px; background: rgba(255,255,255,0.4); border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--glass-border); }
-        .todo-item input[type="checkbox"] { margin-right: 12px; accent-color: var(--accent); transform: scale(1.2); }
+        .todo-item { display: flex; align-items: center; padding: 12px; background: rgba(255,255,255,0.5); border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); }
+        .todo-item input[type="checkbox"] { margin-right: 12px; accent-color: var(--secondary); transform: scale(1.2); }
         .todo-item.done span { text-decoration: line-through; opacity: 0.5; }
 
         /* BRAIN DUMP */
         #notes-area { 
             width: 100%; height: 130px; background: white; 
-            border: 2px dashed #cfd8dc; border-radius: 20px; padding: 15px; 
-            margin-top: 10px; resize: none; outline: none; line-height: 1.5;
+            border: 2px dashed #e1bee7; border-radius: 20px; padding: 15px; 
+            margin-top: 10px; resize: none; outline: none;
         }
 
         /* UTILIDADES */
@@ -142,15 +139,14 @@
         }
 
         button { border: none; cursor: pointer; font-weight: 700; transition: all 0.3s; border-radius: 15px; }
-        button:hover { transform: translateY(-2px); filter: brightness(1.05); }
         .btn-p { background: var(--accent); color: white; padding: 12px 25px; font-size: 1rem; }
         .btn-s { background: white; color: var(--text); padding: 12px 25px; border: 1px solid #ddd; }
         .copy-btn { position: absolute; top: 20px; right: 20px; font-size: 0.7rem; background: var(--secondary); color: white; padding: 8px 15px; }
 
         .sidebar-ad { 
             width: 300px; height: 600px; background: var(--glass); border: 2px solid var(--glass-border);
-            border-radius: 30px; display: flex; align-items: center; justify-content: center; 
-            color: #b0bec5; font-size: 0.8rem; letter-spacing: 2px; text-align: center;
+            border-radius: 35px; display: flex; align-items: center; justify-content: center; 
+            color: #b39ddb; font-size: 0.8rem; letter-spacing: 2px; text-align: center;
         }
 
         @media (max-width: 900px) {
@@ -169,8 +165,8 @@
             
             <div class="top-row">
                 <div class="glass-card" style="text-align: center;">
-                    <div style="font-size: 0.9rem; font-weight: 600; opacity: 0.6; color: var(--text);">
-                        SESIÓN DE <input type="number" id="m-in" value="25" style="width:40px; border:none; background:none; font-weight:800; color: var(--accent); text-align:center;"> MINUTOS
+                    <div style="font-size: 0.9rem; font-weight: 600; opacity: 0.7; color: var(--text);">
+                        SESIÓN DE <input type="number" id="m-in" value="25" style="width:40px; border:none; background:none; font-weight:800; color: var(--secondary); text-align:center;"> MINUTOS
                     </div>
                     <div class="timer-display" id="clock">25:00</div>
                     <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
@@ -185,11 +181,11 @@
                 </div>
 
                 <div class="glass-card">
-                    <span class="music-title">Ambiente de Estudio</span>
+                    <span class="music-title">Dreamy Ambience</span>
                     <select class="music-select" id="music-menu" onchange="loadTrack()">
-                        <option value="lofi">🎹 Lofi Hip Hop</option>
-                        <option value="nature">🌲 Sonidos del Bosque</option>
-                        <option value="coffee">☕ Ruido de Cafetería</option>
+                        <option value="lofi">🎹 Lofi Dream</option>
+                        <option value="nature">🌸 Soft Rain</option>
+                        <option value="coffee">☕ Pastel Cafe</option>
                     </select>
                     
                     <div class="music-controls">
@@ -199,37 +195,36 @@
                     </div>
 
                     <div class="volume-container">
-                        <span style="font-size: 1.2rem;">🔈</span>
+                        <span>🔈</span>
                         <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="vSet(this.value)">
-                        <span style="font-size: 1.2rem;">🔊</span>
+                        <span>🔊</span>
                     </div>
                 </div>
             </div>
 
             <div class="glass-card">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Mis Objetivos de Hoy</h3>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: var(--secondary);">Metas de Estudio</h3>
                 <input type="text" id="todo-in" class="todo-input" placeholder="+ Escribe una tarea y pulsa Enter">
                 <div id="todo-list"></div>
             </div>
 
             <div class="glass-card">
-                <h3 style="font-size: 1.1rem;">Brain Dump</h3>
+                <h3 style="font-size: 1.1rem; color: var(--accent);">Brain Dump</h3>
                 <button class="copy-btn" onclick="copy()">Copiar Notas</button>
-                <textarea id="notes-area" placeholder="Escribe aquí cualquier pensamiento que te distraiga para sacarlo de tu mente..."></textarea>
-                <div class="quote-container">
-                    <p id="motivation-quote">"Pequeños pasos llevan a grandes resultados."</p>
+                <textarea id="notes-area" placeholder="Vuelca aquí tus distracciones para volver al estudio..."></textarea>
+                <div style="text-align: center; margin-top: 15px;">
+                    <p id="motivation-quote" style="font-style: italic; font-size: 0.85rem; opacity: 0.8;">"Confía en el proceso."</p>
                 </div>
             </div>
         </div>
 
-        <div class="sidebar-ad">ESPACIO PARA<br>TUS NOTAS LARGAS O<br>PUBLICIDAD</div>
+        <div class="sidebar-ad">ESPACIO PARA<br>NOTAS EXTRAS<br>✨</div>
     </div>
 
-    <div id="toast">Acción realizada con éxito</div>
+    <div id="toast">¡Hecho!</div>
     <audio id="player" loop></audio>
 
     <script>
-        // --- LÓGICA DEL TEMPORIZADOR Y MODOS ---
         let currentMode = null, leaveTime = null, t = null, left = 25*60;
         const clk = document.getElementById('clock'), st = document.getElementById('start');
         const player = document.getElementById('player'), playBtn = document.getElementById('play-pause');
@@ -253,13 +248,13 @@
                 leaveTime = Date.now();
                 clearInterval(t); t = null;
                 st.innerText = "Reanudar";
-                showToast("¡Vuelve! Temporizador pausado");
+                showToast("¡Pausado! No pierdas el enfoque");
             } else if (!document.hidden && leaveTime && currentMode === 'deep') {
                 const secondsAway = Math.floor((Date.now() - leaveTime) / 1000);
                 left += secondsAway; upd();
-                showToast(`Penalización: +${secondsAway}s añadidos`);
+                showToast(`Penalización: +${secondsAway}s`);
                 document.body.style.background = "#ffcdd2";
-                setTimeout(() => document.body.style.background = "var(--bg-gradient)", 1000);
+                setTimeout(() => document.body.style.background = "var(--bg-gradient)", 800);
                 leaveTime = null;
             }
         });
@@ -276,7 +271,7 @@
                 st.innerText="Pausar";
                 t = setInterval(() => { 
                     if(left > 0) { left--; upd(); }
-                    else { clearInterval(t); showToast("¡Sesión terminada!"); new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play(); }
+                    else { clearInterval(t); showToast("¡Tiempo cumplido!"); }
                 }, 1000);
             }
         };
@@ -285,7 +280,6 @@
             clearInterval(t); t=null; left=document.getElementById('m-in').value*60; upd(); st.innerText="Empezar";
         };
 
-        // --- MÚSICA ---
         const playlists = {
             lofi: ["https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"],
             nature: ["https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"],
@@ -302,20 +296,18 @@
         function musicPrev() { trackIdx = (trackIdx - 1 + 2) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
         function vSet(v) { player.volume = v; }
 
-        // --- TAREAS ---
         document.getElementById('todo-in').addEventListener('keypress', (e) => {
             if(e.key === 'Enter' && e.target.value !== "") {
                 const div = document.createElement('div');
                 div.className = 'todo-item';
                 div.innerHTML = `<input type="checkbox" onchange="this.parentElement.classList.toggle('done')">
                                  <span style="flex:1">${e.target.value}</span>
-                                 <button style="background:none; color:red; font-size:1.2rem;" onclick="this.parentElement.remove()">✕</button>`;
+                                 <button style="background:none; color:var(--secondary); font-weight:bold; cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
                 document.getElementById('todo-list').appendChild(div);
                 e.target.value = "";
             }
         });
 
-        // --- UTILIDADES ---
         function showToast(msg) {
             const toast = document.getElementById('toast');
             toast.innerText = msg; toast.style.opacity = 1;
