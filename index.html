@@ -143,6 +143,17 @@
             background: var(--secondary); cursor: pointer; margin-top: -6px;
         }
 
+        /* INFO CANCIÓN */
+        .track-info {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text);
+            opacity: 0.8;
+            font-weight: 500;
+            min-height: 1.2rem;
+        }
+
         /* TODO LIST */
         .todo-input { 
             width: 100%; padding: 15px; border: none; background: white; 
@@ -221,9 +232,9 @@
                 <div class="glass-card">
                     <span class="music-title">Dreamy Ambience</span>
                     <select class="music-select" id="music-menu" onchange="loadTrack()">
-                        <option value="lofi">🎹 Song 1 - SoundHelix</option>
-                        <option value="nature">🌸 Song 3 - SoundHelix</option>
-                        <option value="coffee">☕ Song 8 - SoundHelix</option>
+                        <option value="lofi">🎹 Lofi Dream</option>
+                        <option value="nature">🌸 Soft Rain</option>
+                        <option value="coffee">☕ Pastel Cafe</option>
                     </select>
                     
                     <div class="music-controls">
@@ -237,6 +248,8 @@
                         <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="vSet(this.value)">
                         <span>🔊</span>
                     </div>
+
+                    <div id="track-display" class="track-info">Selecciona una pista para reproducir</div>
                 </div>
             </div>
 
@@ -270,6 +283,7 @@
         let currentMode = null, leaveTime = null, t = null, left = 25*60;
         const clk = document.getElementById('clock'), st = document.getElementById('start');
         const player = document.getElementById('player'), playBtn = document.getElementById('play-pause');
+        const trackDisplay = document.getElementById('track-display');
 
         function toggleMode(mode) {
             const btnDeep = document.getElementById('btn-deep'), btnProd = document.getElementById('btn-prod');
@@ -323,12 +337,28 @@
         };
 
         const playlists = {
-            lofi: ["https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"],
-            nature: ["https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"],
-            coffee: ["https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"]
+            lofi: [
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", name: "Lofi Dream", author: "SoundHelix"},
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", name: "Chill Beat", author: "SoundHelix"}
+            ],
+            nature: [
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", name: "Soft Rain", author: "SoundHelix"},
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", name: "Forest Whisper", author: "SoundHelix"}
+            ],
+            coffee: [
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", name: "Pastel Cafe", author: "SoundHelix"},
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3", name: "Sugar Jazz", author: "SoundHelix"}
+            ]
         };
         let trackIdx = 0;
-        function loadTrack() { player.src = playlists[document.getElementById('music-menu').value][trackIdx]; }
+
+        function loadTrack() { 
+            const genre = document.getElementById('music-menu').value;
+            const currentTrack = playlists[genre][trackIdx];
+            player.src = currentTrack.url; 
+            trackDisplay.innerText = `${currentTrack.name} - ${currentTrack.author}`;
+        }
+
         function musicToggle() {
             if (!player.src) loadTrack();
             if (player.paused) { player.play(); playBtn.innerText = "⏸"; } 
