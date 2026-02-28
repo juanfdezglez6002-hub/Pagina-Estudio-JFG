@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus-Tap | Minimalist Productivity</title>
+    <title>Focus-Tap | Deep Work & Productivity</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,6 +14,7 @@
             --accent: #6c5ce7;
             --danger: #ff7675;
             --success: #00b894;
+            --warning: #f1c40f;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
@@ -58,6 +59,12 @@
         .top-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         .timer-display { font-size: 60px; font-weight: 600; text-align: center; margin: 5px 0; }
         
+        /* BOTONES DE MODO */
+        .mode-buttons { display: flex; flex-direction: column; gap: 8px; margin-top: 15px; }
+        .btn-mode { font-size: 0.7rem; padding: 10px; background: rgba(255,255,255,0.2); border: 1px solid var(--glass-border); color: var(--text); }
+        .btn-mode.active-deep { background: var(--danger); color: white; border: none; }
+        .btn-mode.active-prod { background: var(--warning); color: #2d3436; border: none; }
+
         /* MÚSICA */
         .music-select {
             width: 100%; padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border);
@@ -90,8 +97,6 @@
         button { border: none; cursor: pointer; font-weight: 600; transition: 0.2s; border-radius: 12px; }
         .btn-p { background: var(--accent); color: white; padding: 10px 18px; }
         .btn-s { background: rgba(0,0,0,0.05); padding: 10px 18px; }
-        .btn-ex { width: 100%; background: var(--danger); color: white; padding: 12px; margin-top: 10px; }
-        .btn-ex.active { background: #d63031; box-shadow: inset 0 0 10px rgba(0,0,0,0.3); }
         .copy-btn { position: absolute; top: 20px; right: 20px; font-size: 0.75rem; padding: 5px 12px; }
 
         .sidebar-ad { width: 300px; height: 600px; background: rgba(255,255,255,0.1); border: 1px dashed rgba(255,255,255,0.3); border-radius: 25px; display: flex; align-items: center; justify-content: center; color: rgba(0,0,0,0.2); font-size: 0.8rem; position: sticky; top: 20px; }
@@ -120,7 +125,11 @@
                         <button class="btn-p" id="start">Empezar</button>
                         <button class="btn-s" id="reset">Reset</button>
                     </div>
-                    <button class="btn-ex" id="extreme">CONCENTRACIÓN PROFUNDA</button>
+                    
+                    <div class="mode-buttons">
+                        <button class="btn-mode" id="btn-deep" onclick="toggleMode('deep')">CONCENTRACIÓN PROFUNDA</button>
+                        <button class="btn-mode" id="btn-prod" onclick="toggleMode('prod')">PRODUCTIVIDAD</button>
+                    </div>
                     
                     <div class="quote-container">
                         <p id="motivation-quote">"Céntrate en el proceso, no en el resultado."</p>
@@ -168,113 +177,70 @@
     <audio id="player"></audio>
 
     <script>
-        // --- CONFIGURACIÓN DE MÚSICA ---
-        const playlists = {
-            lofi: [
-                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
-            ],
-            nature: [
-                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
-                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"
-            ],
-            coffee: [
-                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3",
-                "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"
-            ]
-        };
-        let currentTrackIdx = 0;
+        // --- VARIABLES GLOBALES ---
+        let currentMode = null; // 'deep', 'prod' o null
+        let leaveTime = null;
+        let t = null, left = 25*60;
+        const clk = document.getElementById('clock'), st = document.getElementById('start');
         const player = document.getElementById('player');
         const playBtn = document.getElementById('play-pause');
 
-        function loadTrack() {
-            const genre = document.getElementById('music-menu').value;
-            player.src = playlists[genre][currentTrackIdx];
-        }
+        // --- GESTIÓN DE MODOS ---
+        function toggleMode(mode) {
+            const btnDeep = document.getElementById('btn-deep');
+            const btnProd = document.getElementById('btn-prod');
 
-        function musicToggle() {
-            if (!player.src) loadTrack();
-            if (player.paused) {
-                player.play();
-                playBtn.innerText = "⏸";
+            if (currentMode === mode) {
+                currentMode = null;
+                btnDeep.className = "btn-mode";
+                btnProd.className = "btn-mode";
+                if(document.fullscreenElement) document.exitFullscreen();
             } else {
-                player.pause();
-                playBtn.innerText = "▶";
-            }
-        }
-
-        function musicNext() {
-            currentTrackIdx = (currentTrackIdx + 1) % 2;
-            loadTrack();
-            player.play();
-            playBtn.innerText = "⏸";
-        }
-
-        function musicPrev() {
-            currentTrackIdx = (currentTrackIdx - 1 + 2) % 2;
-            loadTrack();
-            player.play();
-            playBtn.innerText = "⏸";
-        }
-
-        function vSet(v) { player.volume = v; }
-
-        // --- FRASES MOTIVADORAS ---
-        const quotes = [
-            "\"La disciplina es hacer lo que hay que hacer, incluso cuando no quieres.\"",
-            "\"Tu mente es un músculo, entrénala para enfocarse.\"",
-            "\"No te detengas hasta que te sientas orgulloso.\"",
-            "\"Pequeños pasos llevan a grandes metas.\"",
-            "\"El enfoque es el secreto de la eficiencia.\""
-        ];
-        setInterval(() => {
-            const qElem = document.getElementById('motivation-quote');
-            qElem.style.opacity = 0;
-            setTimeout(() => {
-                qElem.innerText = quotes[Math.floor(Math.random() * quotes.length)];
-                qElem.style.opacity = 0.8;
-            }, 500);
-        }, 60000);
-
-        // --- MODO EXTREMO (Anti-distracción) ---
-        let extremeActive = false;
-        const extremeBtn = document.getElementById('extreme');
-
-        extremeBtn.onclick = () => {
-            if(!extremeActive) {
-                if(confirm("¿Activar Modo Extremo? Se bloqueará la salida y habrá penalización por cambiar de pestaña.")) {
-                    extremeActive = true;
-                    extremeBtn.classList.add('active');
-                    extremeBtn.innerText = "MODO EXTREMO ACTIVO";
+                currentMode = mode;
+                btnDeep.className = mode === 'deep' ? "btn-mode active-deep" : "btn-mode";
+                btnProd.className = mode === 'prod' ? "btn-mode active-prod" : "btn-mode";
+                
+                if(mode === 'deep') {
                     document.documentElement.requestFullscreen().catch(() => {});
                 }
-            } else {
-                extremeActive = false;
-                extremeBtn.classList.remove('active');
-                extremeBtn.innerText = "MODO EXTREMO";
-                if(document.fullscreenElement) document.exitFullscreen();
             }
-        };
+        }
 
-        // Penalización por salir de la pestaña
+        // --- LÓGICA DE VISIBILIDAD (EL CORAZÓN DE TU PETICIÓN) ---
         document.addEventListener("visibilitychange", () => {
-            if (document.hidden && extremeActive) {
-                left = Math.max(0, left + 60); // Aumenta 1 minuto de golpe
-                upd();
-                document.body.style.background = "#ff7675";
-                setTimeout(() => document.body.style.background = "var(--bg-gradient)", 1000);
+            if (document.hidden) {
+                // Si el usuario sale de la pestaña y hay un modo activo
+                if (currentMode && t) {
+                    leaveTime = Date.now(); // Guardamos el momento exacto en que se fue
+                    // Pausamos el temporizador
+                    clearInterval(t);
+                    t = null;
+                    st.innerText = "Reanudar";
+                    showToast("Enfoque perdido: Temporizador pausado");
+                }
+            } else {
+                // El usuario vuelve a la pestaña
+                if (leaveTime && currentMode) {
+                    const returnTime = Date.now();
+                    const secondsAway = Math.floor((returnTime - leaveTime) / 1000);
+                    
+                    if (currentMode === 'deep') {
+                        // Modo Concentración Profunda: Sumamos el tiempo perdido
+                        left += secondsAway;
+                        upd();
+                        showToast(`Penalización: +${secondsAway}s añadidos`);
+                        document.body.style.background = "#ff7675";
+                        setTimeout(() => document.body.style.background = "var(--bg-gradient)", 1000);
+                    } else if (currentMode === 'prod') {
+                        // Modo Productividad: Solo se pausó, no hacemos nada más
+                        showToast("Sesión pausada. Haz clic en Reanudar.");
+                    }
+                    leaveTime = null;
+                }
             }
         });
 
-        // Bloqueo de cierre accidental
-        window.onbeforeunload = () => {
-            if (extremeActive) return "¡El Modo Extremo está activo! No deberías irte.";
-        };
-
         // --- TIMER ---
-        let t = null, left = 25*60;
-        const clk = document.getElementById('clock'), st = document.getElementById('start');
-
         document.getElementById('m-in').onchange = (e) => { if(!t){ left = e.target.value*60; upd(); }};
         function upd() { 
             let m=Math.floor(left/60), s=left%60; 
@@ -282,8 +248,9 @@
         }
 
         st.onclick = () => {
-            if(t) { clearInterval(t); t=null; st.innerText="Reanudar"; }
-            else {
+            if(t) { 
+                clearInterval(t); t=null; st.innerText="Reanudar"; 
+            } else {
                 st.innerText="Pausar";
                 t = setInterval(() => { 
                     if(left > 0) { left--; upd(); }
@@ -294,7 +261,31 @@
 
         document.getElementById('reset').onclick = () => {
             clearInterval(t); t=null; left=document.getElementById('m-in').value*60; upd(); st.innerText="Empezar";
+            leaveTime = null;
         };
+
+        // --- MÚSICA ---
+        const playlists = {
+            lofi: ["https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"],
+            nature: ["https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3"],
+            coffee: ["https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3"]
+        };
+        let currentTrackIdx = 0;
+
+        function loadTrack() {
+            const genre = document.getElementById('music-menu').value;
+            player.src = playlists[genre][currentTrackIdx];
+        }
+
+        function musicToggle() {
+            if (!player.src) loadTrack();
+            if (player.paused) { player.play(); playBtn.innerText = "⏸"; } 
+            else { player.pause(); playBtn.innerText = "▶"; }
+        }
+
+        function musicNext() { currentTrackIdx = (currentTrackIdx + 1) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
+        function musicPrev() { currentTrackIdx = (currentTrackIdx - 1 + 2) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
+        function vSet(v) { player.volume = v; }
 
         // --- TAREAS ---
         const todoIn = document.getElementById('todo-in'), todoList = document.getElementById('todo-list');
@@ -310,12 +301,23 @@
             }
         });
 
-        // --- NOTIFICACIÓN Y COPIAR ---
+        // --- FRASES ---
+        const quotes = ["\"La disciplina es hacer lo que hay que hacer.\"", "\"Tu mente es un músculo.\"", "\"No te detengas.\"", "\"Pequeños pasos.\"", "\"El enfoque es secreto.\""];
+        setInterval(() => {
+            const qElem = document.getElementById('motivation-quote');
+            qElem.style.opacity = 0;
+            setTimeout(() => {
+                qElem.innerText = quotes[Math.floor(Math.random() * quotes.length)];
+                qElem.style.opacity = 0.8;
+            }, 500);
+        }, 60000);
+
+        // --- UTILIDADES ---
         function showToast(msg) {
             const toast = document.getElementById('toast');
             toast.innerText = msg;
             toast.style.opacity = 1;
-            setTimeout(() => toast.style.opacity = 0, 2500);
+            setTimeout(() => toast.style.opacity = 0, 3000);
         }
 
         function copy() {
@@ -325,6 +327,8 @@
             document.execCommand('copy');
             showToast("Notas copiadas al portapapeles");
         }
+
+        window.onbeforeunload = () => { if (currentMode) return "Modo activo"; };
     </script>
 </body>
 </html>
