@@ -356,35 +356,7 @@
             toast.style.opacity = 1;
             setTimeout(() => toast.style.opacity = 0, 2000);
         }
-        // --- LÓGICA DE FRASES ALEATORIAS ---
-const frasesMotivadoras = [
-    "El descanso también es productividad.",
-    "Solo un paso a la vez, pero sin detenerte.",
-    "Tu futuro yo te agradecerá el esfuerzo de hoy.",
-    "Hazlo con calma, pero hazlo.",
-    "Pequeños progresos diarios suman grandes resultados.",
-    "Enfócate en el proceso, no solo en la meta.",
-    "La perfección es enemiga de la acción.",
-    "Confía en el proceso.",
-    "Tu mente es para tener ideas, no para guardarlas.",
-    "Cualquier avance es un avance."
-];
 
-function actualizarFrase() {
-    const fraseElemento = document.getElementById('motivation-quote');
-    // Efecto visual de desvanecimiento
-    fraseElemento.style.transition = "opacity 0.5s";
-    fraseElemento.style.opacity = 0;
-
-    setTimeout(() => {
-        const indice = Math.floor(Math.random() * frasesMotivadoras.length);
-        fraseElemento.innerText = `"${frasesMotivadoras[indice]}"`;
-        fraseElemento.style.opacity = 0.5; // Volvemos a la opacidad original (0.5)
-    }, 500);
-}
-
-// Cambiar frase cada 60000 milisegundos (1 minuto)
-setInterval(actualizarFrase, 60000);
     </script>
 </body>
 
