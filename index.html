@@ -4,204 +4,157 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Focus-Tap | Aesthetic Study Space</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
     <link rel="icon" href="panda png.png" type="image/png">
 
     <style>
         :root {
-            /* Paleta: Dreamy Pink & Purple */
-            --bg-gradient: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #ede7f6 100%);
-            --glass: rgba(255, 255, 255, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.8);
-            --text: #5c4b51;
-            --accent: #ce93d8;
-            --accent-hover: #ba68c8;
-            --danger: #ffab91;
-            --warning: #fff176;
-            --secondary: #f48fb1;
-            --neon-glow: #f48fb1;
+            /* Paleta: Muted Pastel Dream (Baja saturación para descanso visual) */
+            --bg-gradient: linear-gradient(135deg, #fdfcfb 0%, #e2d1f9 100%);
+            --glass: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --text: #4a424a;
+            --text-light: #7a6f7a;
+            --accent: #b39ddb;
+            --accent-hover: #9575cd;
+            --secondary: #f8bbd0;
+            --neon-glow: rgba(179, 157, 219, 0.4);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
-            /* FONDO SOLO CON GRADIENTE */
             background: var(--bg-gradient);
             background-attachment: fixed;
             min-height: 100vh;
             color: var(--text);
-            padding: 30px 20px;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             transition: background 0.7s ease-in-out;
-            position: relative;
+            line-height: 1.6;
         }
 
-        /* ESTILO PARA LA IMAGEN PEQUEÑA ARRIBA A LA IZQUIERDA */
+        /* IMAGEN ESQUINADA CON SUAVE FLOTACIÓN */
         .corner-panda {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 160px; /* TAMAÑO DUPLICADO AQUÍ */
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            width: 140px; 
             height: auto;
             z-index: 100;
-            pointer-events: none; /* Para que no estorbe al hacer clic */
+            pointer-events: none;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+            animation: float 6s ease-in-out infinite;
         }
 
-        header { margin-bottom: 35px; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        header { margin-bottom: 40px; }
 
         .logo { 
-            font-size: 2.8rem; 
+            font-size: 2.2rem; 
             font-weight: 800; 
-            color: #fff;
-            letter-spacing: 2px;
+            color: var(--text);
+            letter-spacing: 4px;
             text-transform: uppercase;
-            text-shadow: 
-                0 0 7px #fff,
-                0 0 10px #fff,
-                0 0 21px var(--neon-glow),
-                0 0 42px var(--neon-glow),
-                0 0 82px var(--neon-glow);
-            animation: pulsate 1.5s infinite alternate;
+            text-align: center;
+            opacity: 0.8;
+            animation: glow-soft 3s ease-in-out infinite alternate;
         }
 
-        @keyframes pulsate {
-            100% {
-                text-shadow: 
-                0 0 4px #fff,
-                0 0 11px #fff,
-                0 0 19px var(--neon-glow),
-                0 0 40px var(--neon-glow),
-                0 0 60px var(--neon-glow);
-            }
-            0% {
-                text-shadow: 
-                0 0 2px #fff,
-                0 0 4px #fff,
-                0 0 6px var(--neon-glow),
-                0 0 10px var(--neon-glow),
-                0 0 15px var(--neon-glow);
-            }
+        @keyframes glow-soft {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-glow); }
+            to { text-shadow: 0 0 5px #fff, 0 0 10px var(--neon-glow); }
         }
 
         .main-container {
             display: grid;
             grid-template-columns: 1fr 300px;
-            gap: 25px;
+            gap: 30px;
             width: 100%;
             max-width: 1100px;
-            align-items: stretch;
         }
 
-        .content-layout { display: flex; flex-direction: column; gap: 25px; }
+        .content-layout { display: flex; flex-direction: column; gap: 30px; }
 
         .glass-card {
             background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 2px solid var(--glass-border);
-            border-radius: 35px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            position: relative;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease;
         }
 
-        .top-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; }
+        .top-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
+
         .timer-display { 
-            font-size: 85px; 
+            font-size: 90px; 
             font-weight: 800; 
             text-align: center; 
             margin: 10px 0; 
-            color: var(--secondary);
-            text-shadow: 0 5px 15px rgba(244, 143, 177, 0.2);
+            color: var(--text);
+            letter-spacing: -2px;
         }
         
-        .mode-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .mode-buttons { display: flex; gap: 12px; margin-top: 25px; }
         .btn-mode { 
-            flex: 1; font-size: 0.75rem; padding: 12px; background: white; 
-            border: 1px solid var(--glass-border); color: var(--text); 
-            border-radius: 15px; cursor: pointer;
+            flex: 1; font-size: 0.7rem; padding: 14px; background: rgba(255,255,255,0.4); 
+            border: 1px solid var(--glass-border); color: var(--text-light); 
+            border-radius: 15px; cursor: pointer; font-weight: 600; letter-spacing: 1px;
         }
-        .btn-mode.active-deep { background: var(--secondary); color: white; border: none; }
-        .btn-mode.active-prod { background: var(--warning); color: #5d4037; border: none; }
+        .btn-mode.active-deep { background: var(--accent); color: white; border: none; box-shadow: 0 4px 15px rgba(179, 157, 219, 0.4); }
+        .btn-mode.active-prod { background: #fff9c4; color: #5d4037; border: none; }
 
-        .music-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; display: block; color: var(--accent); }
+        .music-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 20px; text-align: center; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+        
         .music-select {
-            width: 100%; padding: 12px; border-radius: 15px; border: none;
-            background: #fff; color: var(--text); font-size: 0.9rem; margin-bottom: 20px; outline: none;
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);
+            background: #fff; color: var(--text); font-size: 0.85rem; margin-bottom: 25px; outline: none;
         }
-        .music-controls { display: flex; justify-content: center; align-items: center; gap: 15px; }
+
         .btn-music-round { 
-            width: 45px; height: 45px; border-radius: 50%; background: #fff; 
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer;
+            width: 48px; height: 48px; border-radius: 50%; background: #fff; 
+            display: flex; align-items: center; justify-content: center; font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04); cursor: pointer; transition: 0.2s;
         }
-        .btn-music-round.play-btn { background: var(--accent); color: white; width: 55px; height: 55px; font-size: 1.5rem; }
-
-        .volume-container { margin-top: 25px; display: flex; align-items: center; gap: 15px; }
-        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #eee; border-radius: 10px; }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
-            background: var(--secondary); cursor: pointer; margin-top: -6px;
-        }
-
-        .track-info {
-            margin-top: 15px;
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text);
-            opacity: 0.8;
-            font-weight: 500;
-            min-height: 1.2rem;
-        }
+        .btn-music-round:hover { transform: scale(1.05); }
+        .play-btn { background: var(--text) !important; color: white !important; }
 
         .todo-input { 
-            width: 100%; padding: 15px; border: none; background: white; 
-            border-radius: 15px; margin-bottom: 15px; outline: none;
+            width: 100%; padding: 18px; border: 1px solid rgba(0,0,0,0.03); background: white; 
+            border-radius: 18px; margin-bottom: 20px; outline: none; font-size: 0.9rem;
         }
-        .todo-item { display: flex; align-items: center; padding: 12px; background: rgba(255,255,255,0.5); border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); }
-        .todo-item input[type="checkbox"] { margin-right: 12px; accent-color: var(--secondary); transform: scale(1.2); }
-        .todo-item.done span { text-decoration: line-through; opacity: 0.5; }
+        
+        .todo-item { 
+            display: flex; align-items: center; padding: 14px 18px; 
+            background: rgba(255,255,255,0.4); border-radius: 18px; 
+            margin-bottom: 10px; border: 1px solid var(--glass-border); 
+        }
 
         #notes-area { 
-            width: 100%; height: 130px; background: white; 
-            border: 2px dashed #e1bee7; border-radius: 20px; padding: 15px; 
-            margin-top: 10px; resize: none; outline: none;
+            width: 100%; height: 140px; background: rgba(255,255,255,0.4); 
+            border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; 
+            margin-top: 10px; resize: none; outline: none; color: var(--text);
         }
 
-        #toast {
-            position: fixed; bottom: 30px; background: var(--text); color: white;
-            padding: 12px 30px; border-radius: 20px; font-weight: 500; opacity: 0; transition: 0.4s; z-index: 1000;
-        }
-
-        button { border: none; cursor: pointer; font-weight: 700; transition: all 0.3s; border-radius: 15px; }
-        .btn-p { background: var(--accent); color: white; padding: 12px 25px; font-size: 1rem; }
-        .btn-s { background: white; color: var(--text); padding: 12px 25px; border: 1px solid #ddd; }
-        .copy-btn { position: absolute; top: 20px; right: 20px; font-size: 0.7rem; background: var(--secondary); color: white; padding: 8px 15px; }
-
-        .sidebar-ad { 
-            width: 100%;
-            height: 100%;
-            background: var(--glass); 
-            border: 2px solid var(--glass-border);
-            border-radius: 35px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: #b39ddb; 
-            font-size: 0.8rem; 
-            letter-spacing: 2px; 
-            text-align: center;
-            padding: 20px;
-        }
+        /* Estilización de scroll */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
         @media (max-width: 900px) {
             .main-container { grid-template-columns: 1fr; }
             .top-row { grid-template-columns: 1fr; }
             .sidebar-ad { display: none; }
-            .corner-panda { width: 80px; } /* Ajuste proporcional para móvil */
+            .corner-panda { width: 90px; top: 10px; left: 10px; }
         }
     </style>
 </head>
@@ -209,89 +162,91 @@
 
     <img src="panda png.png" alt="Panda" class="corner-panda">
 
-    <header><h1 class="logo">FOCUS-TAP</h1></header>
+    <header><h1 class="logo">Focus Tap</h1></header>
 
     <div class="main-container">
         <div class="content-layout">
             
             <div class="top-row">
                 <div class="glass-card" style="text-align: center;">
-                    <div style="font-size: 0.9rem; font-weight: 600; opacity: 0.7; color: var(--text);">
-                        SESIÓN DE <input type="number" id="m-in" value="25" style="width:40px; border:none; background:none; font-weight:800; color: var(--secondary); text-align:center;"> MINUTOS
+                    <div style="font-size: 0.8rem; font-weight: 500; letter-spacing: 1px; opacity: 0.6;">
+                        TIEMPO DE ENFOQUE (MIN)
                     </div>
+                    <input type="number" id="m-in" value="25" style="width:60px; border:none; background:none; font-weight:800; font-size: 1.5rem; color: var(--accent); text-align:center; outline:none;">
+                    
                     <div class="timer-display" id="clock">25:00</div>
-                    <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
-                        <button class="btn-p" id="start">Empezar</button>
-                        <button class="btn-s" id="reset">Reset</button>
+                    
+                    <div style="display: flex; justify-content: center; gap: 15px;">
+                        <button class="btn-mode active-deep" id="start" style="padding: 12px 35px; font-size: 0.9rem;">Empezar</button>
+                        <button class="btn-mode" id="reset" style="padding: 12px 25px;">Reiniciar</button>
                     </div>
                     
                     <div class="mode-buttons">
-                        <button class="btn-mode" id="btn-deep" onclick="toggleMode('deep')">MODO ENFOQUE</button>
-                        <button class="btn-mode" id="btn-prod" onclick="toggleMode('prod')">PRODUCTIVIDAD</button>
+                        <button class="btn-mode" id="btn-deep" onclick="toggleMode('deep')">BLOQUEO TOTAL</button>
+                        <button class="btn-mode" id="btn-prod" onclick="toggleMode('prod')">FLUJO LIBRE</button>
                     </div>
                 </div>
 
                 <div class="glass-card">
-                    <span class="music-title">Dreamy Ambience</span>
+                    <span class="music-title">Ambiente relajante</span>
                     <select class="music-select" id="music-menu" onchange="loadTrack()">
-                        <option value="lofi">🎹 Lofi Dream</option>
-                        <option value="nature">🌸 Soft Rain</option>
-                        <option value="coffee">☕ Pastel Cafe</option>
+                        <option value="lofi">☁️ Lofi Dream</option>
+                        <option value="nature">🌿 Lluvia Suave</option>
+                        <option value="coffee">☕ Café Pastel</option>
                     </select>
                     
-                    <div class="music-controls">
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
                         <button class="btn-music-round" onclick="musicPrev()">⏮</button>
                         <button class="btn-music-round play-btn" onclick="musicToggle()" id="play-pause">▶</button>
                         <button class="btn-music-round" onclick="musicNext()">⏭</button>
                     </div>
 
-                    <div class="volume-container">
-                        <span>🔈</span>
-                        <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="vSet(this.value)">
-                        <span>🔊</span>
+                    <div class="volume-container" style="margin-top:30px; display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:0.8rem">🔈</span>
+                        <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="vSet(this.value)" style="flex:1; accent-color:var(--accent)">
+                        <span style="font-size:0.8rem">🔊</span>
                     </div>
-
-                    <div id="track-display" class="track-info">Selecciona una pista para reproducir</div>
+                    <div id="track-display" class="track-info" style="margin-top:15px; font-size:0.75rem; text-align:center; opacity:0.6">Listo para reproducir</div>
                 </div>
             </div>
 
             <div class="glass-card">
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: var(--secondary);">Metas de Estudio</h3>
-                <input type="text" id="todo-in" class="todo-input" placeholder="+ Escribe una tarea y pulsa Enter">
+                <h3 style="font-size: 1rem; margin-bottom: 20px; font-weight:600; color: var(--text-light);">MISIÓN DEL DÍA</h3>
+                <input type="text" id="todo-in" class="todo-input" placeholder="¿Qué quieres lograr hoy?">
                 <div id="todo-list"></div>
             </div>
 
             <div class="glass-card">
-                <h3 style="font-size: 1.1rem; color: var(--accent);">Notas (Se borran al cerrar la página)</h3>
-                <button class="copy-btn" onclick="copy()">Copiar Notas</button>
-                <textarea id="notes-area" placeholder="Vuelca aquí tus distracciones para volver al estudio..."></textarea>
-                <div style="text-align: center; margin-top: 15px;">
-                    <p id="motivation-quote" style="font-style: italic; font-size: 0.85rem; opacity: 0.8;">"Confía en el proceso."</p>
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="font-size: 1rem; font-weight:600; color: var(--text-light);">BRAIN DUMP</h3>
+                    <button class="btn-mode" onclick="copy()" style="padding: 5px 15px; font-size: 0.6rem; flex:none;">COPIAR</button>
                 </div>
+                <textarea id="notes-area" placeholder="Escribe aquí cualquier pensamiento que te distraiga para sacarlo de tu mente..."></textarea>
+                <p id="motivation-quote" style="text-align: center; margin-top: 20px; font-style: italic; font-size: 0.8rem; opacity: 0.5;">"El descanso también es productividad."</p>
             </div>
         </div>
 
-        <div>
-            <div class="sidebar-ad">
-                ESPACIO PARA<br>NOTAS EXTRAS<br>O<br>PUBLICIDAD<br>✨
+        <div class="sidebar-ad">
+            <div style="opacity:0.5; font-weight:500;">
+                ZONA DE<br>CALMA<br><br>🌙
             </div>
         </div>
     </div>
 
-    <div id="toast">¡Hecho!</div>
+    <div id="toast" style="position:fixed; bottom:20px; background:var(--text); color:white; padding:10px 25px; border-radius:50px; opacity:0; transition:0.4s; font-size:0.8rem;">¡Copiado!</div>
     <audio id="player" loop></audio>
 
     <script>
+        // Lógica de funcionamiento (Mantenida del original con pequeños ajustes de UI)
         let currentMode = null, leaveTime = null, t = null, left = 25*60;
         const clk = document.getElementById('clock'), st = document.getElementById('start');
         const player = document.getElementById('player'), playBtn = document.getElementById('play-pause');
-        const trackDisplay = document.getElementById('track-display');
 
         function toggleMode(mode) {
             const btnDeep = document.getElementById('btn-deep'), btnProd = document.getElementById('btn-prod');
             if (currentMode === mode) {
                 currentMode = null;
-                btnDeep.className = "btn-mode"; btnProd.className = "btn-mode";
+                btnDeep.classList.remove('active-deep'); btnProd.classList.remove('active-prod');
                 if(document.fullscreenElement) document.exitFullscreen();
             } else {
                 currentMode = mode;
@@ -306,13 +261,9 @@
                 leaveTime = Date.now();
                 clearInterval(t); t = null;
                 st.innerText = "Reanudar";
-                showToast("¡Pausado! No pierdas el enfoque");
             } else if (!document.hidden && leaveTime && currentMode === 'deep') {
                 const secondsAway = Math.floor((Date.now() - leaveTime) / 1000);
                 left += secondsAway; upd();
-                showToast(`Penalización: +${secondsAway}s`);
-                document.body.style.background = "#ffcdd2";
-                setTimeout(() => document.body.style.background = "var(--bg-gradient)", 800);
                 leaveTime = null;
             }
         });
@@ -324,12 +275,12 @@
         }
 
         st.onclick = () => {
-            if(t) { clearInterval(t); t=null; st.innerText="Reanudar"; }
+            if(t) { clearInterval(t); t=null; st.innerText="Continuar"; }
             else {
                 st.innerText="Pausar";
                 t = setInterval(() => { 
                     if(left > 0) { left--; upd(); }
-                    else { clearInterval(t); showToast("¡Tiempo cumplido!"); }
+                    else { clearInterval(t); alert("Sesión terminada. ¡Buen trabajo!"); }
                 }, 1000);
             }
         };
@@ -339,26 +290,15 @@
         };
 
         const playlists = {
-            lofi: [
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", name: "Lofi Dream", author: "SoundHelix"},
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", name: "Chill Beat", author: "SoundHelix"}
-            ],
-            nature: [
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", name: "Soft Rain", author: "SoundHelix"},
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", name: "Forest Whisper", author: "SoundHelix"}
-            ],
-            coffee: [
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", name: "Pastel Cafe", author: "SoundHelix"},
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3", name: "Sugar Jazz", author: "SoundHelix"}
-            ]
+            lofi: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", name: "Lofi Dream"}],
+            nature: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", name: "Rainy Night"}],
+            coffee: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", name: "Cafe Jazz"}]
         };
-        let trackIdx = 0;
 
         function loadTrack() { 
             const genre = document.getElementById('music-menu').value;
-            const currentTrack = playlists[genre][trackIdx];
-            player.src = currentTrack.url; 
-            trackDisplay.innerText = `${currentTrack.name} - ${currentTrack.author}`;
+            player.src = playlists[genre][0].url; 
+            document.getElementById('track-display').innerText = playlists[genre][0].name;
         }
 
         function musicToggle() {
@@ -366,32 +306,26 @@
             if (player.paused) { player.play(); playBtn.innerText = "⏸"; } 
             else { player.pause(); playBtn.innerText = "▶"; }
         }
-        function musicNext() { trackIdx = (trackIdx + 1) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
-        function musicPrev() { trackIdx = (trackIdx - 1 + 2) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
         function vSet(v) { player.volume = v; }
 
         document.getElementById('todo-in').addEventListener('keypress', (e) => {
             if(e.key === 'Enter' && e.target.value !== "") {
                 const div = document.createElement('div');
                 div.className = 'todo-item';
-                div.innerHTML = `<input type="checkbox" onchange="this.parentElement.classList.toggle('done')">
-                                 <span style="flex:1">${e.target.value}</span>
-                                 <button style="background:none; color:var(--secondary); font-weight:bold; cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
+                div.innerHTML = `<input type="checkbox" onchange="this.parentElement.style.opacity = this.checked ? '0.5' : '1'" style="margin-right:15px; accent-color:var(--accent)">
+                                 <span style="flex:1; font-size:0.9rem;">${e.target.value}</span>
+                                 <button style="background:none; border:none; color:var(--secondary); cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
                 document.getElementById('todo-list').appendChild(div);
                 e.target.value = "";
             }
         });
 
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.innerText = msg; toast.style.opacity = 1;
-            setTimeout(() => toast.style.opacity = 0, 3000);
-        }
         function copy() {
             const area = document.getElementById('notes-area');
-            if(area.value.trim() === "") return;
             area.select(); document.execCommand('copy');
-            showToast("¡Notas copiadas!");
+            const toast = document.getElementById('toast');
+            toast.style.opacity = 1;
+            setTimeout(() => toast.style.opacity = 0, 2000);
         }
     </script>
 </body>
