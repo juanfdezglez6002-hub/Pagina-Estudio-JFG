@@ -225,125 +225,61 @@
     <audio id="player" loop></audio>
 
     <script>
-        // --- LÓGICA DE LAS FRASES ALEATORIAS ---
-        const quotes = [
-            "El descanso también es productividad.",
-            "Paso a paso, estás llegando lejos.",
-            "Tu único límite eres tú mismo.",
-            "Hazlo hoy, tu 'yo' del futuro te lo agradecerá.",
-            "Céntrate en el progreso, no en la perfección.",
-            "Cada pequeño esfuerzo cuenta.",
-            "Respira profundo, lo estás haciendo bien.",
-            "La disciplina te llevará donde la motivación no llegue."
-        ];
+    const quotes = ["El descanso también es productividad.", "Paso a paso, estás llegando lejos.", "Tu único límite eres tú mismo.", "Hazlo hoy, tu 'yo' del futuro te lo agradecerá.", "Céntrate en el progreso, no en la perfección.", "Cada pequeño esfuerzo cuenta.", "Respira profundo, lo estás haciendo bien.", "La disciplina te llevará donde la motivación no llegue."];
+    function updateQuote() { const el = document.getElementById('motivation-quote'); el.style.opacity = 0; setTimeout(() => { el.innerText = `"${quotes[Math.floor(Math.random() * quotes.length)]}"`; el.style.opacity = 0.6; }, 500); }
+    setInterval(updateQuote, 60000);
 
-        function updateQuote() {
-            const quoteElement = document.getElementById('motivation-quote');
-            // Efecto de desvanecimiento
-            quoteElement.style.opacity = 0;
-            
-            setTimeout(() => {
-                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-                quoteElement.innerText = `"${randomQuote}"`;
-                quoteElement.style.opacity = 0.6;
-            }, 500);
-        }
+    let currentMode = null, leaveTime = null, t = null, left = 25*60;
+    const clk = document.getElementById('clock'), st = document.getElementById('start'), player = document.getElementById('player'), playBtn = document.getElementById('play-pause');
 
-        // Cambiar cada 60.000 ms (1 minuto)
-        setInterval(updateQuote, 60000);
+    // --- LÓGICA DE MÚSICA CORREGIDA ---
+    const playlists = {
+        lofi: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", name: "Lofi Dream"}],
+        nature: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", name: "Rainy Night"}],
+        coffee: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", name: "Cafe Jazz"}],
+        piano: [{url: "clavier-music-relaxing-piano-music-248868.mp3", name: "Relaxing Piano"}]
+    };
+    let currentTrackIdx = 0;
 
-        // --- RESTO DE LA LÓGICA ORIGINAL ---
-        let currentMode = null, leaveTime = null, t = null, left = 25*60;
-        const clk = document.getElementById('clock'), st = document.getElementById('start');
-        const player = document.getElementById('player'), playBtn = document.getElementById('play-pause');
+    function loadTrack() {
+        const genre = document.getElementById('music-menu').value;
+        const track = playlists[genre][currentTrackIdx] || playlists[genre][0];
+        player.src = track.url;
+        document.getElementById('track-display').innerText = track.name;
+        if (!player.paused) player.play(); 
+    }
 
-        function toggleMode(mode) {
-            const btnDeep = document.getElementById('btn-deep'), btnProd = document.getElementById('btn-prod');
-            if (currentMode === mode) {
-                currentMode = null;
-                btnDeep.classList.remove('active-deep'); btnProd.classList.remove('active-prod');
-                if(document.fullscreenElement) document.exitFullscreen();
-            } else {
-                currentMode = mode;
-                btnDeep.className = mode === 'deep' ? "btn-mode active-deep" : "btn-mode";
-                btnProd.className = mode === 'prod' ? "btn-mode active-prod" : "btn-mode";
-                if(mode === 'deep') document.documentElement.requestFullscreen().catch(() => {});
-            }
-        }
+    function musicToggle() {
+        if (!player.src) loadTrack();
+        if (player.paused) { player.play().catch(e => console.log("Error: revisa el archivo mp3")); playBtn.innerText = "⏸"; } 
+        else { player.pause(); playBtn.innerText = "▶"; }
+    }
 
-        document.addEventListener("visibilitychange", () => {
-            if (document.hidden && currentMode && t) {
-                leaveTime = Date.now();
-                clearInterval(t); t = null;
-                st.innerText = "Reanudar";
-            } else if (!document.hidden && leaveTime && currentMode === 'deep') {
-                const secondsAway = Math.floor((Date.now() - leaveTime) / 1000);
-                left += secondsAway; upd();
-                leaveTime = null;
-            }
-        });
+    function musicNext() {
+        const genre = document.getElementById('music-menu').value;
+        currentTrackIdx = (currentTrackIdx + 1) % playlists[genre].length;
+        loadTrack(); player.play(); playBtn.innerText = "⏸";
+    }
 
-        document.getElementById('m-in').onchange = (e) => { if(!t){ left = e.target.value*60; upd(); }};
-        function upd() { 
-            let m=Math.floor(left/60), s=left%60; 
-            clk.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
-        }
+    function musicPrev() {
+        const genre = document.getElementById('music-menu').value;
+        currentTrackIdx = (currentTrackIdx - 1 + playlists[genre].length) % playlists[genre].length;
+        loadTrack(); player.play(); playBtn.innerText = "⏸";
+    }
 
-        st.onclick = () => {
-            if(t) { clearInterval(t); t=null; st.innerText="Continuar"; }
-            else {
-                st.innerText="Pausar";
-                t = setInterval(() => { 
-                    if(left > 0) { left--; upd(); }
-                    else { clearInterval(t); alert("Sesión terminada. ¡Buen trabajo!"); }
-                }, 1000);
-            }
-        };
-
-        document.getElementById('reset').onclick = () => {
-            clearInterval(t); t=null; left=document.getElementById('m-in').value*60; upd(); st.innerText="Empezar";
-        };
-
-        const playlists = {
-            lofi: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", name: "Lofi Dream"}],
-            nature: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", name: "Rainy Night"}],
-            coffee: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", name: "Cafe Jazz"}]
-            piano: [{url: "clavier-music-relaxing-piano-music-248868.mp3", name: "Relaxing Piano (Clavier)"}]
-        };
-
-        function loadTrack() { 
-            const genre = document.getElementById('music-menu').value;
-            player.src = playlists[genre][0].url; 
-            document.getElementById('track-display').innerText = playlists[genre][0].name;
-        }
-
-        function musicToggle() {
-            if (!player.src) loadTrack();
-            if (player.paused) { player.play(); playBtn.innerText = "⏸"; } 
-            else { player.pause(); playBtn.innerText = "▶"; }
-        }
-
-        function vSet(v) { player.volume = v; }
-
-        document.getElementById('todo-in').addEventListener('keypress', (e) => {
-            if(e.key === 'Enter' && e.target.value !== "") {
-                const div = document.createElement('div');
-                div.className = 'todo-item';
-                div.innerHTML = `<input type="checkbox" onchange="this.parentElement.style.opacity = this.checked ? '0.5' : '1'" style="margin-right:15px; accent-color:var(--accent)">
-                                 <span style="flex:1; font-size:0.9rem;">${e.target.value}</span>
-                                 <button style="background:none; border:none; color:var(--secondary); cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
-                document.getElementById('todo-list').appendChild(div);
-                e.target.value = "";
-            }
-        });
-
-        function copy() {
-            const area = document.getElementById('notes-area');
-            area.select(); document.execCommand('copy');
-            const toast = document.getElementById('toast');
-            toast.style.opacity = 1;
-            setTimeout(() => toast.style.opacity = 0, 2000);
-        }
-    </script>
+    // --- POMODORO Y OTROS ---
+    function toggleMode(mode) {
+        const btnD = document.getElementById('btn-deep'), btnP = document.getElementById('btn-prod');
+        if (currentMode === mode) { currentMode = null; btnD.classList.remove('active-deep'); btnP.classList.remove('active-prod'); if(document.fullscreenElement) document.exitFullscreen(); }
+        else { currentMode = mode; btnD.className = mode === 'deep' ? "btn-mode active-deep" : "btn-mode"; btnP.className = mode === 'prod' ? "btn-mode active-prod" : "btn-mode"; if(mode === 'deep') document.documentElement.requestFullscreen().catch(() => {}); }
+    }
+    document.getElementById('m-in').onchange = (e) => { if(!t){ left = e.target.value*60; upd(); }};
+    function upd() { let m=Math.floor(left/60), s=left%60; clk.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; }
+    st.onclick = () => { if(t) { clearInterval(t); t=null; st.innerText="Continuar"; } else { st.innerText="Pausar"; t = setInterval(() => { if(left > 0) { left--; upd(); } else { clearInterval(t); alert("Sesión terminada"); } }, 1000); } };
+    document.getElementById('reset').onclick = () => { clearInterval(t); t=null; left=document.getElementById('m-in').value*60; upd(); st.innerText="Empezar"; };
+    function vSet(v) { player.volume = v; }
+    document.getElementById('todo-in').addEventListener('keypress', (e) => { if(e.key === 'Enter' && e.target.value !== "") { const div = document.createElement('div'); div.className = 'todo-item'; div.innerHTML = `<input type="checkbox" onchange="this.parentElement.style.opacity = this.checked ? '0.5' : '1'" style="margin-right:15px;"><span style="flex:1;">${e.target.value}</span><button onclick="this.parentElement.remove()">✕</button>`; document.getElementById('todo-list').appendChild(div); e.target.value = ""; } });
+    function copy() { const area = document.getElementById('notes-area'); area.select(); document.execCommand('copy'); const toast = document.getElementById('toast'); toast.style.opacity = 1; setTimeout(() => toast.style.opacity = 0, 2000); }
+</script>
 </body>
 </html>
