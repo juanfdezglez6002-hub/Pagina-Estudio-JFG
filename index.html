@@ -1,258 +1,390 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus-Tap | Aesthetic Study Space</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
-    <link rel="icon" href="panda png.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus-Tap | Aesthetic Study Space</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="panda png.png" type="image/png">
 
-    <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #f8bbd0 0%, #e1bee7 50%, #c5cae9 100%);
-            --glass: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.8);
-            --text: #4a148c;
-            --text-light: #7e57c2;
-            --accent: #ff4081;
-            --accent-hover: #f50057;
-            --secondary: #7c4dff;
-            --neon-glow: rgba(255, 64, 129, 0.3);
-        }
+    <style>
+        :root {
+            /* Paleta: Dreamy Pink & Purple (Más saturada para dar color) */
+            --bg-gradient: linear-gradient(135deg, #f8bbd0 0%, #e1bee7 50%, #c5cae9 100%);
+            --glass: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --text: #4a148c; /* Morado oscuro para el texto */
+            --text-light: #7e57c2;
+            --accent: #ff4081; /* Rosa vibrante para acentos */
+            --accent-hover: #f50057;
+            --secondary: #7c4dff; /* Morado vibrante */
+            --neon-glow: rgba(255, 64, 129, 0.3);
+        }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
-        body {
-            background: var(--bg-gradient);
-            background-attachment: fixed;
-            min-height: 100vh;
-            color: var(--text);
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            line-height: 1.6;
-        }
+        body {
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: var(--text);
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: background 0.7s ease-in-out;
+            line-height: 1.6;
+        }
 
-        .corner-panda {
-            position: fixed;
-            top: 25px;
-            left: 25px;
-            width: 140px; 
-            z-index: 100;
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
-            animation: float 6s ease-in-out infinite;
-        }
+        /* IMAGEN ESQUINADA CON SUAVE FLOTACIÓN */
+        .corner-panda {
+            position: fixed;
+            top: 25px;
+            left: 25px;
+            width: 140px; 
+            height: auto;
+            z-index: 100;
+            pointer-events: none;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+            animation: float 6s ease-in-out infinite;
+        }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
 
-        header { margin-bottom: 40px; }
-        .logo { 
-            font-size: 2.2rem; font-weight: 800; color: #fff; letter-spacing: 4px;
-            text-transform: uppercase; text-align: center;
-            text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-glow);
-        }
+        header { margin-bottom: 40px; }
 
-        .main-container {
-            display: grid;
-            grid-template-columns: 1fr 300px;
-            gap: 30px;
-            width: 100%;
-            max-width: 1100px;
-        }
+        .logo { 
+            font-size: 2.2rem; 
+            font-weight: 800; 
+            color: #fff;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-align: center;
+            text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-glow);
+            animation: glow-soft 3s ease-in-out infinite alternate;
+        }
 
-        .content-layout { display: flex; flex-direction: column; gap: 30px; }
+        @keyframes glow-soft {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-glow); }
+            to { text-shadow: 0 0 5px #fff, 0 0 10px var(--neon-glow); }
+        }
 
-        .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 30px;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
-        }
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 300px; /* RESTAURADA LA COLUMNA DE ANUNCIOS */
+            gap: 30px;
+            width: 100%;
+            max-width: 1100px;
+        }
 
-        .top-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
+        .content-layout { display: flex; flex-direction: column; gap: 30px; }
 
-        .timer-display { 
-            font-size: 90px; font-weight: 800; text-align: center; margin: 10px 0; 
-            color: var(--secondary); text-shadow: 0 5px 15px rgba(124, 77, 255, 0.2);
-        }
-        
-        .btn-mode { 
-            flex: 1; font-size: 0.7rem; padding: 14px; background: rgba(255,255,255,0.4); 
-            border: 1px solid var(--glass-border); color: var(--text-light); 
-            border-radius: 15px; cursor: pointer; font-weight: 600; transition: 0.3s;
-        }
-        .btn-mode.active-deep { background: var(--accent); color: white; border: none; }
-        .btn-mode.active-prod { background: #fff9c4; color: #5d4037; border: none; }
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease;
+        }
 
-        .music-select {
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);
-            background: #fff; margin-bottom: 25px; outline: none;
-        }
+        .top-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
 
-        .btn-music-round { 
-            width: 48px; height: 48px; border-radius: 50%; background: #fff; 
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-        }
+        .timer-display { 
+            font-size: 90px; 
+            font-weight: 800; 
+            text-align: center; 
+            margin: 10px 0; 
+            color: var(--secondary); /* Más color en el tiempo */
+            letter-spacing: -2px;
+            text-shadow: 0 5px 15px rgba(124, 77, 255, 0.2);
+        }
+        
+        .mode-buttons { display: flex; gap: 12px; margin-top: 25px; }
+        .btn-mode { 
+            flex: 1; font-size: 0.7rem; padding: 14px; background: rgba(255,255,255,0.4); 
+            border: 1px solid var(--glass-border); color: var(--text-light); 
+            border-radius: 15px; cursor: pointer; font-weight: 600; letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-mode:hover { background: rgba(255,255,255,0.6); }
+        
+        .btn-mode.active-deep { background: var(--accent); color: white; border: none; box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4); }
+        .btn-mode.active-deep:hover { background: var(--accent-hover); }
+        
+        .btn-mode.active-prod { background: #fff9c4; color: #5d4037; border: none; }
 
-        .todo-input { 
-            width: 100%; padding: 18px; border: 1px solid rgba(0,0,0,0.03); 
-            border-radius: 18px; margin-bottom: 20px; outline: none;
-        }
-        
-        #notes-area { 
-            width: 100%; height: 140px; background: rgba(255,255,255,0.4); 
-            border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; resize: none; outline: none;
-        }
+        .music-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 20px; text-align: center; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+        
+        .music-select {
+            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);
+            background: #fff; color: var(--text); font-size: 0.85rem; margin-bottom: 25px; outline: none;
+        }
 
-        /* Estilos para la frase animada */
-        #motivation-quote {
-            text-align: center;
-            margin-top: 20px;
-            font-style: italic;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-light);
-            transition: opacity 0.8s ease-in-out;
-            min-height: 1.2rem;
-        }
+        .btn-music-round { 
+            width: 48px; height: 48px; border-radius: 50%; background: #fff; 
+            display: flex; align-items: center; justify-content: center; font-size: 1rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.04); cursor: pointer; transition: 0.2s;
+            color: var(--text);
+        }
+        .btn-music-round:hover { transform: scale(1.05); background: #fdfcfb; }
+        .play-btn { background: var(--secondary) !important; color: white !important; }
 
-        .sidebar-ad { 
-            width: 100%; height: 100%; background: var(--glass); 
-            border: 1px solid var(--glass-border); border-radius: 30px; 
-            display: flex; align-items: center; justify-content: center; 
-            color: var(--text-light); font-size: 0.8rem; text-align: center; padding: 20px;
-        }
+        .todo-input { 
+            width: 100%; padding: 18px; border: 1px solid rgba(0,0,0,0.03); background: white; 
+            border-radius: 18px; margin-bottom: 20px; outline: none; font-size: 0.9rem;
+            color: var(--text);
+        }
+        .todo-input::placeholder { color: rgba(74, 20, 140, 0.4); }
+        
+        .todo-item { 
+            display: flex; align-items: center; padding: 14px 18px; 
+            background: rgba(255,255,255,0.4); border-radius: 18px; 
+            margin-bottom: 10px; border: 1px solid var(--glass-border); 
+            color: var(--text);
+        }
 
-        @media (max-width: 900px) {
-            .main-container { grid-template-columns: 1fr; }
-            .sidebar-ad { display: none; }
-        }
-    </style>
+        #notes-area { 
+            width: 100%; height: 140px; background: rgba(255,255,255,0.4); 
+            border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; 
+            margin-top: 10px; resize: none; outline: none; color: var(--text);
+        }
+
+        /* Estilización de scroll */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--secondary); border-radius: 10px; }
+
+        /* --- SIDEBAR AJUSTADA (RESTAURADA) --- */
+        .sidebar-ad { 
+            width: 100%;
+            height: 100%;
+            background: var(--glass); 
+            border: 1px solid var(--glass-border);
+            border-radius: 30px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: var(--text-light); 
+            font-size: 0.8rem; 
+            letter-spacing: 2px; 
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; }
+            .top-row { grid-template-columns: 1fr; }
+            .sidebar-ad { display: none; }
+            .corner-panda { width: 90px; top: 10px; left: 10px; }
+        }
+    </style>
 </head>
 <body>
 
-    <img src="panda png.png" alt="Panda" class="corner-panda">
+    <img src="panda png.png" alt="Panda" class="corner-panda">
 
-    <header><h1 class="logo">Focus Tap</h1></header>
+    <header><h1 class="logo">Focus Tap</h1></header>
 
-    <div class="main-container">
-        <div class="content-layout">
-            <div class="top-row">
-                <div class="glass-card" style="text-align: center;">
-                    <div style="font-size: 0.8rem; opacity: 0.6;">TIEMPO DE ENFOQUE (MIN)</div>
-                    <input type="number" id="m-in" value="25" style="width:60px; border:none; background:none; font-weight:800; font-size: 1.5rem; color: var(--accent); text-align:center; outline:none;">
-                    <div class="timer-display" id="clock">25:00</div>
-                    <div style="display: flex; justify-content: center; gap: 15px;">
-                        <button class="btn-mode active-deep" id="start">Empezar</button>
-                        <button class="btn-mode" id="reset">Reiniciar</button>
-                    </div>
-                </div>
+    <div class="main-container">
+        <div class="content-layout">
+            
+            <div class="top-row">
+                <div class="glass-card" style="text-align: center;">
+                    <div style="font-size: 0.8rem; font-weight: 500; letter-spacing: 1px; opacity: 0.6; color: var(--text);">
+                        TIEMPO DE ENFOQUE (MIN)
+                    </div>
+                    <input type="number" id="m-in" value="25" style="width:60px; border:none; background:none; font-weight:800; font-size: 1.5rem; color: var(--accent); text-align:center; outline:none;">
+                    
+                    <div class="timer-display" id="clock">25:00</div>
+                    
+                    <div style="display: flex; justify-content: center; gap: 15px;">
+                        <button class="btn-mode active-deep" id="start" style="padding: 12px 35px; font-size: 0.9rem;">Empezar</button>
+                        <button class="btn-mode" id="reset" style="padding: 12px 25px;">Reiniciar</button>
+                    </div>
+                    
+                    <div class="mode-buttons">
+                        <button class="btn-mode" id="btn-deep" onclick="toggleMode('deep')">BLOQUEO TOTAL</button>
+                        <button class="btn-mode" id="btn-prod" onclick="toggleMode('prod')">FLUJO LIBRE</button>
+                    </div>
+                </div>
 
-                <div class="glass-card">
-                    <select class="music-select" id="music-menu" onchange="loadTrack()">
-                        <option value="lofi">☁️ Lofi Dream</option>
-                        <option value="nature">🌿 Lluvia Suave</option>
-                        <option value="coffee">☕ Café Pastel</option>
-                    </select>
-                    <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
-                        <button class="btn-music-round play-btn" onclick="musicToggle()" id="play-pause" style="background: var(--secondary); color: white;">▶</button>
-                    </div>
-                </div>
-            </div>
+                <div class="glass-card">
+                    <span class="music-title">Ambiente relajante</span>
+                    <select class="music-select" id="music-menu" onchange="loadTrack()">
+                        <option value="lofi">☁️ Lofi Dream</option>
+                        <option value="nature">🌿 Lluvia Suave</option>
+                        <option value="coffee">☕ Café Pastel</option>
+                    </select>
+                    
+                    <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+                        <button class="btn-music-round" onclick="musicPrev()">⏮</button>
+                        <button class="btn-music-round play-btn" onclick="musicToggle()" id="play-pause">▶</button>
+                        <button class="btn-music-round" onclick="musicNext()">⏭</button>
+                    </div>
 
-            <div class="glass-card">
-                <h3 style="font-size: 1rem; margin-bottom: 20px;">MISIÓN DEL DÍA</h3>
-                <input type="text" id="todo-in" class="todo-input" placeholder="¿Qué quieres lograr hoy?">
-                <div id="todo-list"></div>
-            </div>
+                    <div class="volume-container" style="margin-top:30px; display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:0.8rem">🔈</span>
+                        <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="vSet(this.value)" style="flex:1; accent-color:var(--accent)">
+                        <span style="font-size:0.8rem">🔊</span>
+                    </div>
+                    <div id="track-display" class="track-info" style="margin-top:15px; font-size:0.75rem; text-align:center; opacity:0.6; color: var(--text);">Listo para reproducir</div>
+                </div>
+            </div>
 
-            <div class="glass-card">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <h3 style="font-size: 1rem;">BRAIN DUMP</h3>
-                    <button class="btn-mode active-prod" onclick="copy()" style="padding: 5px 15px; flex:none; background:var(--secondary); color:white;">COPIAR</button>
-                </div>
-                <textarea id="notes-area" placeholder="Vuelca tus distracciones aquí..."></textarea>
-                <p id="motivation-quote">"El descanso también es productividad."</p>
-            </div>
-        </div>
+            <div class="glass-card">
+                <h3 style="font-size: 1rem; margin-bottom: 20px; font-weight:600; color: var(--text-light);">MISIÓN DEL DÍA</h3>
+                <input type="text" id="todo-in" class="todo-input" placeholder="¿Qué quieres lograr hoy?">
+                <div id="todo-list"></div>
+            </div>
 
-        <div class="sidebar-ad">ESPACIO PARA ANUNCIOS / NOTAS</div>
-    </div>
+            <div class="glass-card">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h3 style="font-size: 1rem; font-weight:600; color: var(--text-light);">BRAIN DUMP</h3>
+                    <button class="btn-mode active-prod" onclick="copy()" style="padding: 5px 15px; font-size: 0.6rem; flex:none; background:var(--secondary); color:white;">COPIAR</button>
+                </div>
+                <textarea id="notes-area" placeholder="Escribe aquí cualquier pensamiento que te distraiga para sacarlo de tu mente..."></textarea>
+                <p id="motivation-quote" style="text-align: center; margin-top: 20px; font-style: italic; font-size: 0.8rem; opacity: 0.5;">"El descanso también es productividad."</p>
+            </div>
+        </div>
 
-    <script>
+        <div>
+            <div class="sidebar-ad">
+                ESPACIO PARA<br>NOTAS EXTRAS<br>O<br>PUBLICIDAD<br>✨
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" style="position:fixed; bottom:20px; background:var(--text); color:white; padding:10px 25px; border-radius:50px; opacity:0; transition:0.4s; font-size:0.8rem;">¡Copiado!</div>
+    <audio id="player" loop></audio>
+
+    <script>
+        // Lógica de funcionamiento (Mantenida del original con pequeños ajustes de UI)
+        let currentMode = null, leaveTime = null, t = null, left = 25*60;
+        const clk = document.getElementById('clock'), st = document.getElementById('start');
+        const player = document.getElementById('player'), playBtn = document.getElementById('play-pause');
+
+        function toggleMode(mode) {
+            const btnDeep = document.getElementById('btn-deep'), btnProd = document.getElementById('btn-prod');
+            if (currentMode === mode) {
+                currentMode = null;
+                btnDeep.classList.remove('active-deep'); btnProd.classList.remove('active-prod');
+                if(document.fullscreenElement) document.exitFullscreen();
+            } else {
+                currentMode = mode;
+                btnDeep.className = mode === 'deep' ? "btn-mode active-deep" : "btn-mode";
+                btnProd.className = mode === 'prod' ? "btn-mode active-prod" : "btn-mode";
+                if(mode === 'deep') document.documentElement.requestFullscreen().catch(() => {});
+            }
+        }
+
+        document.addEventListener("visibilitychange", () => {
+            if (document.hidden && currentMode && t) {
+                leaveTime = Date.now();
+                clearInterval(t); t = null;
+                st.innerText = "Reanudar";
+            } else if (!document.hidden && leaveTime && currentMode === 'deep') {
+                const secondsAway = Math.floor((Date.now() - leaveTime) / 1000);
+                left += secondsAway; upd();
+                leaveTime = null;
+            }
+        });
+
+        document.getElementById('m-in').onchange = (e) => { if(!t){ left = e.target.value*60; upd(); }};
+        function upd() { 
+            let m=Math.floor(left/60), s=left%60; 
+            clk.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
+        }
+
+        st.onclick = () => {
+            if(t) { clearInterval(t); t=null; st.innerText="Continuar"; }
+            else {
+                st.innerText="Pausar";
+                t = setInterval(() => { 
+                    if(left > 0) { left--; upd(); }
+                    else { clearInterval(t); alert("Sesión terminada. ¡Buen trabajo!"); }
+                }, 1000);
+            }
+        };
+
+        document.getElementById('reset').onclick = () => {
+            clearInterval(t); t=null; left=document.getElementById('m-in').value*60; upd(); st.innerText="Empezar";
+        };
+
+        const playlists = {
+            lofi: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", name: "Lofi Dream"}],
+            nature: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", name: "Rainy Night"}],
+            coffee: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", name: "Cafe Jazz"}]
+        };
+
+        function loadTrack() { 
+            const genre = document.getElementById('music-menu').value;
+            player.src = playlists[genre][0].url; 
+            document.getElementById('track-display').innerText = playlists[genre][0].name;
+        }
+
+        function musicToggle() {
+            if (!player.src) loadTrack();
+            if (player.paused) { player.play(); playBtn.innerText = "⏸"; } 
+            else { player.pause(); playBtn.innerText = "▶"; }
+        }
+        function vSet(v) { player.volume = v; }
+
+        document.getElementById('todo-in').addEventListener('keypress', (e) => {
+            if(e.key === 'Enter' && e.target.value !== "") {
+                const div = document.createElement('div');
+                div.className = 'todo-item';
+                div.innerHTML = `<input type="checkbox" onchange="this.parentElement.style.opacity = this.checked ? '0.5' : '1'" style="margin-right:15px; accent-color:var(--accent)">
+                                 <span style="flex:1; font-size:0.9rem;">${e.target.value}</span>
+                                 <button style="background:none; border:none; color:var(--secondary); cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
+                document.getElementById('todo-list').appendChild(div);
+                e.target.value = "";
+            }
+        });
+
+        function copy() {
+            const area = document.getElementById('notes-area');
+            area.select(); document.execCommand('copy');
+            const toast = document.getElementById('toast');
+            toast.style.opacity = 1;
+            setTimeout(() => toast.style.opacity = 0, 2000);
+        }
         // --- LÓGICA DE FRASES ALEATORIAS ---
-        const frases = [
-            "El descanso también es productividad.",
-            "Solo un paso a la vez, pero sin detenerte.",
-            "Tu futuro yo te agradecerá el esfuerzo de hoy.",
-            "La disciplina es elegir entre lo que quieres ahora y lo que más quieres.",
-            "Hazlo con calma, pero hazlo.",
-            "Pequeños progresos diarios suman grandes resultados.",
-            "Enfócate en el proceso, no solo en la meta.",
-            "Tu mente es para tener ideas, no para guardarlas (¡anótalas!).",
-            "La perfección es enemiga de la acción.",
-            "Confía en tu capacidad de aprender."
-        ];
+const frasesMotivadoras = [
+    "El descanso también es productividad.",
+    "Solo un paso a la vez, pero sin detenerte.",
+    "Tu futuro yo te agradecerá el esfuerzo de hoy.",
+    "Hazlo con calma, pero hazlo.",
+    "Pequeños progresos diarios suman grandes resultados.",
+    "Enfócate en el proceso, no solo en la meta.",
+    "La perfección es enemiga de la acción.",
+    "Confía en el proceso.",
+    "Tu mente es para tener ideas, no para guardarlas.",
+    "Cualquier avance es un avance."
+];
 
-        function cambiarFrase() {
-            const fraseElemento = document.getElementById('motivation-quote');
-            // Efecto de desvanecimiento
-            fraseElemento.style.opacity = 0;
-            
-            setTimeout(() => {
-                const fraseAzar = frases[Math.floor(Math.random() * frases.length)];
-                fraseElemento.innerText = `"${fraseAzar}"`;
-                fraseElemento.style.opacity = 0.6; // Volvemos a la opacidad suave
-            }, 800);
-        }
+function actualizarFrase() {
+    const fraseElemento = document.getElementById('motivation-quote');
+    // Efecto visual de desvanecimiento
+    fraseElemento.style.transition = "opacity 0.5s";
+    fraseElemento.style.opacity = 0;
 
-        // Ejecutar cambio cada 60 segundos (60000 ms)
-        setInterval(cambiarFrase, 60000);
+    setTimeout(() => {
+        const indice = Math.floor(Math.random() * frasesMotivadoras.length);
+        fraseElemento.innerText = `"${frasesMotivadoras[indice]}"`;
+        fraseElemento.style.opacity = 0.5; // Volvemos a la opacidad original (0.5)
+    }, 500);
+}
 
-        // --- LÓGICA EXISTENTE ---
-        let t = null, left = 25*60;
-        const clk = document.getElementById('clock'), st = document.getElementById('start');
-        const player = document.getElementById('player');
-
-        function upd() { 
-            let m=Math.floor(left/60), s=left%60; 
-            clk.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
-        }
-
-        st.onclick = () => {
-            if(t) { clearInterval(t); t=null; st.innerText="Continuar"; }
-            else {
-                st.innerText="Pausar";
-                t = setInterval(() => { 
-                    if(left > 0) { left--; upd(); }
-                    else { clearInterval(t); alert("¡Sesión completada!"); }
-                }, 1000);
-            }
-        };
-
-        document.getElementById('reset').onclick = () => {
-            clearInterval(t); t=null; left=document.getElementById('m-in').value*60; upd(); st.innerText="Empezar";
-        };
-
-        function copy() {
-            const area = document.getElementById('notes-area');
-            area.select(); document.execCommand('copy');
-            alert("¡Copiado al portapapeles!");
-        }
-
-        // Inicialización de música básica para el ejemplo
-        function musicToggle() {
-            const btn = document.getElementById('play-pause');
-            if (btn.innerText === "▶") { btn.innerText = "⏸"; } 
-            else { btn.innerText = "▶"; }
-        }
-    </script>
+// Cambiar frase cada 60000 milisegundos (1 minuto)
+setInterval(actualizarFrase, 60000);
+    </script>
 </body>
-</html>
+
