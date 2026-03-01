@@ -11,7 +11,7 @@
         :root {
             /* Paleta: Dreamy Pink & Purple */
             --bg-gradient: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #ede7f6 100%);
-            --glass: rgba(255, 255, 255, 0.75); /* Un poco más de opacidad para legibilidad */
+            --glass: rgba(255, 255, 255, 0.75);
             --glass-border: rgba(255, 255, 255, 0.8);
             --text: #5c4b51;
             --accent: #ce93d8;
@@ -25,13 +25,9 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
         body {
-            /* CONFIGURACIÓN DE IMAGEN DE FONDO */
-            background-image: var(--bg-gradient), url('panda png.png');
-            background-size: cover;
-            background-position: center;
+            /* FONDO SOLO CON GRADIENTE */
+            background: var(--bg-gradient);
             background-attachment: fixed;
-            background-blend-mode: overlay; /* Mezcla el gradiente con la imagen */
-            
             min-height: 100vh;
             color: var(--text);
             padding: 30px 20px;
@@ -39,11 +35,22 @@
             flex-direction: column;
             align-items: center;
             transition: background 0.7s ease-in-out;
+            position: relative;
+        }
+
+        /* ESTILO PARA LA IMAGEN PEQUEÑA ARRIBA A LA IZQUIERDA */
+        .corner-panda {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 80px; /* Ajusta el tamaño aquí */
+            height: auto;
+            z-index: 100;
+            pointer-events: none; /* Para que no estorbe al hacer clic */
         }
 
         header { margin-bottom: 35px; }
 
-        /* --- EFECTO NEÓN --- */
         .logo { 
             font-size: 2.8rem; 
             font-weight: 800; 
@@ -100,7 +107,6 @@
             position: relative;
         }
 
-        /* TIMER AREA */
         .top-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; }
         .timer-display { 
             font-size: 85px; 
@@ -120,7 +126,6 @@
         .btn-mode.active-deep { background: var(--secondary); color: white; border: none; }
         .btn-mode.active-prod { background: var(--warning); color: #5d4037; border: none; }
 
-        /* MÚSICA */
         .music-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; display: block; color: var(--accent); }
         .music-select {
             width: 100%; padding: 12px; border-radius: 15px; border: none;
@@ -134,7 +139,6 @@
         }
         .btn-music-round.play-btn { background: var(--accent); color: white; width: 55px; height: 55px; font-size: 1.5rem; }
 
-        /* VOLUMEN */
         .volume-container { margin-top: 25px; display: flex; align-items: center; gap: 15px; }
         input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #eee; border-radius: 10px; }
@@ -143,7 +147,6 @@
             background: var(--secondary); cursor: pointer; margin-top: -6px;
         }
 
-        /* INFO CANCIÓN */
         .track-info {
             margin-top: 15px;
             text-align: center;
@@ -154,7 +157,6 @@
             min-height: 1.2rem;
         }
 
-        /* TODO LIST */
         .todo-input { 
             width: 100%; padding: 15px; border: none; background: white; 
             border-radius: 15px; margin-bottom: 15px; outline: none;
@@ -163,14 +165,12 @@
         .todo-item input[type="checkbox"] { margin-right: 12px; accent-color: var(--secondary); transform: scale(1.2); }
         .todo-item.done span { text-decoration: line-through; opacity: 0.5; }
 
-        /* BRAIN DUMP */
         #notes-area { 
             width: 100%; height: 130px; background: white; 
             border: 2px dashed #e1bee7; border-radius: 20px; padding: 15px; 
             margin-top: 10px; resize: none; outline: none;
         }
 
-        /* UTILIDADES */
         #toast {
             position: fixed; bottom: 30px; background: var(--text); color: white;
             padding: 12px 30px; border-radius: 20px; font-weight: 500; opacity: 0; transition: 0.4s; z-index: 1000;
@@ -181,7 +181,6 @@
         .btn-s { background: white; color: var(--text); padding: 12px 25px; border: 1px solid #ddd; }
         .copy-btn { position: absolute; top: 20px; right: 20px; font-size: 0.7rem; background: var(--secondary); color: white; padding: 8px 15px; }
 
-        /* --- SIDEBAR AJUSTADA --- */
         .sidebar-ad { 
             width: 100%;
             height: 100%;
@@ -202,10 +201,13 @@
             .main-container { grid-template-columns: 1fr; }
             .top-row { grid-template-columns: 1fr; }
             .sidebar-ad { display: none; }
+            .corner-panda { width: 50px; } /* Más pequeño en móvil */
         }
     </style>
 </head>
 <body>
+
+    <img src="panda png.png" alt="Panda" class="corner-panda">
 
     <header><h1 class="logo">FOCUS-TAP</h1></header>
 
