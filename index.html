@@ -10,9 +10,11 @@
 
     <title>Focus-Tap | Aesthetic Study Space</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap" rel="stylesheet">
 
     <link rel="icon" href="panda png.png" type="image/png">
+
+
 
     <style>
 
@@ -20,29 +22,37 @@
 
             /* Paleta: Dreamy Pink & Purple */
 
-            --bg-gradient: linear-gradient(135deg, #f8bbd0 0%, #e1bee7 50%, #c5cae9 100%);
+            --bg-gradient: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #ede7f6 100%);
 
-            --glass: rgba(255, 255, 255, 0.7);
+            --glass: rgba(255, 255, 255, 0.75);
 
             --glass-border: rgba(255, 255, 255, 0.8);
 
-            --text: #4a148c; 
+            --text: #5c4b51;
 
-            --text-light: #7e57c2;
+            --accent: #ce93d8;
 
-            --accent: #ff4081; 
+            --accent-hover: #ba68c8;
 
-            --accent-hover: #f50057;
+            --danger: #ffab91;
 
-            --secondary: #7c4dff; 
+            --warning: #fff176;
 
-            --neon-glow: rgba(255, 64, 129, 0.3);
+            --secondary: #f48fb1;
+
+            --neon-glow: #f48fb1;
 
         }
 
+
+
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
 
+
+
         body {
+
+            /* FONDO SOLO CON GRADIENTE */
 
             background: var(--bg-gradient);
 
@@ -52,7 +62,7 @@
 
             color: var(--text);
 
-            padding: 40px 20px;
+            padding: 30px 20px;
 
             display: flex;
 
@@ -62,69 +72,105 @@
 
             transition: background 0.7s ease-in-out;
 
-            line-height: 1.6;
+            position: relative;
 
         }
 
+
+
+        /* ESTILO PARA LA IMAGEN PEQUEÑA ARRIBA A LA IZQUIERDA */
+
         .corner-panda {
 
-            position: fixed;
+            position: absolute;
 
-            top: 25px;
+            top: 20px;
 
-            left: 25px;
+            left: 20px;
 
-            width: 140px; 
+            width: 160px; /* TAMAÑO DUPLICADO AQUÍ */
 
             height: auto;
 
             z-index: 100;
 
-            pointer-events: none;
-
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
-
-            animation: float 6s ease-in-out infinite;
+            pointer-events: none; /* Para que no estorbe al hacer clic */
 
         }
 
-        @keyframes float {
 
-            0%, 100% { transform: translateY(0); }
 
-            50% { transform: translateY(-10px); }
+        header { margin-bottom: 35px; }
 
-        }
 
-        header { margin-bottom: 40px; }
 
         .logo { 
 
-            font-size: 2.2rem; 
+            font-size: 2.8rem; 
 
             font-weight: 800; 
 
             color: #fff;
 
-            letter-spacing: 4px;
+            letter-spacing: 2px;
 
             text-transform: uppercase;
 
-            text-align: center;
+            text-shadow: 
 
-            text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-glow);
+                0 0 7px #fff,
 
-            animation: glow-soft 3s ease-in-out infinite alternate;
+                0 0 10px #fff,
+
+                0 0 21px var(--neon-glow),
+
+                0 0 42px var(--neon-glow),
+
+                0 0 82px var(--neon-glow);
+
+            animation: pulsate 1.5s infinite alternate;
 
         }
 
-        @keyframes glow-soft {
 
-            from { text-shadow: 0 0 10px #fff, 0 0 20px var(--neon-glow); }
 
-            to { text-shadow: 0 0 5px #fff, 0 0 10px var(--neon-glow); }
+        @keyframes pulsate {
+
+            100% {
+
+                text-shadow: 
+
+                0 0 4px #fff,
+
+                0 0 11px #fff,
+
+                0 0 19px var(--neon-glow),
+
+                0 0 40px var(--neon-glow),
+
+                0 0 60px var(--neon-glow);
+
+            }
+
+            0% {
+
+                text-shadow: 
+
+                0 0 2px #fff,
+
+                0 0 4px #fff,
+
+                0 0 6px var(--neon-glow),
+
+                0 0 10px var(--neon-glow),
+
+                0 0 15px var(--neon-glow);
+
+            }
 
         }
+
+
 
         .main-container {
 
@@ -132,41 +178,49 @@
 
             grid-template-columns: 1fr 300px;
 
-            gap: 30px;
+            gap: 25px;
 
             width: 100%;
 
             max-width: 1100px;
 
+            align-items: stretch;
+
         }
 
-        .content-layout { display: flex; flex-direction: column; gap: 30px; }
+
+
+        .content-layout { display: flex; flex-direction: column; gap: 25px; }
+
+
 
         .glass-card {
 
             background: var(--glass);
 
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(15px);
 
-            -webkit-backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(15px);
 
-            border: 1px solid var(--glass-border);
+            border: 2px solid var(--glass-border);
 
-            border-radius: 30px;
+            border-radius: 35px;
 
-            padding: 30px;
+            padding: 25px;
 
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 
-            transition: transform 0.3s ease;
+            position: relative;
 
         }
 
-        .top-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 30px; }
+
+
+        .top-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; }
 
         .timer-display { 
 
-            font-size: 90px; 
+            font-size: 85px; 
 
             font-weight: 800; 
 
@@ -176,125 +230,167 @@
 
             color: var(--secondary);
 
-            letter-spacing: -2px;
-
-            text-shadow: 0 5px 15px rgba(124, 77, 255, 0.2);
+            text-shadow: 0 5px 15px rgba(244, 143, 177, 0.2);
 
         }
 
-        .mode-buttons { display: flex; gap: 12px; margin-top: 25px; }
+
+
+        .mode-buttons { display: flex; gap: 10px; margin-top: 20px; }
 
         .btn-mode { 
 
-            flex: 1; font-size: 0.7rem; padding: 14px; background: rgba(255,255,255,0.4); 
+            flex: 1; font-size: 0.75rem; padding: 12px; background: white; 
 
-            border: 1px solid var(--glass-border); color: var(--text-light); 
+            border: 1px solid var(--glass-border); color: var(--text); 
 
-            border-radius: 15px; cursor: pointer; font-weight: 600; letter-spacing: 1px;
-
-            transition: 0.3s;
+            border-radius: 15px; cursor: pointer;
 
         }
 
-        .btn-mode:hover { background: rgba(255,255,255,0.6); }
+        .btn-mode.active-deep { background: var(--secondary); color: white; border: none; }
 
-        .btn-mode.active-deep { background: var(--accent); color: white; border: none; box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4); }
+        .btn-mode.active-prod { background: var(--warning); color: #5d4037; border: none; }
 
-        .btn-mode.active-prod { background: #fff9c4; color: #5d4037; border: none; }
 
-        .music-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 20px; text-align: center; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+
+        .music-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; display: block; color: var(--accent); }
 
         .music-select {
 
-            width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05);
+            width: 100%; padding: 12px; border-radius: 15px; border: none;
 
-            background: #fff; color: var(--text); font-size: 0.85rem; margin-bottom: 25px; outline: none;
+            background: #fff; color: var(--text); font-size: 0.9rem; margin-bottom: 20px; outline: none;
 
         }
+
+        .music-controls { display: flex; justify-content: center; align-items: center; gap: 15px; }
 
         .btn-music-round { 
 
-            width: 48px; height: 48px; border-radius: 50%; background: #fff; 
+            width: 45px; height: 45px; border-radius: 50%; background: #fff; 
 
-            display: flex; align-items: center; justify-content: center; font-size: 1rem;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.04); cursor: pointer; transition: 0.2s;
-
-            color: var(--text);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer;
 
         }
 
-        .play-btn { background: var(--secondary) !important; color: white !important; }
+        .btn-music-round.play-btn { background: var(--accent); color: white; width: 55px; height: 55px; font-size: 1.5rem; }
+
+
+
+        .volume-container { margin-top: 25px; display: flex; align-items: center; gap: 15px; }
+
+        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #eee; border-radius: 10px; }
+
+        input[type=range]::-webkit-slider-thumb {
+
+            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
+
+            background: var(--secondary); cursor: pointer; margin-top: -6px;
+
+        }
+
+
+
+        .track-info {
+
+            margin-top: 15px;
+
+            text-align: center;
+
+            font-size: 0.8rem;
+
+            color: var(--text);
+
+            opacity: 0.8;
+
+            font-weight: 500;
+
+            min-height: 1.2rem;
+
+        }
+
+
 
         .todo-input { 
 
-            width: 100%; padding: 18px; border: 1px solid rgba(0,0,0,0.03); background: white; 
+            width: 100%; padding: 15px; border: none; background: white; 
 
-            border-radius: 18px; margin-bottom: 20px; outline: none; font-size: 0.9rem;
-
-            color: var(--text);
+            border-radius: 15px; margin-bottom: 15px; outline: none;
 
         }
 
-        .todo-item { 
+        .todo-item { display: flex; align-items: center; padding: 12px; background: rgba(255,255,255,0.5); border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); }
 
-            display: flex; align-items: center; padding: 14px 18px; 
+        .todo-item input[type="checkbox"] { margin-right: 12px; accent-color: var(--secondary); transform: scale(1.2); }
 
-            background: rgba(255,255,255,0.4); border-radius: 18px; 
+        .todo-item.done span { text-decoration: line-through; opacity: 0.5; }
 
-            margin-bottom: 10px; border: 1px solid var(--glass-border); 
 
-            color: var(--text);
-
-        }
 
         #notes-area { 
 
-            width: 100%; height: 140px; background: rgba(255,255,255,0.4); 
+            width: 100%; height: 130px; background: white; 
 
-            border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; 
+            border: 2px dashed #e1bee7; border-radius: 20px; padding: 15px; 
 
-            margin-top: 10px; resize: none; outline: none; color: var(--text);
+            margin-top: 10px; resize: none; outline: none;
+
+        }
+
+
+
+        #toast {
+
+            position: fixed; bottom: 30px; background: var(--text); color: white;
+
+            padding: 12px 30px; border-radius: 20px; font-weight: 500; opacity: 0; transition: 0.4s; z-index: 1000;
 
         }
 
 
 
-        /* ESTILO PARA LA CITA MOTIVADORA */
+        button { border: none; cursor: pointer; font-weight: 700; transition: all 0.3s; border-radius: 15px; }
 
-        #motivation-quote {
+        .btn-p { background: var(--accent); color: white; padding: 12px 25px; font-size: 1rem; }
 
-            text-align: center; 
+        .btn-s { background: white; color: var(--text); padding: 12px 25px; border: 1px solid #ddd; }
 
-            margin-top: 20px; 
-
-            font-style: italic; 
-
-            font-size: 0.9rem; 
-
-            opacity: 0.6;
-
-            transition: opacity 0.5s ease-in-out; /* Transición suave */
-
-            min-height: 1.2em;
-
-        }
+        .copy-btn { position: absolute; top: 20px; right: 20px; font-size: 0.7rem; background: var(--secondary); color: white; padding: 8px 15px; }
 
 
 
         .sidebar-ad { 
 
-            width: 100%; height: 100%; background: var(--glass); 
+            width: 100%;
 
-            border: 1px solid var(--glass-border); border-radius: 30px; 
+            height: 100%;
 
-            display: flex; align-items: center; justify-content: center; 
+            background: var(--glass); 
 
-            color: var(--text-light); font-size: 0.8rem; letter-spacing: 2px; 
+            border: 2px solid var(--glass-border);
 
-            text-align: center; padding: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.03);
+            border-radius: 35px; 
 
-            text-transform: uppercase;
+            display: flex; 
+
+            align-items: center; 
+
+            justify-content: center; 
+
+            color: #b39ddb; 
+
+            font-size: 0.8rem; 
+
+            letter-spacing: 2px; 
+
+            text-align: center;
+
+            padding: 20px;
 
         }
 
@@ -308,6 +404,8 @@
 
             .sidebar-ad { display: none; }
 
+            .corner-panda { width: 80px; } /* Ajuste proporcional para móvil */
+
         }
 
     </style>
@@ -320,7 +418,9 @@
 
     <img src="panda png.png" alt="Panda" class="corner-panda">
 
-    <header><h1 class="logo">Focus Tap</h1></header>
+
+
+    <header><h1 class="logo">FOCUS-TAP</h1></header>
 
 
 
@@ -328,29 +428,35 @@
 
         <div class="content-layout">
 
+
+
             <div class="top-row">
 
                 <div class="glass-card" style="text-align: center;">
 
-                    <div style="font-size: 0.8rem; font-weight: 500; letter-spacing: 1px; opacity: 0.6; color: var(--text);">TIEMPO DE ENFOQUE (MIN)</div>
+                    <div style="font-size: 0.9rem; font-weight: 600; opacity: 0.7; color: var(--text);">
 
-                    <input type="number" id="m-in" value="25" style="width:60px; border:none; background:none; font-weight:800; font-size: 1.5rem; color: var(--accent); text-align:center; outline:none;">
-
-                    <div class="timer-display" id="clock">25:00</div>
-
-                    <div style="display: flex; justify-content: center; gap: 15px;">
-
-                        <button class="btn-mode active-deep" id="start" style="padding: 12px 35px; font-size: 0.9rem;">Empezar</button>
-
-                        <button class="btn-mode" id="reset" style="padding: 12px 25px;">Reiniciar</button>
+                        SESIÓN DE <input type="number" id="m-in" value="25" style="width:40px; border:none; background:none; font-weight:800; color: var(--secondary); text-align:center;"> MINUTOS
 
                     </div>
 
+                    <div class="timer-display" id="clock">25:00</div>
+
+                    <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
+
+                        <button class="btn-p" id="start">Empezar</button>
+
+                        <button class="btn-s" id="reset">Reset</button>
+
+                    </div>
+
+
+
                     <div class="mode-buttons">
 
-                        <button class="btn-mode" id="btn-deep" onclick="toggleMode('deep')">BLOQUEO TOTAL</button>
+                        <button class="btn-mode" id="btn-deep" onclick="toggleMode('deep')">MODO ENFOQUE</button>
 
-                        <button class="btn-mode" id="btn-prod" onclick="toggleMode('prod')">FLUJO LIBRE</button>
+                        <button class="btn-mode" id="btn-prod" onclick="toggleMode('prod')">PRODUCTIVIDAD</button>
 
                     </div>
 
@@ -360,22 +466,21 @@
 
                 <div class="glass-card">
 
-                    <span class="music-title">Ambiente relajante</span>
+                    <span class="music-title">Dreamy Ambience</span>
 
                     <select class="music-select" id="music-menu" onchange="loadTrack()">
 
-                        <option value="lofi">☁️ Lofi Dream</option>
+                        <option value="lofi">🎹 Lofi Dream</option>
 
-                        <option value="nature">🌿 Lluvia Suave</option>
+                        <option value="nature">🌸 Soft Rain</option>
 
-
-                        <option value="piano"> 🎹​ Piano</option>
-
-                        <option value="coffee">☕ Café Pastel</option>
+                        <option value="coffee">☕ Pastel Cafe</option>
 
                     </select>
 
-                    <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+
+
+                    <div class="music-controls">
 
                         <button class="btn-music-round" onclick="musicPrev()">⏮</button>
 
@@ -385,17 +490,21 @@
 
                     </div>
 
-                    <div class="volume-container" style="margin-top:30px; display:flex; align-items:center; gap:10px;">
+
+
+                    <div class="volume-container">
 
                         <span>🔈</span>
 
-                        <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="vSet(this.value)" style="flex:1; accent-color:var(--accent)">
+                        <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="vSet(this.value)">
 
                         <span>🔊</span>
 
                     </div>
 
-                    <div id="track-display" class="track-info" style="margin-top:15px; font-size:0.75rem; text-align:center; opacity:0.6; color: var(--text);">Listo para reproducir</div>
+
+
+                    <div id="track-display" class="track-info">Selecciona una pista para reproducir</div>
 
                 </div>
 
@@ -405,9 +514,9 @@
 
             <div class="glass-card">
 
-                <h3 style="font-size: 1rem; margin-bottom: 20px; font-weight:600; color: var(--text-light);">MISIÓN DEL DÍA</h3>
+                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: var(--secondary);">Metas de Estudio</h3>
 
-                <input type="text" id="todo-in" class="todo-input" placeholder="¿Qué quieres lograr hoy?">
+                <input type="text" id="todo-in" class="todo-input" placeholder="+ Escribe una tarea y pulsa Enter">
 
                 <div id="todo-list"></div>
 
@@ -417,17 +526,18 @@
 
             <div class="glass-card">
 
-                <div style="display:flex; justify-content:space-between; align-items:center;">
 
-                    <h3 style="font-size: 1rem; font-weight:600; color: var(--text-light);">BRAIN DUMP</h3>
+                <h3 style="font-size: 1.1rem; color: var(--accent);">Notas (Se borran al cerrar la página)</h3>
 
-                    <button class="btn-mode active-prod" onclick="copy()" style="padding: 5px 15px; font-size: 0.6rem; flex:none; background:var(--secondary); color:white;">COPIAR</button>
+                <button class="copy-btn" onclick="copy()">Copiar Notas</button>
+
+                <textarea id="notes-area" placeholder="Vuelca aquí tus distracciones para volver al estudio..."></textarea>
+
+                <div style="text-align: center; margin-top: 15px;">
+
+                    <p id="motivation-quote" style="font-style: italic; font-size: 0.85rem; opacity: 0.8;">"Confía en el proceso."</p>
 
                 </div>
-
-                <textarea id="notes-area" placeholder="Escribe aquí cualquier pensamiento que te distraiga..."></textarea>
-
-                <p id="motivation-quote">"El descanso también es productividad."</p>
 
             </div>
 
@@ -437,7 +547,11 @@
 
         <div>
 
-            <div class="sidebar-ad">ESPACIO PARA<br>NOTAS EXTRAS<br>O<br>PUBLICIDAD<br>✨</div>
+            <div class="sidebar-ad">
+
+                ESPACIO PARA<br>NOTAS EXTRAS<br>O<br>PUBLICIDAD<br>✨
+
+            </div>
 
         </div>
 
@@ -445,7 +559,7 @@
 
 
 
-    <div id="toast" style="position:fixed; bottom:20px; background:var(--text); color:white; padding:10px 25px; border-radius:50px; opacity:0; transition:0.4s; font-size:0.8rem;">¡Copiado!</div>
+    <div id="toast">¡Hecho!</div>
 
     <audio id="player" loop></audio>
 
@@ -453,67 +567,13 @@
 
     <script>
 
-        // --- LÓGICA DE LAS FRASES ALEATORIAS ---
-
-        const quotes = [
-
-            "El descanso también es productividad.",
-
-            "Paso a paso, estás llegando lejos.",
-
-            "Tu único límite eres tú mismo.",
-
-            "Hazlo hoy, tu 'yo' del futuro te lo agradecerá.",
-
-            "Céntrate en el progreso, no en la perfección.",
-
-            "Cada pequeño esfuerzo cuenta.",
-
-            "Respira profundo, lo estás haciendo bien.",
-
-            "La disciplina te llevará donde la motivación no llegue."
-
-        ];
-
-
-
-        function updateQuote() {
-
-            const quoteElement = document.getElementById('motivation-quote');
-
-            // Efecto de desvanecimiento
-
-            quoteElement.style.opacity = 0;
-
-
-
-            setTimeout(() => {
-
-                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-
-                quoteElement.innerText = `"${randomQuote}"`;
-
-                quoteElement.style.opacity = 0.6;
-
-            }, 500);
-
-        }
-
-
-
-        // Cambiar cada 60.000 ms (1 minuto)
-
-        setInterval(updateQuote, 60000);
-
-
-
-        // --- RESTO DE LA LÓGICA ORIGINAL ---
-
         let currentMode = null, leaveTime = null, t = null, left = 25*60;
 
         const clk = document.getElementById('clock'), st = document.getElementById('start');
 
         const player = document.getElementById('player'), playBtn = document.getElementById('play-pause');
+
+        const trackDisplay = document.getElementById('track-display');
 
 
 
@@ -525,7 +585,7 @@
 
                 currentMode = null;
 
-                btnDeep.classList.remove('active-deep'); btnProd.classList.remove('active-prod');
+                btnDeep.className = "btn-mode"; btnProd.className = "btn-mode";
 
                 if(document.fullscreenElement) document.exitFullscreen();
 
@@ -555,11 +615,19 @@
 
                 st.innerText = "Reanudar";
 
+                showToast("¡Pausado! No pierdas el enfoque");
+
             } else if (!document.hidden && leaveTime && currentMode === 'deep') {
 
                 const secondsAway = Math.floor((Date.now() - leaveTime) / 1000);
 
                 left += secondsAway; upd();
+
+                showToast(`Penalización: +${secondsAway}s`);
+
+                document.body.style.background = "#ffcdd2";
+
+                setTimeout(() => document.body.style.background = "var(--bg-gradient)", 800);
 
                 leaveTime = null;
 
@@ -583,7 +651,7 @@
 
         st.onclick = () => {
 
-            if(t) { clearInterval(t); t=null; st.innerText="Continuar"; }
+            if(t) { clearInterval(t); t=null; st.innerText="Reanudar"; }
 
             else {
 
@@ -593,7 +661,7 @@
 
                     if(left > 0) { left--; upd(); }
 
-                    else { clearInterval(t); alert("Sesión terminada. ¡Buen trabajo!"); }
+                    else { clearInterval(t); showToast("¡Tiempo cumplido!"); }
 
                 }, 1000);
 
@@ -613,16 +681,33 @@
 
         const playlists = {
 
-            lofi: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", name: "Lofi Dream"}],
+            lofi: [
 
-            nature: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", name: "Rainy Night"}],
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", name: "Lofi Dream", author: "SoundHelix"},
 
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", name: "Chill Beat", author: "SoundHelix"}
 
-            piano: [{url:"clavier-music-relaxing-piano-music-248868.mp3",name:"Relaxing Piano Music"}]
+            ],
 
-            coffee: [{url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", name: "Cafe Jazz"}]
+            nature: [
+
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", name: "Soft Rain", author: "SoundHelix"},
+
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", name: "Forest Whisper", author: "SoundHelix"}
+
+            ],
+
+            coffee: [
+
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", name: "Pastel Cafe", author: "SoundHelix"},
+
+                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3", name: "Sugar Jazz", author: "SoundHelix"}
+
+            ]
 
         };
+
+        let trackIdx = 0;
 
 
 
@@ -630,9 +715,11 @@
 
             const genre = document.getElementById('music-menu').value;
 
-            player.src = playlists[genre][0].url; 
+            const currentTrack = playlists[genre][trackIdx];
 
-            document.getElementById('track-display').innerText = playlists[genre][0].name;
+            player.src = currentTrack.url; 
+
+            trackDisplay.innerText = `${currentTrack.name} - ${currentTrack.author}`;
 
         }
 
@@ -648,7 +735,9 @@
 
         }
 
+        function musicNext() { trackIdx = (trackIdx + 1) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
 
+        function musicPrev() { trackIdx = (trackIdx - 1 + 2) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
 
         function vSet(v) { player.volume = v; }
 
@@ -662,11 +751,11 @@
 
                 div.className = 'todo-item';
 
-                div.innerHTML = `<input type="checkbox" onchange="this.parentElement.style.opacity = this.checked ? '0.5' : '1'" style="margin-right:15px; accent-color:var(--accent)">
+                div.innerHTML = `<input type="checkbox" onchange="this.parentElement.classList.toggle('done')">
 
-                                 <span style="flex:1; font-size:0.9rem;">${e.target.value}</span>
+                                 <span style="flex:1">${e.target.value}</span>
 
-                                 <button style="background:none; border:none; color:var(--secondary); cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
+                                 <button style="background:none; color:var(--secondary); font-weight:bold; cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
 
                 document.getElementById('todo-list').appendChild(div);
 
@@ -678,17 +767,25 @@
 
 
 
+        function showToast(msg) {
+
+            const toast = document.getElementById('toast');
+
+            toast.innerText = msg; toast.style.opacity = 1;
+
+            setTimeout(() => toast.style.opacity = 0, 3000);
+
+        }
+
         function copy() {
 
             const area = document.getElementById('notes-area');
 
+            if(area.value.trim() === "") return;
+
             area.select(); document.execCommand('copy');
 
-            const toast = document.getElementById('toast');
-
-            toast.style.opacity = 1;
-
-            setTimeout(() => toast.style.opacity = 0, 2000);
+            showToast("¡Notas copiadas!");
 
         }
 
