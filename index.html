@@ -16,400 +16,200 @@
 
 
 
-    <style>
-
-        :root {
-
-            /* Paleta: Dreamy Pink & Purple */
-
-            --bg-gradient: linear-gradient(135deg, #fce4ec 0%, #f3e5f5 50%, #ede7f6 100%);
-
-            --glass: rgba(255, 255, 255, 0.75);
-
-            --glass-border: rgba(255, 255, 255, 0.8);
-
-            --text: #5c4b51;
-
-            --accent: #ce93d8;
-
-            --accent-hover: #ba68c8;
-
-            --danger: #ffab91;
-
-            --warning: #fff176;
-
-            --secondary: #f48fb1;
-
-            --neon-glow: #f48fb1;
-
-        }
-
-
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-
-
-
-        body {
-
-            /* FONDO SOLO CON GRADIENTE */
-
-            background: var(--bg-gradient);
-
-            background-attachment: fixed;
-
-            min-height: 100vh;
-
-            color: var(--text);
-
-            padding: 30px 20px;
-
-            display: flex;
-
-            flex-direction: column;
-
-            align-items: center;
-
-            transition: background 0.7s ease-in-out;
-
-            position: relative;
-
-        }
-
-
-
-        /* ESTILO PARA LA IMAGEN PEQUEÑA ARRIBA A LA IZQUIERDA */
-
-        .corner-panda {
-
-            position: absolute;
-
-            top: 20px;
-
-            left: 20px;
-
-            width: 160px; /* TAMAÑO DUPLICADO AQUÍ */
-
-            height: auto;
-
-            z-index: 100;
-
-            pointer-events: none; /* Para que no estorbe al hacer clic */
-
-        }
-
-
-
-        header { margin-bottom: 35px; }
-
-
-
-        .logo { 
-
-            font-size: 2.8rem; 
-
-            font-weight: 800; 
-
-            color: #fff;
-
-            letter-spacing: 2px;
-
-            text-transform: uppercase;
-
-            text-shadow: 
-
-                0 0 7px #fff,
-
-                0 0 10px #fff,
-
-                0 0 21px var(--neon-glow),
-
-                0 0 42px var(--neon-glow),
-
-                0 0 82px var(--neon-glow);
-
-            animation: pulsate 1.5s infinite alternate;
-
-        }
-
-
-
-        @keyframes pulsate {
-
-            100% {
-
-                text-shadow: 
-
-                0 0 4px #fff,
-
-                0 0 11px #fff,
-
-                0 0 19px var(--neon-glow),
-
-                0 0 40px var(--neon-glow),
-
-                0 0 60px var(--neon-glow);
-
-            }
-
-            0% {
-
-                text-shadow: 
-
-                0 0 2px #fff,
-
-                0 0 4px #fff,
-
-                0 0 6px var(--neon-glow),
-
-                0 0 10px var(--neon-glow),
-
-                0 0 15px var(--neon-glow);
-
-            }
-
-        }
-
-
-
-        .main-container {
-
-            display: grid;
-
-            grid-template-columns: 1fr 300px;
-
-            gap: 25px;
-
-            width: 100%;
-
-            max-width: 1100px;
-
-            align-items: stretch;
-
-        }
-
-
-
-        .content-layout { display: flex; flex-direction: column; gap: 25px; }
-
-
-
-        .glass-card {
-
-            background: var(--glass);
-
-            backdrop-filter: blur(15px);
-
-            -webkit-backdrop-filter: blur(15px);
-
-            border: 2px solid var(--glass-border);
-
-            border-radius: 35px;
-
-            padding: 25px;
-
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-
-            position: relative;
-
-        }
-
-
-
-        .top-row { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; }
-
-        .timer-display { 
-
-            font-size: 85px; 
-
-            font-weight: 800; 
-
-            text-align: center; 
-
-            margin: 10px 0; 
-
-            color: var(--secondary);
-
-            text-shadow: 0 5px 15px rgba(244, 143, 177, 0.2);
-
-        }
-
-
-
-        .mode-buttons { display: flex; gap: 10px; margin-top: 20px; }
-
-        .btn-mode { 
-
-            flex: 1; font-size: 0.75rem; padding: 12px; background: white; 
-
-            border: 1px solid var(--glass-border); color: var(--text); 
-
-            border-radius: 15px; cursor: pointer;
-
-        }
-
-        .btn-mode.active-deep { background: var(--secondary); color: white; border: none; }
-
-        .btn-mode.active-prod { background: var(--warning); color: #5d4037; border: none; }
-
-
-
-        .music-title { font-weight: 700; font-size: 1.1rem; margin-bottom: 15px; display: block; color: var(--accent); }
-
-        .music-select {
-
-            width: 100%; padding: 12px; border-radius: 15px; border: none;
-
-            background: #fff; color: var(--text); font-size: 0.9rem; margin-bottom: 20px; outline: none;
-
-        }
-
-        .music-controls { display: flex; justify-content: center; align-items: center; gap: 15px; }
-
-        .btn-music-round { 
-
-            width: 45px; height: 45px; border-radius: 50%; background: #fff; 
-
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05); cursor: pointer;
-
-        }
-
-        .btn-music-round.play-btn { background: var(--accent); color: white; width: 55px; height: 55px; font-size: 1.5rem; }
-
-
-
-        .volume-container { margin-top: 25px; display: flex; align-items: center; gap: 15px; }
-
-        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
-
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #eee; border-radius: 10px; }
-
-        input[type=range]::-webkit-slider-thumb {
-
-            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
-
-            background: var(--secondary); cursor: pointer; margin-top: -6px;
-
-        }
-
-
-
-        .track-info {
-
-            margin-top: 15px;
-
-            text-align: center;
-
-            font-size: 0.8rem;
-
-            color: var(--text);
-
-            opacity: 0.8;
-
-            font-weight: 500;
-
-            min-height: 1.2rem;
-
-        }
-
-
-
-        .todo-input { 
-
-            width: 100%; padding: 15px; border: none; background: white; 
-
-            border-radius: 15px; margin-bottom: 15px; outline: none;
-
-        }
-
-        .todo-item { display: flex; align-items: center; padding: 12px; background: rgba(255,255,255,0.5); border-radius: 15px; margin-bottom: 8px; border: 1px solid var(--glass-border); }
-
-        .todo-item input[type="checkbox"] { margin-right: 12px; accent-color: var(--secondary); transform: scale(1.2); }
-
-        .todo-item.done span { text-decoration: line-through; opacity: 0.5; }
-
-
-
-        #notes-area { 
-
-            width: 100%; height: 130px; background: white; 
-
-            border: 2px dashed #e1bee7; border-radius: 20px; padding: 15px; 
-
-            margin-top: 10px; resize: none; outline: none;
-
-        }
-
-
-
-        #toast {
-
-            position: fixed; bottom: 30px; background: var(--text); color: white;
-
-            padding: 12px 30px; border-radius: 20px; font-weight: 500; opacity: 0; transition: 0.4s; z-index: 1000;
-
-        }
-
-
-
-        button { border: none; cursor: pointer; font-weight: 700; transition: all 0.3s; border-radius: 15px; }
-
-        .btn-p { background: var(--accent); color: white; padding: 12px 25px; font-size: 1rem; }
-
-        .btn-s { background: white; color: var(--text); padding: 12px 25px; border: 1px solid #ddd; }
-
-        .copy-btn { position: absolute; top: 20px; right: 20px; font-size: 0.7rem; background: var(--secondary); color: white; padding: 8px 15px; }
-
-
-
-        .sidebar-ad { 
-
-            width: 100%;
-
-            height: 100%;
-
-            background: var(--glass); 
-
-            border: 2px solid var(--glass-border);
-
-            border-radius: 35px; 
-
-            display: flex; 
-
-            align-items: center; 
-
-            justify-content: center; 
-
-            color: #b39ddb; 
-
-            font-size: 0.8rem; 
-
-            letter-spacing: 2px; 
-
-            text-align: center;
-
-            padding: 20px;
-
-        }
-
-
-
-        @media (max-width: 900px) {
-
-            .main-container { grid-template-columns: 1fr; }
-
-            .top-row { grid-template-columns: 1fr; }
-
-            .sidebar-ad { display: none; }
-
-            .corner-panda { width: 80px; } /* Ajuste proporcional para móvil */
-
-        }
-
-    </style>
-
+  <style>
+    :root {
+        /* Paleta Relajante: Muted Nature & Sky */
+        --bg-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+        --glass: rgba(255, 255, 255, 0.55);
+        --glass-border: rgba(255, 255, 255, 0.8);
+        --text: #455a64; /* Gris azulado oscuro para lectura suave */
+        --text-light: #78909c;
+        --accent: #9fa8da; /* Lavanda suave */
+        --secondary: #80cbc4; /* Menta relajante */
+        --warning: #ffe082; /* Crema suave */
+        --shadow: rgba(149, 157, 165, 0.1);
+    }
+
+    * { 
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
+        font-family: 'Inter', -apple-system, sans-serif; 
+    }
+
+    body {
+        background: var(--bg-gradient);
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: var(--text);
+        padding: 40px 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: background 1s ease;
+    }
+
+    /* Animación sutil para el Panda */
+    .corner-panda {
+        position: fixed;
+        top: 30px;
+        left: 30px;
+        width: 110px;
+        z-index: 100;
+        filter: drop-shadow(0 10px 15px rgba(0,0,0,0.03));
+        animation: breath 8s ease-in-out infinite;
+        opacity: 0.8;
+    }
+
+    @keyframes breath {
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-5px) scale(1.02); }
+    }
+
+    header { margin-bottom: 50px; }
+    
+    .logo { 
+        font-size: 1.8rem; 
+        font-weight: 300; 
+        color: var(--text);
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        opacity: 0.6;
+    }
+
+    .main-container {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 35px;
+        width: 100%;
+        max-width: 1150px;
+    }
+
+    .content-layout { display: flex; flex-direction: column; gap: 35px; }
+
+    .glass-card {
+        background: var(--glass);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid var(--glass-border);
+        border-radius: 40px; /* Bordes muy suaves */
+        padding: 35px;
+        box-shadow: 0 20px 40px var(--shadow);
+        position: relative;
+        transition: transform 0.3s ease;
+    }
+
+    .top-row { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 35px; }
+
+    /* Reloj con estilo minimalista */
+    .timer-display { 
+        font-size: 95px; 
+        font-weight: 200; /* Más fino para no cansar */
+        text-align: center; 
+        margin: 15px 0; 
+        color: var(--text);
+        letter-spacing: -3px;
+    }
+
+    .mode-buttons { display: flex; gap: 12px; margin-top: 25px; }
+    
+    .btn-mode { 
+        flex: 1; 
+        font-size: 0.7rem; 
+        padding: 14px; 
+        background: rgba(255,255,255,0.3); 
+        border: 1px solid var(--glass-border); 
+        color: var(--text-light); 
+        border-radius: 20px; 
+        letter-spacing: 1px;
+    }
+
+    .btn-mode.active-deep { background: var(--accent); color: white; border: none; }
+    .btn-mode.active-prod { background: var(--secondary); color: white; border: none; }
+
+    /* Música y controles */
+    .music-title { font-weight: 500; font-size: 0.9rem; margin-bottom: 20px; color: var(--text-light); text-align: center; display: block; text-transform: uppercase; letter-spacing: 2px; }
+    
+    .music-select {
+        width: 100%; padding: 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.5);
+        background: rgba(255,255,255,0.4); color: var(--text); font-size: 0.85rem; margin-bottom: 25px; outline: none;
+        cursor: pointer;
+    }
+
+    .music-controls { display: flex; justify-content: center; align-items: center; gap: 20px; }
+    
+    .btn-music-round { 
+        width: 50px; height: 50px; border-radius: 50%; background: white; 
+        display: flex; align-items: center; justify-content: center; font-size: 1rem;
+        box-shadow: 0 8px 15px var(--shadow); color: var(--text-light);
+    }
+
+    .btn-music-round.play-btn { background: var(--text); color: white; font-size: 1.2rem; }
+
+    /* Volumen personalizado */
+    .volume-container { margin-top: 30px; display: flex; align-items: center; gap: 15px; padding: 0 10px; }
+    input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+    input[type=range]::-webkit-slider-runnable-track { height: 4px; background: rgba(0,0,0,0.05); border-radius: 10px; }
+    input[type=range]::-webkit-slider-thumb {
+        -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+        background: var(--text-light); cursor: pointer; margin-top: -6px; border: 2px solid white;
+    }
+
+    .track-info { margin-top: 20px; text-align: center; font-size: 0.75rem; color: var(--text-light); font-style: italic; }
+
+    /* Inputs y Notas */
+    .todo-input { 
+        width: 100%; padding: 18px; border: 1px solid rgba(0,0,0,0.03); background: rgba(255,255,255,0.6); 
+        border-radius: 20px; margin-bottom: 20px; outline: none; font-size: 0.9rem; color: var(--text);
+    }
+
+    .todo-item { 
+        display: flex; align-items: center; padding: 15px 20px; 
+        background: rgba(255,255,255,0.3); border-radius: 20px; 
+        margin-bottom: 10px; border: 1px solid var(--glass-border); 
+    }
+
+    #notes-area { 
+        width: 100%; height: 160px; background: rgba(255,255,255,0.3); 
+        border: 1px solid var(--glass-border); border-radius: 25px; padding: 20px; 
+        margin-top: 15px; resize: none; outline: none; color: var(--text); line-height: 1.6;
+    }
+
+    .copy-btn { 
+        position: absolute; top: 30px; right: 35px; font-size: 0.65rem; 
+        background: white; color: var(--text-light); padding: 8px 15px; 
+        border-radius: 12px; border: 1px solid var(--glass-border);
+    }
+
+    /* Notificaciones sutiles */
+    #toast {
+        position: fixed; top: 40px; background: white; color: var(--text);
+        padding: 12px 30px; border-radius: 25px; font-size: 0.85rem; box-shadow: 0 10px 30px var(--shadow);
+        opacity: 0; transition: 0.5s; z-index: 1000;
+    }
+
+    /* Botones de acción principal */
+    .btn-p { background: var(--text); color: white; padding: 14px 35px; font-size: 0.9rem; border-radius: 20px; letter-spacing: 1px; }
+    .btn-s { background: white; color: var(--text-light); padding: 14px 35px; border-radius: 20px; border: 1px solid var(--glass-border); }
+
+    .sidebar-ad { 
+        width: 100%; height: 100%; background: transparent; 
+        border: 1px dashed var(--text-light); border-radius: 40px; 
+        display: flex; align-items: center; justify-content: center; 
+        color: var(--text-light); font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px; text-align: center; padding: 30px;
+    }
+
+    /* Scrollbar estética */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--text-light); border-radius: 10px; opacity: 0.2; }
+
+    @media (max-width: 900px) {
+        .main-container { grid-template-columns: 1fr; }
+        .top-row { grid-template-columns: 1fr; }
+        .sidebar-ad { display: none; }
+    }
+</style>
 </head>
 
 <body>
