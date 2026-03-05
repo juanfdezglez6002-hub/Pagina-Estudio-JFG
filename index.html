@@ -16,18 +16,18 @@
 
 
 
- <style>
+<style>
     :root {
-        /* Paleta Zen: Azul Aire, Verde Musgo y Crema */
-        --bg-gradient: linear-gradient(135deg, #eef2f3 0%, #dae2e8 100%);
-        --glass: rgba(255, 255, 255, 0.65);
+        /* Paleta Relajante: Muted Nature & Sky */
+        --bg-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+        --glass: rgba(255, 255, 255, 0.55);
         --glass-border: rgba(255, 255, 255, 0.8);
-        --text: #37474f; /* Gris azulado profundo para lectura sin esfuerzo */
+        --text: #455a64; /* Gris azulado oscuro para lectura suave */
         --text-light: #78909c;
-        --accent: #90a4ae; /* Azul acero suave */
-        --secondary: #81c784; /* Verde menta relajante */
-        --warning: #ffd54f; /* Amarillo miel suave */
-        --shadow: rgba(144, 164, 174, 0.12);
+        --accent: #9fa8da; /* Lavanda suave */
+        --secondary: #80cbc4; /* Menta relajante */
+        --warning: #ffe082; /* Crema suave */
+        --shadow: rgba(149, 157, 165, 0.1);
     }
 
     * { 
@@ -46,36 +46,35 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        transition: background 1.5s ease;
-        -webkit-font-smoothing: antialiased;
+        transition: background 1s ease;
     }
 
-    /* El Panda: Animación de respiración muy lenta */
+    /* Animación sutil para el Panda */
     .corner-panda {
         position: fixed;
-        top: 35px;
-        left: 35px;
-        width: 100px;
+        top: 30px;
+        left: 30px;
+        width: 110px;
         z-index: 100;
-        filter: drop-shadow(0 10px 15px rgba(0,0,0,0.02));
-        animation: breath 10s ease-in-out infinite;
-        opacity: 0.7;
+        filter: drop-shadow(0 10px 15px rgba(0,0,0,0.03));
+        animation: breath 8s ease-in-out infinite;
+        opacity: 0.8;
     }
 
     @keyframes breath {
-        0%, 100% { transform: scale(1); opacity: 0.7; }
-        50% { transform: scale(1.05); opacity: 0.8; }
+        0%, 100% { transform: translateY(0) scale(1); }
+        50% { transform: translateY(-5px) scale(1.02); }
     }
 
     header { margin-bottom: 50px; }
     
     .logo { 
-        font-size: 1.4rem; 
+        font-size: 1.8rem; 
         font-weight: 300; 
         color: var(--text);
-        letter-spacing: 8px;
+        letter-spacing: 6px;
         text-transform: uppercase;
-        opacity: 0.5;
+        opacity: 0.6;
     }
 
     .main-container {
@@ -83,143 +82,132 @@
         grid-template-columns: 1fr 320px;
         gap: 35px;
         width: 100%;
-        max-width: 1100px;
+        max-width: 1150px;
     }
 
     .content-layout { display: flex; flex-direction: column; gap: 35px; }
 
     .glass-card {
         background: var(--glass);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
         border: 1px solid var(--glass-border);
-        border-radius: 45px; /* Bordes extra suaves */
-        padding: 40px;
-        box-shadow: 0 20px 50px var(--shadow);
+        border-radius: 40px; /* Bordes muy suaves */
+        padding: 35px;
+        box-shadow: 0 20px 40px var(--shadow);
         position: relative;
+        transition: transform 0.3s ease;
     }
 
     .top-row { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 35px; }
 
-    /* Reloj: Tipografía fina para evitar ansiedad visual */
+    /* Reloj con estilo minimalista */
     .timer-display { 
-        font-size: 100px; 
-        font-weight: 200; 
+        font-size: 95px; 
+        font-weight: 200; /* Más fino para no cansar */
         text-align: center; 
-        margin: 10px 0; 
+        margin: 15px 0; 
         color: var(--text);
-        letter-spacing: -4px;
-        font-variant-numeric: tabular-nums;
+        letter-spacing: -3px;
     }
 
-    .mode-buttons { display: flex; gap: 15px; margin-top: 30px; }
+    .mode-buttons { display: flex; gap: 12px; margin-top: 25px; }
     
     .btn-mode { 
         flex: 1; 
         font-size: 0.7rem; 
-        padding: 15px; 
-        background: rgba(255,255,255,0.4); 
+        padding: 14px; 
+        background: rgba(255,255,255,0.3); 
         border: 1px solid var(--glass-border); 
         color: var(--text-light); 
-        border-radius: 25px; 
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
+        border-radius: 20px; 
+        letter-spacing: 1px;
     }
 
-    .btn-mode.active-deep { background: var(--text); color: white; border: none; }
+    .btn-mode.active-deep { background: var(--accent); color: white; border: none; }
     .btn-mode.active-prod { background: var(--secondary); color: white; border: none; }
 
-    /* Música: Controles minimalistas */
-    .music-title { 
-        font-weight: 500; 
-        font-size: 0.8rem; 
-        margin-bottom: 25px; 
-        color: var(--text-light); 
-        text-align: center; 
-        text-transform: uppercase; 
-        letter-spacing: 2px;
-        opacity: 0.8;
-    }
+    /* Música y controles */
+    .music-title { font-weight: 500; font-size: 0.9rem; margin-bottom: 20px; color: var(--text-light); text-align: center; display: block; text-transform: uppercase; letter-spacing: 2px; }
     
     .music-select {
-        width: 100%; padding: 15px; border-radius: 25px; border: 1px solid transparent;
-        background: rgba(255,255,255,0.5); color: var(--text); font-size: 0.85rem; margin-bottom: 25px; outline: none;
-        cursor: pointer; text-align-last: center;
+        width: 100%; padding: 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.5);
+        background: rgba(255,255,255,0.4); color: var(--text); font-size: 0.85rem; margin-bottom: 25px; outline: none;
+        cursor: pointer;
     }
 
-    .music-controls { display: flex; justify-content: center; align-items: center; gap: 25px; }
+    .music-controls { display: flex; justify-content: center; align-items: center; gap: 20px; }
     
     .btn-music-round { 
-        width: 45px; height: 45px; border-radius: 50%; background: white; 
-        display: flex; align-items: center; justify-content: center; 
-        box-shadow: 0 5px 15px var(--shadow); color: var(--text-light);
-        font-size: 0.9rem;
+        width: 50px; height: 50px; border-radius: 50%; background: white; 
+        display: flex; align-items: center; justify-content: center; font-size: 1rem;
+        box-shadow: 0 8px 15px var(--shadow); color: var(--text-light);
     }
 
-    .btn-music-round.play-btn { background: var(--text); color: white; width: 55px; height: 55px; font-size: 1.1rem; }
+    .btn-music-round.play-btn { background: var(--text); color: white; font-size: 1.2rem; }
 
-    /* Volume Slider */
-    .volume-container { margin-top: 35px; display: flex; align-items: center; gap: 15px; padding: 0 10px; opacity: 0.6; }
+    /* Volumen personalizado */
+    .volume-container { margin-top: 30px; display: flex; align-items: center; gap: 15px; padding: 0 10px; }
     input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
-    input[type=range]::-webkit-slider-runnable-track { height: 3px; background: var(--text-light); border-radius: 10px; }
+    input[type=range]::-webkit-slider-runnable-track { height: 4px; background: rgba(0,0,0,0.05); border-radius: 10px; }
     input[type=range]::-webkit-slider-thumb {
-        -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%;
-        background: var(--text); cursor: pointer; margin-top: -5.5px; border: 2px solid white;
+        -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+        background: var(--text-light); cursor: pointer; margin-top: -6px; border: 2px solid white;
     }
 
-    /* Inputs y Tareas */
+    .track-info { margin-top: 20px; text-align: center; font-size: 0.75rem; color: var(--text-light); font-style: italic; }
+
+    /* Inputs y Notas */
     .todo-input { 
-        width: 100%; padding: 20px; border: 1px solid rgba(0,0,0,0.02); background: rgba(255,255,255,0.5); 
-        border-radius: 25px; margin-bottom: 25px; outline: none; font-size: 0.9rem; color: var(--text);
+        width: 100%; padding: 18px; border: 1px solid rgba(0,0,0,0.03); background: rgba(255,255,255,0.6); 
+        border-radius: 20px; margin-bottom: 20px; outline: none; font-size: 0.9rem; color: var(--text);
     }
 
     .todo-item { 
-        display: flex; align-items: center; padding: 15px 25px; 
-        background: rgba(255,255,255,0.3); border-radius: 25px; 
-        margin-bottom: 12px; border: 1px solid var(--glass-border); 
-        transition: all 0.3s ease;
+        display: flex; align-items: center; padding: 15px 20px; 
+        background: rgba(255,255,255,0.3); border-radius: 20px; 
+        margin-bottom: 10px; border: 1px solid var(--glass-border); 
     }
 
-    .todo-item.done { opacity: 0.4; filter: grayscale(1); }
-
-    /* Notas */
     #notes-area { 
-        width: 100%; height: 180px; background: rgba(255,255,255,0.2); 
-        border: 1px dashed var(--text-light); border-radius: 30px; padding: 25px; 
-        margin-top: 20px; resize: none; outline: none; color: var(--text); 
-        line-height: 1.8; font-size: 0.95rem;
+        width: 100%; height: 160px; background: rgba(255,255,255,0.3); 
+        border: 1px solid var(--glass-border); border-radius: 25px; padding: 20px; 
+        margin-top: 15px; resize: none; outline: none; color: var(--text); line-height: 1.6;
     }
 
     .copy-btn { 
-        position: absolute; top: 40px; right: 40px; font-size: 0.6rem; 
-        background: var(--text); color: white; padding: 10px 20px; 
-        border-radius: 15px; text-transform: uppercase; letter-spacing: 1px;
+        position: absolute; top: 30px; right: 35px; font-size: 0.65rem; 
+        background: white; color: var(--text-light); padding: 8px 15px; 
+        border-radius: 12px; border: 1px solid var(--glass-border);
     }
 
-    /* Botones de acción */
-    .btn-p { background: var(--text); color: white; padding: 16px 40px; font-size: 0.85rem; border-radius: 25px; text-transform: uppercase; letter-spacing: 2px; }
-    .btn-s { background: white; color: var(--text-light); padding: 16px 40px; border-radius: 25px; border: 1px solid var(--glass-border); text-transform: uppercase; letter-spacing: 1px; }
+    /* Notificaciones sutiles */
+    #toast {
+        position: fixed; top: 40px; background: white; color: var(--text);
+        padding: 12px 30px; border-radius: 25px; font-size: 0.85rem; box-shadow: 0 10px 30px var(--shadow);
+        opacity: 0; transition: 0.5s; z-index: 1000;
+    }
 
-    /* Sidebar Ad / Extra */
+    /* Botones de acción principal */
+    .btn-p { background: var(--text); color: white; padding: 14px 35px; font-size: 0.9rem; border-radius: 20px; letter-spacing: 1px; }
+    .btn-s { background: white; color: var(--text-light); padding: 14px 35px; border-radius: 20px; border: 1px solid var(--glass-border); }
+
     .sidebar-ad { 
         width: 100%; height: 100%; background: transparent; 
-        border: 1px solid var(--glass-border); border-radius: 45px; 
+        border: 1px dashed var(--text-light); border-radius: 40px; 
         display: flex; align-items: center; justify-content: center; 
-        color: var(--text-light); font-size: 0.65rem; opacity: 0.4; letter-spacing: 3px; text-align: center; padding: 40px;
+        color: var(--text-light); font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px; text-align: center; padding: 30px;
     }
 
-    /* Toast sutil */
-    #toast {
-        position: fixed; bottom: 40px; background: var(--text); color: white;
-        padding: 15px 35px; border-radius: 30px; font-size: 0.8rem; box-shadow: 0 10px 30px var(--shadow);
-        opacity: 0; transition: 0.6s cubic-bezier(0.4, 0, 0.2, 1); z-index: 1000;
-    }
+    /* Scrollbar estética */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--text-light); border-radius: 10px; opacity: 0.2; }
 
     @media (max-width: 900px) {
         .main-container { grid-template-columns: 1fr; }
         .top-row { grid-template-columns: 1fr; }
         .sidebar-ad { display: none; }
-        .timer-display { font-size: 80px; }
     }
 </style>
 </head>
