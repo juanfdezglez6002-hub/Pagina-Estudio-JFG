@@ -350,16 +350,22 @@ input[type=range]::-webkit-slider-thumb{
 }
 @keyframes slide-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 .task-item:hover{background:rgba(255,255,255,0.6);}
-.task-item.done .task-txt{text-decoration:line-through;opacity:0.45;}
 .task-check{
-  width:20px;height:20px;border-radius:50%;
+  width:22px;height:22px;border-radius:50%;
   border:2px solid var(--border2);
   background:transparent;cursor:pointer;
   flex-shrink:0;display:flex;align-items:center;justify-content:center;
-  transition:all 0.2s;font-size:11px;
+  transition:all 0.25s;font-size:12px;
 }
-.task-check.checked{background:var(--mint2);border-color:var(--mint2);color:white;}
-.task-txt{flex:1;font-size:0.88rem;}
+.task-item.done{background:rgba(255,255,255,0.22);}
+.task-item.done .task-txt{
+  text-decoration:line-through;
+  text-decoration-color:var(--mint2);
+  text-decoration-thickness:2px;
+  color:var(--text2);
+}
+.task-item.done .task-check{background:var(--mint2);border-color:var(--mint2);color:white;}
+.task-txt{flex:1;font-size:0.88rem;transition:all 0.3s;}
 .priority-dot{
   width:8px;height:8px;border-radius:50%;flex-shrink:0;
 }
@@ -367,11 +373,15 @@ input[type=range]::-webkit-slider-thumb{
 .p-med{background:var(--warn);}
 .p-low{background:#a5d6a7;}
 .task-del{
-  background:none;border:none;cursor:pointer;
-  color:var(--text2);opacity:0.3;font-size:14px;
-  transition:opacity 0.2s;padding:4px;
+  background:rgba(244,143,177,0.12);
+  border:1px solid rgba(244,143,177,0.25);
+  border-radius:8px;cursor:pointer;
+  color:#e57373;font-size:12px;font-weight:700;
+  transition:all 0.2s;padding:5px 9px;
+  font-family:'Nunito',sans-serif;
+  opacity:0.6;
 }
-.task-del:hover{opacity:0.7;}
+.task-del:hover{opacity:1;background:rgba(244,143,177,0.25);transform:scale(1.05);}
 
 .task-progress{
   display:flex;align-items:center;gap:10px;margin-bottom:14px;
@@ -413,22 +423,50 @@ input[type=range]::-webkit-slider-thumb{
 
 /* ── QUOTE ── */
 .quote-box{
-  margin-top:18px;padding:16px 20px;
-  background:rgba(255,255,255,0.25);
-  border-left:3px solid var(--accent);
-  border-radius:0 14px 14px 0;
+  margin-top:18px;padding:20px 24px;
+  background:linear-gradient(135deg,rgba(121,134,203,0.12),rgba(77,182,172,0.08));
+  border:1px solid rgba(121,134,203,0.25);
+  border-left:4px solid var(--accent2);
+  border-radius:0 16px 16px 0;
   display:flex;align-items:flex-start;gap:14px;
+  position:relative;overflow:hidden;
+}
+.quote-box::before{
+  content:'\201C';
+  position:absolute;top:-10px;left:10px;
+  font-size:80px;font-family:'Lora',serif;
+  color:var(--accent2);opacity:0.12;
+  line-height:1;pointer-events:none;
 }
 .quote-text{
   font-family:'Lora',serif;font-style:italic;
-  font-size:0.88rem;color:var(--text2);line-height:1.6;flex:1;
+  font-size:0.95rem;color:var(--text);line-height:1.7;flex:1;
+  font-weight:400;
+  transition:opacity 0.35s ease, transform 0.35s ease;
+}
+.quote-text.fade-out{opacity:0;transform:translateY(6px);}
+.quote-text.fade-in{opacity:1;transform:translateY(0);}
+.quote-author{
+  display:block;font-style:normal;font-family:'Nunito',sans-serif;
+  font-size:0.72rem;font-weight:700;letter-spacing:1px;
+  color:var(--accent2);margin-top:8px;text-transform:uppercase;
 }
 .quote-refresh{
-  background:none;border:none;cursor:pointer;
-  font-size:16px;color:var(--text2);opacity:0.5;
-  transition:all 0.3s;padding:2px;
+  background:rgba(121,134,203,0.12);border:1px solid rgba(121,134,203,0.2);
+  border-radius:50%;width:30px;height:30px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--accent2);
+  transition:all 0.3s;flex-shrink:0;margin-top:2px;
 }
-.quote-refresh:hover{opacity:1;transform:rotate(180deg);}
+.quote-refresh:hover{background:rgba(121,134,203,0.25);transform:rotate(180deg);}
+/* Timer pill for quote */
+.quote-timer{
+  position:absolute;bottom:0;left:0;height:3px;
+  background:linear-gradient(90deg,var(--accent2),var(--mint2));
+  border-radius:0 3px 0 0;
+  animation:quote-countdown var(--quote-dur,15s) linear forwards;
+}
+@keyframes quote-countdown{from{width:100%}to{width:0%}}
 
 /* ── SIDEBAR ── */
 .sidebar-card{
@@ -738,9 +776,13 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
         <span class="notes-meta" id="save-indicator" style="color:var(--mint2);">✓ Guardado</span>
       </div>
 
-      <div class="quote-box">
-        <div class="quote-text" id="quote-text">"El enfoque no es lo que haces, sino lo que no haces."</div>
-        <button class="quote-refresh" onclick="nextQuote()" title="Nueva cita">↻</button>
+      <div class="quote-box" id="quote-box">
+        <div style="flex:1">
+          <div class="quote-text" id="quote-text"></div>
+          <span class="quote-author" id="quote-author"></span>
+        </div>
+        <button class="quote-refresh" onclick="nextQuote(true)" title="Nueva cita">↻</button>
+        <div class="quote-timer" id="quote-timer"></div>
       </div>
     </div>
   </div>
@@ -829,18 +871,21 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 //  DATA
 // ══════════════════════════════════════
 const QUOTES = [
-  '"El enfoque no es lo que haces, sino lo que no haces." — Steve Jobs',
-  '"El éxito es la suma de pequeños esfuerzos repetidos día tras día." — R. Collier',
-  '"La disciplina es el puente entre metas y logros." — Jim Rohn',
-  '"Estudiar no es un sacrificio, es una inversión." — Anónimo',
-  '"Haz hoy lo que otros no harán, vive mañana como otros no pueden." — J. Rogers',
-  '"La concentración es la raíz de todos los poderes humanos." — Bruce Lee',
-  '"Un río corta la roca no por su fuerza, sino por su constancia." — Ovidio',
-  '"No esperes el momento perfecto. Toma el momento y hazlo perfecto." — Z. Ziglar',
-  '"La mente que se abre a una nueva idea nunca vuelve a su tamaño original." — Einstein',
-  '"Cada sesión de estudio es un paso hacia la versión que quieres ser."',
-  '"Hoy no tienes que ser perfecto. Solo tienes que empezar."',
-  '"Tu cerebro se fortalece cada vez que eliges estudiar en vez de distraerte."',
+  {text:'El enfoque no es lo que haces, sino lo que decides no hacer.',author:'Steve Jobs'},
+  {text:'El éxito es la suma de pequeños esfuerzos repetidos cada día.',author:'Robert Collier'},
+  {text:'La disciplina es el puente entre las metas y los logros.',author:'Jim Rohn'},
+  {text:'Estudiar no es un sacrificio, es una inversión en tu futuro.',author:'Anónimo'},
+  {text:'Haz hoy lo que otros no harán, vive mañana como otros no pueden.',author:'Jerry Rogers'},
+  {text:'La concentración es la raíz de todos los poderes humanos.',author:'Bruce Lee'},
+  {text:'Un río corta la roca no por su fuerza, sino por su constancia.',author:'Ovidio'},
+  {text:'No esperes el momento perfecto. Toma el momento y hazlo perfecto.',author:'Zig Ziglar'},
+  {text:'La mente que se abre a una nueva idea nunca vuelve a su tamaño original.',author:'Albert Einstein'},
+  {text:'Cada sesión de estudio es un paso hacia la persona que quieres ser.',author:'Focus-Tap'},
+  {text:'Hoy no tienes que ser perfecto. Solo tienes que empezar.',author:'Focus-Tap'},
+  {text:'Tu cerebro se fortalece cada vez que eliges estudiar en vez de distraerte.',author:'Focus-Tap'},
+  {text:'No estudias para los exámenes. Estudias para la vida.',author:'Anónimo'},
+  {text:'El conocimiento es el único bien que crece cuando se comparte.',author:'Sócrates'},
+  {text:'Cada minuto de estudio hoy es un problema menos mañana.',author:'Focus-Tap'},
 ];
 
 const PLAYLISTS = {
@@ -1204,19 +1249,44 @@ function clearNotes(){
 // ══════════════════════════════════════
 //  QUOTES
 // ══════════════════════════════════════
-function nextQuote(){
-  quoteIdx=(quoteIdx+1)%QUOTES.length;
-  const el=document.getElementById('quote-text');
-  el.style.opacity=0;
-  setTimeout(()=>{el.innerText=QUOTES[quoteIdx]; el.style.opacity=1;},300);
-}
-document.getElementById('quote-text').style.transition='opacity 0.3s';
+const QUOTE_INTERVAL = 18000; // 18 segundos
+let quoteAutoTimer = null;
 
-// Auto-rotate quotes every 60s
-setInterval(()=>{
-  quoteIdx=(quoteIdx+Math.floor(Math.random()*3)+1)%QUOTES.length;
-  nextQuote();
-},60000);
+function showQuote(idx, restart){
+  const q = QUOTES[idx];
+  const textEl = document.getElementById('quote-text');
+  const authorEl = document.getElementById('quote-author');
+  // Fade out
+  textEl.classList.add('fade-out');
+  setTimeout(()=>{
+    textEl.innerText = '\u201C' + q.text + '\u201D';
+    authorEl.innerText = '— ' + q.author;
+    textEl.classList.remove('fade-out');
+    textEl.classList.add('fade-in');
+    setTimeout(()=>textEl.classList.remove('fade-in'), 400);
+  }, 350);
+  // Reset countdown bar
+  const bar = document.getElementById('quote-timer');
+  bar.style.animation = 'none';
+  bar.offsetHeight; // reflow
+  bar.style.setProperty('--quote-dur', QUOTE_INTERVAL/1000 + 's');
+  bar.style.animation = '';
+  if(restart) startQuoteTimer();
+}
+
+function nextQuote(manual){
+  quoteIdx = (quoteIdx + 1) % QUOTES.length;
+  showQuote(quoteIdx, true);
+  if(manual) clearTimeout(quoteAutoTimer);
+}
+
+function startQuoteTimer(){
+  clearTimeout(quoteAutoTimer);
+  quoteAutoTimer = setTimeout(()=>{
+    quoteIdx = (quoteIdx + 1) % QUOTES.length;
+    showQuote(quoteIdx, true);
+  }, QUOTE_INTERVAL);
+}
 
 // ══════════════════════════════════════
 //  BREAK TIMER
@@ -1268,7 +1338,13 @@ loadTrack(false);
 
 // Randomize starting quote
 quoteIdx=Math.floor(Math.random()*QUOTES.length);
-document.getElementById('quote-text').innerText=QUOTES[quoteIdx];
+// Show first quote directly (no fade-out needed on load)
+const _q=QUOTES[quoteIdx];
+document.getElementById('quote-text').innerText='\u201C'+_q.text+'\u201D';
+document.getElementById('quote-author').innerText='— '+_q.author;
+const _bar=document.getElementById('quote-timer');
+_bar.style.setProperty('--quote-dur', QUOTE_INTERVAL/1000+'s');
+startQuoteTimer();
 
 // ══════════════════════════════════════
 //  CELEBRATION
