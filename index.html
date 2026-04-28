@@ -1,596 +1,1186 @@
 <!DOCTYPE html>
-
 <html lang="es">
-
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Focus-Tap | Aesthetic Study Space</title>
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&display=swap" rel="stylesheet">
-
-    <link rel="icon" href="panda png.png" type="image/png">
-
-
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Focus-Tap | Tu Espacio de Estudio</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="icon" href="panda png.png" type="image/png">
 <style>
-    :root {
-        /* Paleta Relajante: Muted Nature & Sky */
-        --bg-gradient: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
-        --glass: rgba(255, 255, 255, 0.55);
-        --glass-border: rgba(255, 255, 255, 0.8);
-        --text: #455a64; /* Gris azulado oscuro para lectura suave */
-        --text-light: #78909c;
-        --accent: #9fa8da; /* Lavanda suave */
-        --secondary: #80cbc4; /* Menta relajante */
-        --warning: #ffe082; /* Crema suave */
-        --shadow: rgba(149, 157, 165, 0.1);
-    }
+:root {
+  --bg: #eef2fa;
+  --bg2: #e3eaf6;
+  --glass: rgba(255,255,255,0.6);
+  --glass2: rgba(255,255,255,0.35);
+  --border: rgba(255,255,255,0.85);
+  --border2: rgba(200,210,230,0.4);
+  --text: #3d4f6b;
+  --text2: #7a8eaa;
+  --accent: #9fa8da;
+  --accent2: #7986cb;
+  --mint: #80cbc4;
+  --mint2: #4db6ac;
+  --rose: #f48fb1;
+  --warn: #ffcc80;
+  --shadow: rgba(120,140,180,0.12);
+  --shadow2: rgba(100,120,160,0.08);
+  --card-radius: 28px;
+  --ad-bg: rgba(255,255,255,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Nunito',sans-serif;
+  background: radial-gradient(ellipse at 20% 20%, #dce8fc 0%, #e8f0f8 40%, #eff4fb 100%);
+  background-attachment:fixed;
+  min-height:100vh;
+  color:var(--text);
+  padding:30px 20px 60px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
 
-    * { 
-        margin: 0; 
-        padding: 0; 
-        box-sizing: border-box; 
-        font-family: 'Inter', -apple-system, sans-serif; 
-    }
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:0.5;
+}
 
-    body {
-        background: var(--bg-gradient);
-        background-attachment: fixed;
-        min-height: 100vh;
-        color: var(--text);
-        padding: 40px 20px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        transition: background 1s ease;
-    }
+/* ── HEADER ── */
+header{
+  display:flex;align-items:center;gap:18px;
+  margin-bottom:40px;z-index:1;position:relative;
+}
+.panda-logo{
+  width:60px;height:60px;
+  background:white;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;
+  box-shadow:0 8px 25px var(--shadow);
+  animation:float 6s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.logo-text{
+  font-size:1.6rem;font-weight:300;
+  letter-spacing:8px;text-transform:uppercase;
+  color:var(--text);opacity:0.55;
+  font-family:'Lora',serif;
+}
 
-    /* Animación sutil para el Panda */
-    .corner-panda {
-        position: fixed;
-        top: 30px;
-        left: 30px;
-        width: 110px;
-        z-index: 100;
-        filter: drop-shadow(0 10px 15px rgba(0,0,0,0.03));
-        animation: breath 8s ease-in-out infinite;
-        opacity: 0.8;
-    }
+/* ── LAYOUT ── */
+.main{
+  display:grid;
+  grid-template-columns:1fr 290px;
+  gap:28px;
+  width:100%;max-width:1180px;
+  z-index:1;position:relative;
+}
+.left{display:flex;flex-direction:column;gap:24px;}
+.right{display:flex;flex-direction:column;gap:24px;}
+.top-row{display:grid;grid-template-columns:1.2fr 0.8fr;gap:24px;}
 
-    @keyframes breath {
-        0%, 100% { transform: translateY(0) scale(1); }
-        50% { transform: translateY(-5px) scale(1.02); }
-    }
+/* ── GLASS CARD ── */
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:var(--card-radius);
+  padding:30px;
+  box-shadow:0 15px 40px var(--shadow),0 2px 8px var(--shadow2);
+  position:relative;overflow:hidden;
+  transition:transform 0.25s ease;
+}
+.card-sm{border-radius:20px;padding:22px;}
 
-    header { margin-bottom: 50px; }
-    
-    .logo { 
-        font-size: 1.8rem; 
-        font-weight: 300; 
-        color: var(--text);
-        letter-spacing: 6px;
-        text-transform: uppercase;
-        opacity: 0.6;
-    }
+/* ── TIMER ── */
+.session-label{
+  font-size:0.72rem;font-weight:600;
+  letter-spacing:2.5px;text-transform:uppercase;
+  color:var(--text2);text-align:center;margin-bottom:8px;
+}
+.session-label span{
+  font-weight:800;color:var(--accent2);font-size:0.9rem;
+}
+.session-input{
+  width:40px;border:none;background:none;
+  font-family:'Nunito',sans-serif;
+  font-weight:800;color:var(--accent2);
+  font-size:0.9rem;text-align:center;
+  padding:0;cursor:pointer;
+}
+.clock{
+  font-size:88px;font-weight:200;
+  text-align:center;letter-spacing:-4px;
+  color:var(--text);margin:10px 0 20px;
+  font-family:'Lora',serif;
+  text-shadow:0 2px 20px rgba(100,120,180,0.08);
+}
+.progress-ring-wrap{
+  display:flex;justify-content:center;margin-bottom:16px;
+}
+.progress-ring{transform:rotate(-90deg);}
+.ring-bg{stroke:rgba(159,168,218,0.15);fill:none;}
+.ring-fill{
+  stroke:var(--accent);fill:none;
+  stroke-linecap:round;
+  transition:stroke-dashoffset 0.8s ease;
+}
+.clock-over{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  display:flex;align-items:center;justify-content:center;
+}
+.ring-container{position:relative;width:220px;height:220px;}
 
-    .main-container {
-        display: grid;
-        grid-template-columns: 1fr 320px;
-        gap: 35px;
-        width: 100%;
-        max-width: 1150px;
-    }
+.timer-actions{display:flex;justify-content:center;gap:14px;margin-bottom:22px;}
+.btn-main{
+  background:var(--text);color:white;
+  padding:13px 32px;border-radius:50px;
+  font-family:'Nunito',sans-serif;
+  font-size:0.88rem;font-weight:700;
+  letter-spacing:1px;cursor:pointer;border:none;
+  transition:all 0.2s;
+  box-shadow:0 8px 20px rgba(61,79,107,0.25);
+}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 12px 25px rgba(61,79,107,0.3);}
+.btn-main:active{transform:scale(0.97);}
+.btn-sec{
+  background:white;color:var(--text2);
+  padding:13px 28px;border-radius:50px;
+  border:1px solid var(--border2);
+  font-family:'Nunito',sans-serif;font-size:0.88rem;font-weight:600;
+  cursor:pointer;transition:all 0.2s;
+}
+.btn-sec:hover{background:rgba(255,255,255,0.9);}
 
-    .content-layout { display: flex; flex-direction: column; gap: 35px; }
+/* ── MODE BUTTONS ── */
+.modes{display:flex;gap:10px;}
+.btn-mode{
+  flex:1;font-size:0.68rem;font-weight:700;
+  padding:12px 8px;
+  background:rgba(255,255,255,0.4);
+  border:1px solid var(--border2);
+  color:var(--text2);border-radius:16px;
+  letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;transition:all 0.25s;font-family:'Nunito',sans-serif;
+}
+.btn-mode:hover{background:rgba(255,255,255,0.7);}
+.btn-mode.active-deep{background:var(--accent2);color:white;border-color:transparent;box-shadow:0 6px 18px rgba(121,134,203,0.4);}
+.btn-mode.active-prod{background:var(--mint2);color:white;border-color:transparent;box-shadow:0 6px 18px rgba(77,182,172,0.4);}
 
-    .glass-card {
-        background: var(--glass);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border: 1px solid var(--glass-border);
-        border-radius: 40px; /* Bordes muy suaves */
-        padding: 35px;
-        box-shadow: 0 20px 40px var(--shadow);
-        position: relative;
-        transition: transform 0.3s ease;
-    }
+/* ── SESSION STATS ── */
+.stats-row{display:flex;gap:10px;margin-top:14px;}
+.stat-chip{
+  flex:1;background:rgba(255,255,255,0.45);
+  border:1px solid var(--border2);
+  border-radius:14px;padding:10px 8px;text-align:center;
+}
+.stat-val{font-size:1.4rem;font-weight:800;color:var(--accent2);}
+.stat-lbl{font-size:0.62rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);font-weight:600;margin-top:2px;}
 
-    .top-row { display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 35px; }
+/* ── MUSIC PLAYER ── */
+.album-display{
+  border-radius:20px;height:120px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;position:relative;overflow:hidden;
+  transition:background 0.5s ease;
+}
+.album-art-emoji{font-size:48px;z-index:1;}
+.album-shimmer{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,0.2) 0%,transparent 60%);
+}
+.track-name{
+  font-weight:700;font-size:0.95rem;color:var(--text);
+  text-align:center;margin-bottom:2px;
+}
+.track-artist{
+  font-size:0.75rem;color:var(--text2);
+  text-align:center;margin-bottom:16px;
+}
 
-    /* Reloj con estilo minimalista */
-    .timer-display { 
-        font-size: 95px; 
-        font-weight: 200; /* Más fino para no cansar */
-        text-align: center; 
-        margin: 15px 0; 
-        color: var(--text);
-        letter-spacing: -3px;
-    }
+/* Genre pills */
+.genre-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
+.pill{
+  padding:6px 14px;border-radius:50px;font-size:0.72rem;font-weight:700;
+  letter-spacing:0.5px;cursor:pointer;transition:all 0.2s;border:none;font-family:'Nunito',sans-serif;
+  background:rgba(255,255,255,0.5);border:1px solid var(--border2);color:var(--text2);
+}
+.pill.active{background:var(--text);color:white;border-color:transparent;}
+.pill:hover:not(.active){background:rgba(255,255,255,0.8);}
 
-    .mode-buttons { display: flex; gap: 12px; margin-top: 25px; }
-    
-    .btn-mode { 
-        flex: 1; 
-        font-size: 0.7rem; 
-        padding: 14px; 
-        background: rgba(255,255,255,0.3); 
-        border: 1px solid var(--glass-border); 
-        color: var(--text-light); 
-        border-radius: 20px; 
-        letter-spacing: 1px;
-    }
+/* Music controls */
+.music-controls{display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:18px;}
+.btn-ctrl{
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(255,255,255,0.6);border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:14px;color:var(--text2);
+  transition:all 0.2s;
+}
+.btn-ctrl:hover{background:white;transform:scale(1.05);}
+.btn-ctrl.play{
+  width:54px;height:54px;background:var(--text);color:white;
+  font-size:18px;border:none;
+  box-shadow:0 8px 20px rgba(61,79,107,0.3);
+}
+.btn-ctrl.play:hover{transform:scale(1.08);}
 
-    .btn-mode.active-deep { background: var(--accent); color: white; border: none; }
-    .btn-mode.active-prod { background: var(--secondary); color: white; border: none; }
+/* Fake progress bar */
+.progress-bar-wrap{
+  background:rgba(0,0,0,0.06);border-radius:10px;
+  height:4px;margin-bottom:10px;cursor:pointer;position:relative;
+}
+.progress-bar-fill{
+  background:var(--accent2);border-radius:10px;
+  height:100%;width:0%;transition:width 0.5s linear;
+}
+.time-labels{display:flex;justify-content:space-between;font-size:0.67rem;color:var(--text2);margin-bottom:16px;}
 
-    /* Música y controles */
-    .music-title { font-weight: 500; font-size: 0.9rem; margin-bottom: 20px; color: var(--text-light); text-align: center; display: block; text-transform: uppercase; letter-spacing: 2px; }
-    
-    .music-select {
-        width: 100%; padding: 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.5);
-        background: rgba(255,255,255,0.4); color: var(--text); font-size: 0.85rem; margin-bottom: 25px; outline: none;
-        cursor: pointer;
-    }
+/* Equalizer */
+.eq{display:flex;align-items:flex-end;gap:3px;height:20px;}
+.eq-bar{
+  width:4px;background:var(--accent2);border-radius:2px;
+  animation:eq-bounce 0.8s ease-in-out infinite alternate;
+  opacity:0;transition:opacity 0.3s;
+}
+.eq-bar:nth-child(2){animation-delay:0.1s;}
+.eq-bar:nth-child(3){animation-delay:0.2s;}
+.eq-bar:nth-child(4){animation-delay:0.3s;}
+.eq-bar:nth-child(5){animation-delay:0.15s;}
+.eq.playing .eq-bar{opacity:1;}
+@keyframes eq-bounce{0%{height:4px}100%{height:18px}}
 
-    .music-controls { display: flex; justify-content: center; align-items: center; gap: 20px; }
-    
-    .btn-music-round { 
-        width: 50px; height: 50px; border-radius: 50%; background: white; 
-        display: flex; align-items: center; justify-content: center; font-size: 1rem;
-        box-shadow: 0 8px 15px var(--shadow); color: var(--text-light);
-    }
+.volume-row{display:flex;align-items:center;gap:12px;}
+.vol-icon{font-size:13px;color:var(--text2);}
+input[type=range]{
+  -webkit-appearance:none;flex:1;background:transparent;
+}
+input[type=range]::-webkit-slider-runnable-track{
+  height:4px;background:rgba(0,0,0,0.06);border-radius:10px;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;height:16px;width:16px;
+  border-radius:50%;background:var(--text2);cursor:pointer;
+  margin-top:-6px;border:2px solid white;
+  box-shadow:0 2px 6px rgba(0,0,0,0.15);
+}
 
-    .btn-music-round.play-btn { background: var(--text); color: white; font-size: 1.2rem; }
+/* ── AD BANNER ── */
+.ad-banner{
+  background:var(--ad-bg);
+  border:1px dashed var(--border2);
+  border-radius:18px;padding:16px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;
+}
+.ad-label{
+  font-size:0.6rem;text-transform:uppercase;letter-spacing:2px;
+  color:var(--text2);opacity:0.5;white-space:nowrap;
+}
+.ad-slot{
+  flex:1;text-align:center;color:var(--text2);font-size:0.75rem;opacity:0.4;
+  letter-spacing:1px;
+}
 
-    /* Volumen personalizado */
-    .volume-container { margin-top: 30px; display: flex; align-items: center; gap: 15px; padding: 0 10px; }
-    input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
-    input[type=range]::-webkit-slider-runnable-track { height: 4px; background: rgba(0,0,0,0.05); border-radius: 10px; }
-    input[type=range]::-webkit-slider-thumb {
-        -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
-        background: var(--text-light); cursor: pointer; margin-top: -6px; border: 2px solid white;
-    }
+/* ── GOALS / TASKS ── */
+.section-title{
+  font-size:0.75rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:2px;margin-bottom:16px;display:flex;align-items:center;gap:10px;
+}
+.section-title .dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--accent2);display:inline-block;
+}
+.section-title .dot.mint{background:var(--mint2);}
+.section-title .dot.rose{background:var(--rose);}
 
-    .track-info { margin-top: 20px; text-align: center; font-size: 0.75rem; color: var(--text-light); font-style: italic; }
+.task-input-row{display:flex;gap:10px;margin-bottom:16px;}
+.task-input{
+  flex:1;padding:14px 18px;
+  background:rgba(255,255,255,0.6);
+  border:1px solid var(--border2);
+  border-radius:16px;outline:none;
+  font-family:'Nunito',sans-serif;font-size:0.88rem;color:var(--text);
+  transition:border 0.2s;
+}
+.task-input:focus{border-color:var(--accent);}
+.priority-sel{
+  padding:0 14px;background:rgba(255,255,255,0.5);
+  border:1px solid var(--border2);border-radius:16px;
+  font-family:'Nunito',sans-serif;font-size:0.8rem;color:var(--text2);
+  outline:none;cursor:pointer;
+}
 
-    /* Inputs y Notas */
-    .todo-input { 
-        width: 100%; padding: 18px; border: 1px solid rgba(0,0,0,0.03); background: rgba(255,255,255,0.6); 
-        border-radius: 20px; margin-bottom: 20px; outline: none; font-size: 0.9rem; color: var(--text);
-    }
+.task-item{
+  display:flex;align-items:center;gap:12px;
+  padding:13px 18px;
+  background:rgba(255,255,255,0.38);
+  border:1px solid var(--border2);
+  border-radius:16px;margin-bottom:8px;
+  transition:all 0.25s;
+  animation:slide-in 0.25s ease;
+}
+@keyframes slide-in{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.task-item:hover{background:rgba(255,255,255,0.6);}
+.task-item.done .task-txt{text-decoration:line-through;opacity:0.45;}
+.task-check{
+  width:20px;height:20px;border-radius:50%;
+  border:2px solid var(--border2);
+  background:transparent;cursor:pointer;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;font-size:11px;
+}
+.task-check.checked{background:var(--mint2);border-color:var(--mint2);color:white;}
+.task-txt{flex:1;font-size:0.88rem;}
+.priority-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+}
+.p-high{background:#ef9a9a;}
+.p-med{background:var(--warn);}
+.p-low{background:#a5d6a7;}
+.task-del{
+  background:none;border:none;cursor:pointer;
+  color:var(--text2);opacity:0.3;font-size:14px;
+  transition:opacity 0.2s;padding:4px;
+}
+.task-del:hover{opacity:0.7;}
 
-    .todo-item { 
-        display: flex; align-items: center; padding: 15px 20px; 
-        background: rgba(255,255,255,0.3); border-radius: 20px; 
-        margin-bottom: 10px; border: 1px solid var(--glass-border); 
-    }
+.task-progress{
+  display:flex;align-items:center;gap:10px;margin-bottom:14px;
+}
+.task-progress-bar{
+  flex:1;height:5px;background:rgba(0,0,0,0.05);border-radius:10px;overflow:hidden;
+}
+.task-progress-fill{
+  height:100%;background:linear-gradient(90deg,var(--accent),var(--mint));
+  border-radius:10px;transition:width 0.4s ease;
+}
+.task-progress-txt{font-size:0.72rem;color:var(--text2);font-weight:600;white-space:nowrap;}
 
-    #notes-area { 
-        width: 100%; height: 160px; background: rgba(255,255,255,0.3); 
-        border: 1px solid var(--glass-border); border-radius: 25px; padding: 20px; 
-        margin-top: 15px; resize: none; outline: none; color: var(--text); line-height: 1.6;
-    }
+/* ── NOTAS ── */
+.notes-area{
+  width:100%;height:140px;
+  background:rgba(255,255,255,0.35);
+  border:1px solid var(--border2);border-radius:18px;
+  padding:16px 20px;margin-top:14px;
+  resize:none;outline:none;
+  font-family:'Nunito',sans-serif;
+  color:var(--text);font-size:0.88rem;line-height:1.7;
+  transition:border 0.2s;
+}
+.notes-area:focus{border-color:var(--accent);}
+.notes-toolbar{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:10px;
+}
+.notes-meta{font-size:0.7rem;color:var(--text2);}
+.btn-tiny{
+  background:rgba(255,255,255,0.6);
+  border:1px solid var(--border2);border-radius:10px;
+  padding:6px 14px;font-family:'Nunito',sans-serif;
+  font-size:0.72rem;font-weight:600;color:var(--text2);
+  cursor:pointer;transition:all 0.2s;
+}
+.btn-tiny:hover{background:white;}
 
-    .copy-btn { 
-        position: absolute; top: 30px; right: 35px; font-size: 0.65rem; 
-        background: white; color: var(--text-light); padding: 8px 15px; 
-        border-radius: 12px; border: 1px solid var(--glass-border);
-    }
+/* ── QUOTE ── */
+.quote-box{
+  margin-top:18px;padding:16px 20px;
+  background:rgba(255,255,255,0.25);
+  border-left:3px solid var(--accent);
+  border-radius:0 14px 14px 0;
+  display:flex;align-items:flex-start;gap:14px;
+}
+.quote-text{
+  font-family:'Lora',serif;font-style:italic;
+  font-size:0.88rem;color:var(--text2);line-height:1.6;flex:1;
+}
+.quote-refresh{
+  background:none;border:none;cursor:pointer;
+  font-size:16px;color:var(--text2);opacity:0.5;
+  transition:all 0.3s;padding:2px;
+}
+.quote-refresh:hover{opacity:1;transform:rotate(180deg);}
 
-    /* Notificaciones sutiles */
-    #toast {
-        position: fixed; top: 40px; background: white; color: var(--text);
-        padding: 12px 30px; border-radius: 25px; font-size: 0.85rem; box-shadow: 0 10px 30px var(--shadow);
-        opacity: 0; transition: 0.5s; z-index: 1000;
-    }
+/* ── SIDEBAR ── */
+.sidebar-card{
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--border);
+  border-radius:var(--card-radius);
+  padding:24px;
+  box-shadow:0 15px 40px var(--shadow);
+}
+.break-card{
+  background:linear-gradient(135deg,rgba(255,204,128,0.35),rgba(255,183,77,0.15));
+  border:1px solid rgba(255,193,90,0.3);
+}
 
-    /* Botones de acción principal */
-    .btn-p { background: var(--text); color: white; padding: 14px 35px; font-size: 0.9rem; border-radius: 20px; letter-spacing: 1px; }
-    .btn-s { background: white; color: var(--text-light); padding: 14px 35px; border-radius: 20px; border: 1px solid var(--glass-border); }
+/* Streak tracker */
+.streak-row{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap;}
+.streak-day{
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,0.4);
+  border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0.65rem;font-weight:700;color:var(--text2);
+  transition:all 0.3s;
+}
+.streak-day.done{background:var(--accent2);border-color:var(--accent2);color:white;}
+.streak-day.today{background:var(--mint2);border-color:var(--mint2);color:white;}
 
-    .sidebar-ad { 
-        width: 100%; height: 100%; background: transparent; 
-        border: 1px dashed var(--text-light); border-radius: 40px; 
-        display: flex; align-items: center; justify-content: center; 
-        color: var(--text-light); font-size: 0.7rem; opacity: 0.5; letter-spacing: 2px; text-align: center; padding: 30px;
-    }
+/* Focus score */
+.score-ring{
+  display:flex;justify-content:center;align-items:center;
+  margin:14px 0;position:relative;
+}
+.score-val{
+  position:absolute;text-align:center;
+  font-size:1.6rem;font-weight:800;color:var(--accent2);
+  line-height:1;
+}
+.score-lbl{font-size:0.6rem;color:var(--text2);margin-top:2px;}
 
-    /* Scrollbar estética */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--text-light); border-radius: 10px; opacity: 0.2; }
+/* Sidebar ad */
+.ad-sidebar{
+  border:1.5px dashed var(--border2);
+  border-radius:20px;padding:20px;
+  text-align:center;color:var(--text2);
+  opacity:0.5;font-size:0.7rem;
+  letter-spacing:1.5px;text-transform:uppercase;
+  line-height:2.5;
+  min-height:180px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
 
-    @media (max-width: 900px) {
-        .main-container { grid-template-columns: 1fr; }
-        .top-row { grid-template-columns: 1fr; }
-        .sidebar-ad { display: none; }
-    }
+/* ── BREAK TIMER ── */
+.break-clock{
+  font-family:'Lora',serif;font-size:2.2rem;font-weight:400;
+  text-align:center;color:var(--text);margin:10px 0;letter-spacing:-1px;
+}
+.break-label{font-size:0.7rem;letter-spacing:2px;text-transform:uppercase;color:var(--text2);text-align:center;}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:40px;left:50%;transform:translateX(-50%);
+  background:var(--text);color:white;
+  padding:12px 28px;border-radius:50px;
+  font-size:0.82rem;font-weight:600;letter-spacing:0.5px;
+  box-shadow:0 10px 30px rgba(61,79,107,0.3);
+  opacity:0;transition:opacity 0.4s ease;z-index:9999;
+  pointer-events:none;font-family:'Nunito',sans-serif;
+}
+
+/* ── PENALTY FLASH ── */
+@keyframes penalty-flash{
+  0%{background:rgba(244,143,177,0.3)}
+  100%{background:transparent}
+}
+body.penalized{animation:penalty-flash 0.8s ease-out;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:rgba(100,120,160,0.15);border-radius:10px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:960px){
+  .main{grid-template-columns:1fr;}
+  .top-row{grid-template-columns:1fr;}
+  .right{display:none;}
+}
+@media(max-width:480px){
+  .clock{font-size:64px;}
+  .card{padding:22px;}
+}
 </style>
 </head>
-
 <body>
 
-
-
-    <img src="panda png.png" alt="Panda" class="corner-panda">
-
-
-
-    <header><h1 class="logo">FOCUS-TAP</h1></header>
-
-
-
-    <div class="main-container">
-
-        <div class="content-layout">
-
-
-
-            <div class="top-row">
-
-                <div class="glass-card" style="text-align: center;">
-
-                    <div style="font-size: 0.9rem; font-weight: 600; opacity: 0.7; color: var(--text);">
-
-                        SESIÓN DE <input type="number" id="m-in" value="25" style="width:40px; border:none; background:none; font-weight:800; color: var(--secondary); text-align:center;"> MINUTOS
-
-                    </div>
-
-                    <div class="timer-display" id="clock">25:00</div>
-
-                    <div style="display: flex; justify-content: center; gap: 15px; margin-bottom: 20px;">
-
-                        <button class="btn-p" id="start">Empezar</button>
-
-                        <button class="btn-s" id="reset">Reset</button>
-
-                    </div>
-
-
-
-                    <div class="mode-buttons">
-
-                        <button class="btn-mode" id="btn-deep" onclick="toggleMode('deep')">MODO ENFOQUE</button>
-
-                        <button class="btn-mode" id="btn-prod" onclick="toggleMode('prod')">PRODUCTIVIDAD</button>
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="glass-card">
-
-                    <span class="music-title">Dreamy Ambience</span>
-
-                    <select class="music-select" id="music-menu" onchange="loadTrack()">
-
-                        <option value="lofi">🎹 Lofi Dream</option>
-
-                        <option value="nature">🌸 Soft Rain</option>
-
-                        <option value="coffee">☕ Pastel Cafe</option>
-
-                    </select>
-
-
-
-                    <div class="music-controls">
-
-                        <button class="btn-music-round" onclick="musicPrev()">⏮</button>
-
-                        <button class="btn-music-round play-btn" onclick="musicToggle()" id="play-pause">▶</button>
-
-                        <button class="btn-music-round" onclick="musicNext()">⏭</button>
-
-                    </div>
-
-
-
-                    <div class="volume-container">
-
-                        <span>🔈</span>
-
-                        <input type="range" min="0" max="1" step="0.1" value="0.5" oninput="vSet(this.value)">
-
-                        <span>🔊</span>
-
-                    </div>
-
-
-
-                    <div id="track-display" class="track-info">Selecciona una pista para reproducir</div>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="glass-card">
-
-                <h3 style="font-size: 1.1rem; margin-bottom: 15px; color: var(--secondary);">Metas de Estudio</h3>
-
-                <input type="text" id="todo-in" class="todo-input" placeholder="+ Escribe una tarea y pulsa Enter">
-
-                <div id="todo-list"></div>
-
-            </div>
-
-
-
-            <div class="glass-card">
-
-
-                <h3 style="font-size: 1.1rem; color: var(--accent);">Notas (Se borran al cerrar la página)</h3>
-
-                <button class="copy-btn" onclick="copy()">Copiar Notas</button>
-
-                <textarea id="notes-area" placeholder="Vuelca aquí tus distracciones para volver al estudio..."></textarea>
-
-                <div style="text-align: center; margin-top: 15px;">
-
-                    <p id="motivation-quote" style="font-style: italic; font-size: 0.85rem; opacity: 0.8;">"Confía en el proceso."</p>
-
-                </div>
-
-            </div>
-
+<header>
+  <div class="panda-logo">🐼</div>
+  <h1 class="logo-text">Focus·Tap</h1>
+</header>
+
+<div class="main">
+
+  <!-- ══════════════ LEFT COLUMN ══════════════ -->
+  <div class="left">
+    <div class="top-row">
+
+      <!-- TIMER CARD -->
+      <div class="card" style="text-align:center;">
+        <div class="session-label">
+          Sesión de <input type="number" id="m-in" class="session-input" value="25"> min
         </div>
 
-
-
-        <div>
-
-            <div class="sidebar-ad">
-
-                ESPACIO PARA<br>NOTAS EXTRAS<br>O<br>PUBLICIDAD<br>✨
-
-            </div>
-
+        <!-- Ring Progress -->
+        <div class="ring-container" style="margin:0 auto 16px;">
+          <svg class="progress-ring" width="220" height="220" viewBox="0 0 220 220">
+            <circle class="ring-bg" cx="110" cy="110" r="95" stroke-width="8"/>
+            <circle class="ring-fill" id="ring" cx="110" cy="110" r="95" stroke-width="8"
+              stroke-dasharray="596.9" stroke-dashoffset="0"/>
+          </svg>
+          <div class="clock-over">
+            <div class="clock" id="clock">25:00</div>
+          </div>
         </div>
 
+        <div class="timer-actions">
+          <button class="btn-main" id="start">▶ Empezar</button>
+          <button class="btn-sec" id="reset">↺ Reset</button>
+        </div>
+
+        <div class="modes">
+          <button class="btn-mode" id="btn-deep" onclick="toggleMode('deep')">🎯 Modo Enfoque</button>
+          <button class="btn-mode" id="btn-prod" onclick="toggleMode('prod')">⚡ Productividad</button>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-chip">
+            <div class="stat-val" id="sessions-done">0</div>
+            <div class="stat-lbl">Sesiones hoy</div>
+          </div>
+          <div class="stat-chip">
+            <div class="stat-val" id="total-min">0</div>
+            <div class="stat-lbl">Min enfocado</div>
+          </div>
+          <div class="stat-chip">
+            <div class="stat-val" id="streak-count">0</div>
+            <div class="stat-lbl">Racha días</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MUSIC PLAYER CARD -->
+      <div class="card card-sm">
+        <div id="album-display" class="album-display" style="background:linear-gradient(135deg,#c5cae9,#9fa8da);">
+          <div class="album-shimmer"></div>
+          <div class="album-art-emoji" id="album-emoji">🎹</div>
+        </div>
+
+        <div class="track-name" id="track-name">Lofi Dream</div>
+        <div class="track-artist" id="track-artist">Focus-Tap Radio</div>
+
+        <!-- Genre Pills -->
+        <div class="genre-pills" id="genre-pills">
+          <button class="pill active" onclick="setGenre('lofi',this)">🎹 Lofi</button>
+          <button class="pill" onclick="setGenre('nature',this)">🌧 Lluvia</button>
+          <button class="pill" onclick="setGenre('cafe',this)">☕ Café</button>
+          <button class="pill" onclick="setGenre('classical',this)">🎻 Clásica</button>
+          <button class="pill" onclick="setGenre('jazz',this)">🎷 Jazz</button>
+        </div>
+
+        <!-- Equalizer + Controls -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:16px;">
+          <div class="eq" id="eq">
+            <div class="eq-bar"></div><div class="eq-bar"></div>
+            <div class="eq-bar"></div><div class="eq-bar"></div>
+            <div class="eq-bar"></div>
+          </div>
+        </div>
+
+        <div class="progress-bar-wrap" id="prog-wrap">
+          <div class="progress-bar-fill" id="prog-fill"></div>
+        </div>
+        <div class="time-labels">
+          <span id="t-elapsed">0:00</span>
+          <span id="t-total">3:45</span>
+        </div>
+
+        <div class="music-controls">
+          <button class="btn-ctrl" onclick="musicPrev()" title="Anterior">⏮</button>
+          <button class="btn-ctrl play" onclick="musicToggle()" id="play-btn">▶</button>
+          <button class="btn-ctrl" onclick="musicNext()" title="Siguiente">⏭</button>
+        </div>
+
+        <div class="volume-row">
+          <span class="vol-icon">🔈</span>
+          <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)">
+          <span class="vol-icon">🔊</span>
+        </div>
+      </div>
     </div>
 
-
-
-    <div id="toast">¡Hecho!</div>
-
-    <audio id="player" loop></audio>
-
-
-
-    <script>
-
-        let currentMode = null, leaveTime = null, t = null, left = 25*60;
-
-        const clk = document.getElementById('clock'), st = document.getElementById('start');
-
-        const player = document.getElementById('player'), playBtn = document.getElementById('play-pause');
-
-        const trackDisplay = document.getElementById('track-display');
-
-
-
-        function toggleMode(mode) {
-
-            const btnDeep = document.getElementById('btn-deep'), btnProd = document.getElementById('btn-prod');
-
-            if (currentMode === mode) {
-
-                currentMode = null;
-
-                btnDeep.className = "btn-mode"; btnProd.className = "btn-mode";
-
-                if(document.fullscreenElement) document.exitFullscreen();
-
-            } else {
-
-                currentMode = mode;
-
-                btnDeep.className = mode === 'deep' ? "btn-mode active-deep" : "btn-mode";
-
-                btnProd.className = mode === 'prod' ? "btn-mode active-prod" : "btn-mode";
-
-                if(mode === 'deep') document.documentElement.requestFullscreen().catch(() => {});
-
-            }
-
-        }
-
-
-
-        document.addEventListener("visibilitychange", () => {
-
-            if (document.hidden && currentMode && t) {
-
-                leaveTime = Date.now();
-
-                clearInterval(t); t = null;
-
-                st.innerText = "Reanudar";
-
-                showToast("¡Pausado! No pierdas el enfoque");
-
-            } else if (!document.hidden && leaveTime && currentMode === 'deep') {
-
-                const secondsAway = Math.floor((Date.now() - leaveTime) / 1000);
-
-                left += secondsAway; upd();
-
-                showToast(`Penalización: +${secondsAway}s`);
-
-                document.body.style.background = "#ffcdd2";
-
-                setTimeout(() => document.body.style.background = "var(--bg-gradient)", 800);
-
-                leaveTime = null;
-
-            }
-
-        });
-
-
-
-        document.getElementById('m-in').onchange = (e) => { if(!t){ left = e.target.value*60; upd(); }};
-
-        function upd() { 
-
-            let m=Math.floor(left/60), s=left%60; 
-
-            clk.innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`; 
-
-        }
-
-
-
-        st.onclick = () => {
-
-            if(t) { clearInterval(t); t=null; st.innerText="Reanudar"; }
-
-            else {
-
-                st.innerText="Pausar";
-
-                t = setInterval(() => { 
-
-                    if(left > 0) { left--; upd(); }
-
-                    else { clearInterval(t); showToast("¡Tiempo cumplido!"); }
-
-                }, 1000);
-
-            }
-
-        };
-
-
-
-        document.getElementById('reset').onclick = () => {
-
-            clearInterval(t); t=null; left=document.getElementById('m-in').value*60; upd(); st.innerText="Empezar";
-
-        };
-
-
-
-        const playlists = {
-
-            lofi: [
-
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", name: "Lofi Dream", author: "SoundHelix"},
-
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", name: "Chill Beat", author: "SoundHelix"}
-
-            ],
-
-            nature: [
-
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", name: "Soft Rain", author: "SoundHelix"},
-
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", name: "Forest Whisper", author: "SoundHelix"}
-
-            ],
-
-            coffee: [
-
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3", name: "Pastel Cafe", author: "SoundHelix"},
-
-                {url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3", name: "Sugar Jazz", author: "SoundHelix"}
-
-            ]
-
-        };
-
-        let trackIdx = 0;
-
-
-
-        function loadTrack() { 
-
-            const genre = document.getElementById('music-menu').value;
-
-            const currentTrack = playlists[genre][trackIdx];
-
-            player.src = currentTrack.url; 
-
-            trackDisplay.innerText = `${currentTrack.name} - ${currentTrack.author}`;
-
-        }
-
-
-
-        function musicToggle() {
-
-            if (!player.src) loadTrack();
-
-            if (player.paused) { player.play(); playBtn.innerText = "⏸"; } 
-
-            else { player.pause(); playBtn.innerText = "▶"; }
-
-        }
-
-        function musicNext() { trackIdx = (trackIdx + 1) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
-
-        function musicPrev() { trackIdx = (trackIdx - 1 + 2) % 2; loadTrack(); player.play(); playBtn.innerText = "⏸"; }
-
-        function vSet(v) { player.volume = v; }
-
-
-
-        document.getElementById('todo-in').addEventListener('keypress', (e) => {
-
-            if(e.key === 'Enter' && e.target.value !== "") {
-
-                const div = document.createElement('div');
-
-                div.className = 'todo-item';
-
-                div.innerHTML = `<input type="checkbox" onchange="this.parentElement.classList.toggle('done')">
-
-                                 <span style="flex:1">${e.target.value}</span>
-
-                                 <button style="background:none; color:var(--secondary); font-weight:bold; cursor:pointer;" onclick="this.parentElement.remove()">✕</button>`;
-
-                document.getElementById('todo-list').appendChild(div);
-
-                e.target.value = "";
-
-            }
-
-        });
-
-
-
-        function showToast(msg) {
-
-            const toast = document.getElementById('toast');
-
-            toast.innerText = msg; toast.style.opacity = 1;
-
-            setTimeout(() => toast.style.opacity = 0, 3000);
-
-        }
-
-        function copy() {
-
-            const area = document.getElementById('notes-area');
-
-            if(area.value.trim() === "") return;
-
-            area.select(); document.execCommand('copy');
-
-            showToast("¡Notas copiadas!");
-
-        }
-
-    </script>
-
+    <!-- ── AD BANNER (Horizontal, discreta) ── -->
+    <div class="ad-banner">
+      <span class="ad-label">Anuncio</span>
+      <div class="ad-slot">
+        <!-- Coloca aquí tu código de Google AdSense o similar -->
+        728×90 · Leaderboard Banner
+      </div>
+      <span class="ad-label">Anuncio</span>
+    </div>
+
+    <!-- GOALS / TASKS CARD -->
+    <div class="card">
+      <div class="section-title" style="color:var(--accent2);">
+        <span class="dot"></span> Metas de Estudio
+      </div>
+
+      <div class="task-progress">
+        <div class="task-progress-bar">
+          <div class="task-progress-fill" id="task-prog-fill" style="width:0%"></div>
+        </div>
+        <span class="task-progress-txt" id="task-prog-txt">0 / 0 completadas</span>
+      </div>
+
+      <div class="task-input-row">
+        <input type="text" id="task-in" class="task-input" placeholder="+ Nueva tarea... pulsa Enter">
+        <select class="priority-sel" id="task-priority">
+          <option value="high">🔴 Alta</option>
+          <option value="med" selected>🟡 Media</option>
+          <option value="low">🟢 Baja</option>
+        </select>
+      </div>
+      <div id="task-list"></div>
+    </div>
+
+    <!-- NOTES + QUOTE CARD -->
+    <div class="card">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="section-title" style="color:var(--rose);margin-bottom:0;">
+          <span class="dot rose"></span> Notas Rápidas
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn-tiny" onclick="copyNotes()">📋 Copiar</button>
+          <button class="btn-tiny" onclick="downloadNotes()">⬇ Guardar .txt</button>
+          <button class="btn-tiny" onclick="clearNotes()">🗑 Limpiar</button>
+        </div>
+      </div>
+      <textarea class="notes-area" id="notes" placeholder="Vuelca aquí tus pensamientos para volver al enfoque..."></textarea>
+      <div class="notes-toolbar">
+        <span class="notes-meta" id="notes-meta">0 palabras · guardado automático</span>
+        <span class="notes-meta" id="save-indicator" style="color:var(--mint2);">✓ Guardado</span>
+      </div>
+
+      <div class="quote-box">
+        <div class="quote-text" id="quote-text">"El enfoque no es lo que haces, sino lo que no haces."</div>
+        <button class="quote-refresh" onclick="nextQuote()" title="Nueva cita">↻</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <div class="right">
+
+    <!-- FOCUS SCORE -->
+    <div class="sidebar-card">
+      <div class="section-title" style="color:var(--accent2);">
+        <span class="dot"></span> Puntuación Hoy
+      </div>
+      <div class="score-ring">
+        <svg width="110" height="110" style="transform:rotate(-90deg);">
+          <circle cx="55" cy="55" r="44" fill="none" stroke="rgba(159,168,218,0.15)" stroke-width="7"/>
+          <circle id="score-arc" cx="55" cy="55" r="44" fill="none" stroke="var(--accent2)" stroke-width="7"
+            stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5"
+            style="transition:stroke-dashoffset 1s ease;"/>
+        </svg>
+        <div class="score-val">
+          <div id="score-num">0</div>
+          <div class="score-lbl">/ 100</div>
+        </div>
+      </div>
+      <div style="font-size:0.75rem;color:var(--text2);text-align:center;line-height:1.6;">
+        Completa sesiones y tareas<br>para subir tu puntuación
+      </div>
+    </div>
+
+    <!-- STREAK TRACKER -->
+    <div class="sidebar-card">
+      <div class="section-title" style="color:var(--mint2);">
+        <span class="dot mint"></span> Racha Semanal
+      </div>
+      <div class="streak-row" id="streak-row"></div>
+      <div style="margin-top:14px;font-size:0.75rem;color:var(--text2);">
+        ¡Estudia hoy para mantener tu racha! 🔥
+      </div>
+    </div>
+
+    <!-- BREAK TIMER -->
+    <div class="sidebar-card break-card">
+      <div class="section-title" style="color:#e65100;margin-bottom:8px;">
+        ☕ Descanso Activo
+      </div>
+      <div class="break-label">Tiempo de descanso</div>
+      <div class="break-clock" id="break-clock">05:00</div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:10px;">
+        <button class="btn-tiny" onclick="setBreak(5)">5 min</button>
+        <button class="btn-tiny" onclick="setBreak(10)">10 min</button>
+        <button class="btn-tiny" onclick="setBreak(15)">15 min</button>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;">
+        <button class="btn-tiny" id="break-start" onclick="toggleBreak()">▶ Iniciar</button>
+        <button class="btn-tiny" onclick="resetBreak()">↺</button>
+      </div>
+    </div>
+
+    <!-- SIDEBAR AD -->
+    <div class="sidebar-card" style="padding:0;overflow:hidden;">
+      <div class="ad-sidebar">
+        <!-- Google AdSense / 300×250 -->
+        <span class="ad-label" style="opacity:0.4;letter-spacing:1px;">Espacio publicitario</span>
+        <div style="margin-top:6px;opacity:0.3;font-size:1.5rem;">📢</div>
+        <div style="font-size:0.65rem;opacity:0.3;margin-top:4px;">300 × 250</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast"></div>
+<audio id="player" loop></audio>
+
+<script>
+// ══════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════
+const QUOTES = [
+  '"El enfoque no es lo que haces, sino lo que no haces." — Steve Jobs',
+  '"El éxito es la suma de pequeños esfuerzos repetidos día tras día." — R. Collier',
+  '"La disciplina es el puente entre metas y logros." — Jim Rohn',
+  '"Estudiar no es un sacrificio, es una inversión." — Anónimo',
+  '"Haz hoy lo que otros no harán, vive mañana como otros no pueden." — J. Rogers',
+  '"La concentración es la raíz de todos los poderes humanos." — Bruce Lee',
+  '"Un río corta la roca no por su fuerza, sino por su constancia." — Ovidio',
+  '"No esperes el momento perfecto. Toma el momento y hazlo perfecto." — Z. Ziglar',
+  '"La mente que se abre a una nueva idea nunca vuelve a su tamaño original." — Einstein',
+  '"Cada sesión de estudio es un paso hacia la versión que quieres ser."',
+  '"Hoy no tienes que ser perfecto. Solo tienes que empezar."',
+  '"Tu cerebro se fortalece cada vez que eliges estudiar en vez de distraerte."',
+];
+
+const PLAYLISTS = {
+  lofi:{
+    emoji:'🎹',
+    bg:'linear-gradient(135deg,#c5cae9,#9fa8da)',
+    tracks:[
+      {name:'Lofi Dream',artist:'Lo-Fi Vibes',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',dur:206},
+      {name:'Midnight Study',artist:'Chill Beats',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',dur:234},
+    ]
+  },
+  nature:{
+    emoji:'🌧',
+    bg:'linear-gradient(135deg,#b2dfdb,#80cbc4)',
+    tracks:[
+      {name:'Soft Rain',artist:'Ambient Nature',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3',dur:198},
+      {name:'Forest Whisper',artist:'Nature Sounds',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3',dur:217},
+    ]
+  },
+  cafe:{
+    emoji:'☕',
+    bg:'linear-gradient(135deg,#ffe0b2,#ffcc80)',
+    tracks:[
+      {name:'Pastel Café',artist:'Coffee Sounds',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',dur:221},
+      {name:'Morning Brew',artist:'Urban Café',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',dur:189},
+    ]
+  },
+  classical:{
+    emoji:'🎻',
+    bg:'linear-gradient(135deg,#f8bbd0,#f48fb1)',
+    tracks:[
+      {name:'Moonlight Study',artist:'Classical Essentials',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',dur:245},
+      {name:'Piano Afternoon',artist:'Solo Piano',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',dur:230},
+    ]
+  },
+  jazz:{
+    emoji:'🎷',
+    bg:'linear-gradient(135deg,#b39ddb,#9575cd)',
+    tracks:[
+      {name:'Smooth Jazz',artist:'Jazz Cafe',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',dur:218},
+      {name:'Evening Keys',artist:'Quartet Session',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',dur:203},
+    ]
+  }
+};
+
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+let currentMode=null, leaveTime=null;
+let timerInterval=null, timerLeft=25*60, timerRunning=false;
+let totalSec=0;
+let sessionsDone=parseInt(localStorage.getItem('ft-sessions')||'0');
+let totalMin=parseInt(localStorage.getItem('ft-totalmin')||'0');
+let streakDays=JSON.parse(localStorage.getItem('ft-streak')||'[]');
+let currentGenre='lofi', trackIdx=0;
+let musicPlaying=false, progInterval=null, elapsedSec=0;
+let breakLeft=5*60, breakRunning=false, breakInterval=null;
+let quoteIdx=0;
+
+// ══════════════════════════════════════
+//  TIMER
+// ══════════════════════════════════════
+const clock=document.getElementById('clock');
+const ring=document.getElementById('ring');
+const startBtn=document.getElementById('start');
+const CIRCUM=596.9;
+
+function updateClock(){
+  const m=Math.floor(timerLeft/60), s=timerLeft%60;
+  clock.innerText=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  const pct=timerLeft/(document.getElementById('m-in').value*60);
+  ring.style.strokeDashoffset=CIRCUM*(1-pct);
+  document.title=`${clock.innerText} · Focus-Tap`;
+}
+
+function toggleMode(mode){
+  const bd=document.getElementById('btn-deep'), bp=document.getElementById('btn-prod');
+  if(currentMode===mode){
+    currentMode=null;
+    bd.className='btn-mode'; bp.className='btn-mode';
+    if(document.fullscreenElement) document.exitFullscreen();
+    showToast('Modo desactivado');
+  } else {
+    currentMode=mode;
+    bd.className=mode==='deep'?'btn-mode active-deep':'btn-mode';
+    bp.className=mode==='prod'?'btn-mode active-prod':'btn-mode';
+    if(mode==='deep'){
+      document.documentElement.requestFullscreen().catch(()=>{});
+      showToast('🎯 Modo Enfoque activado — ¡Sin distracciones!');
+    } else {
+      showToast('⚡ Modo Productividad activado');
+    }
+  }
+}
+
+startBtn.onclick=()=>{
+  if(timerRunning){
+    clearInterval(timerInterval); timerRunning=false;
+    startBtn.innerHTML='▶ Reanudar';
+    showToast('Pausado — Respira profundo');
+  } else {
+    timerRunning=true;
+    startBtn.innerHTML='⏸ Pausar';
+    timerInterval=setInterval(()=>{
+      if(timerLeft>0){
+        timerLeft--;
+        totalMin=Math.floor((parseInt(localStorage.getItem('ft-totalmin')||'0')*60+1)/60);
+        updateClock();
+      } else {
+        clearInterval(timerInterval); timerRunning=false;
+        startBtn.innerHTML='▶ Empezar';
+        sessionsDone++;
+        localStorage.setItem('ft-sessions',sessionsDone);
+        const prev=parseInt(localStorage.getItem('ft-totalmin')||'0');
+        const mins=parseInt(document.getElementById('m-in').value);
+        localStorage.setItem('ft-totalmin',prev+mins);
+        updateStats();
+        updateScore();
+        markStreak();
+        showToast('🎉 ¡Sesión completada! Descansa un poco');
+        timerLeft=document.getElementById('m-in').value*60;
+        updateClock();
+      }
+    },1000);
+  }
+};
+
+document.getElementById('reset').onclick=()=>{
+  clearInterval(timerInterval); timerRunning=false;
+  timerLeft=document.getElementById('m-in').value*60;
+  updateClock(); startBtn.innerHTML='▶ Empezar';
+};
+
+document.getElementById('m-in').onchange=(e)=>{
+  if(!timerRunning){timerLeft=e.target.value*60; updateClock();}
+};
+
+// Penalty for tab-switching in deep mode
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden && currentMode && timerRunning){
+    leaveTime=Date.now();
+    clearInterval(timerInterval); timerRunning=false;
+    startBtn.innerHTML='▶ Reanudar';
+    showToast('⚠️ ¡Pausa automática! Vuelve al estudio');
+  } else if(!document.hidden && leaveTime && currentMode==='deep'){
+    const away=Math.floor((Date.now()-leaveTime)/1000);
+    timerLeft=Math.min(timerLeft+away, document.getElementById('m-in').value*60);
+    updateClock();
+    showToast(`⏱ Penalización: +${away}s añadidos`);
+    document.body.classList.add('penalized');
+    setTimeout(()=>document.body.classList.remove('penalized'),900);
+    leaveTime=null;
+  }
+});
+
+function updateStats(){
+  document.getElementById('sessions-done').innerText=parseInt(localStorage.getItem('ft-sessions')||'0');
+  document.getElementById('total-min').innerText=parseInt(localStorage.getItem('ft-totalmin')||'0');
+  document.getElementById('streak-count').innerText=streakDays.filter(Boolean).length;
+}
+
+// ══════════════════════════════════════
+//  SCORE
+// ══════════════════════════════════════
+function updateScore(){
+  const s=parseInt(localStorage.getItem('ft-sessions')||'0');
+  const t=document.querySelectorAll('.task-item').length;
+  const d=document.querySelectorAll('.task-item.done').length;
+  const raw=Math.min(100, s*10 + (t>0?Math.round(d/t*50):0));
+  document.getElementById('score-num').innerText=raw;
+  const arc=document.getElementById('score-arc');
+  arc.style.strokeDashoffset=276.5*(1-raw/100);
+}
+
+// ══════════════════════════════════════
+//  STREAK
+// ══════════════════════════════════════
+const DAYS=['L','M','X','J','V','S','D'];
+function buildStreak(){
+  const row=document.getElementById('streak-row');
+  row.innerHTML='';
+  const today=(new Date().getDay()+6)%7;
+  DAYS.forEach((d,i)=>{
+    const el=document.createElement('div');
+    el.className='streak-day'+(i===today?' today':streakDays.includes(i)?' done':'');
+    el.innerText=d;
+    row.appendChild(el);
+  });
+}
+function markStreak(){
+  const today=(new Date().getDay()+6)%7;
+  if(!streakDays.includes(today)) streakDays.push(today);
+  localStorage.setItem('ft-streak',JSON.stringify(streakDays));
+  buildStreak();
+  updateStats();
+}
+
+// ══════════════════════════════════════
+//  MUSIC PLAYER
+// ══════════════════════════════════════
+const player=document.getElementById('player');
+const playBtn=document.getElementById('play-btn');
+const eq=document.getElementById('eq');
+
+function setGenre(genre, el){
+  currentGenre=genre; trackIdx=0;
+  document.querySelectorAll('.genre-pills .pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  loadTrack(false);
+}
+
+function loadTrack(autoplay){
+  const pl=PLAYLISTS[currentGenre];
+  const t=pl.tracks[trackIdx];
+  player.src=t.url;
+  document.getElementById('album-display').style.background=pl.bg;
+  document.getElementById('album-emoji').innerText=pl.emoji;
+  document.getElementById('track-name').innerText=t.name;
+  document.getElementById('track-artist').innerText=t.artist;
+  document.getElementById('t-total').innerText=formatTime(t.dur);
+  elapsedSec=0;
+  updateProg();
+  if(autoplay){player.play().catch(()=>{}); setPlaying(true);}
+  else{setPlaying(false);}
+}
+
+function setPlaying(v){
+  musicPlaying=v;
+  playBtn.innerHTML=v?'⏸':'▶';
+  eq.classList.toggle('playing',v);
+  clearInterval(progInterval);
+  if(v){
+    progInterval=setInterval(()=>{
+      elapsedSec++;
+      const dur=PLAYLISTS[currentGenre].tracks[trackIdx].dur;
+      if(elapsedSec>=dur){elapsedSec=0;}
+      updateProg();
+    },1000);
+  }
+}
+
+function updateProg(){
+  const dur=PLAYLISTS[currentGenre].tracks[trackIdx].dur;
+  const pct=(elapsedSec/dur)*100;
+  document.getElementById('prog-fill').style.width=pct+'%';
+  document.getElementById('t-elapsed').innerText=formatTime(elapsedSec);
+}
+
+function musicToggle(){
+  if(!player.src) loadTrack(false);
+  if(player.paused){player.play().catch(()=>{}); setPlaying(true);}
+  else{player.pause(); setPlaying(false);}
+}
+
+function musicNext(){trackIdx=(trackIdx+1)%PLAYLISTS[currentGenre].tracks.length; loadTrack(musicPlaying);}
+function musicPrev(){trackIdx=(trackIdx-1+PLAYLISTS[currentGenre].tracks.length)%PLAYLISTS[currentGenre].tracks.length; loadTrack(musicPlaying);}
+function setVol(v){player.volume=v;}
+
+function formatTime(sec){
+  return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
+}
+
+// Click on progress bar to seek
+document.getElementById('prog-wrap').addEventListener('click',e=>{
+  const rect=e.currentTarget.getBoundingClientRect();
+  const pct=(e.clientX-rect.left)/rect.width;
+  const dur=PLAYLISTS[currentGenre].tracks[trackIdx].dur;
+  elapsedSec=Math.floor(pct*dur);
+  updateProg();
+});
+
+// ══════════════════════════════════════
+//  TASKS
+// ══════════════════════════════════════
+let tasks=JSON.parse(localStorage.getItem('ft-tasks')||'[]');
+
+function saveTasks(){
+  localStorage.setItem('ft-tasks',JSON.stringify(tasks));
+  updateTaskProgress();
+  updateScore();
+}
+
+function renderTasks(){
+  const list=document.getElementById('task-list');
+  list.innerHTML='';
+  tasks.forEach((task,i)=>{
+    const div=document.createElement('div');
+    div.className='task-item'+(task.done?' done':'');
+    const dotClass=task.priority==='high'?'p-high':task.priority==='low'?'p-low':'p-med';
+    div.innerHTML=`
+      <div class="task-check${task.done?' checked':''}" onclick="toggleTask(${i})">
+        ${task.done?'✓':''}
+      </div>
+      <div class="priority-dot ${dotClass}"></div>
+      <span class="task-txt">${task.text}</span>
+      <button class="task-del" onclick="deleteTask(${i})" title="Eliminar">✕</button>
+    `;
+    list.appendChild(div);
+  });
+  updateTaskProgress();
+}
+
+function updateTaskProgress(){
+  const total=tasks.length, done=tasks.filter(t=>t.done).length;
+  const pct=total>0?Math.round(done/total*100):0;
+  document.getElementById('task-prog-fill').style.width=pct+'%';
+  document.getElementById('task-prog-txt').innerText=`${done} / ${total} completadas`;
+}
+
+function toggleTask(i){tasks[i].done=!tasks[i].done; saveTasks(); renderTasks();}
+function deleteTask(i){tasks.splice(i,1); saveTasks(); renderTasks();}
+
+document.getElementById('task-in').addEventListener('keypress',e=>{
+  if(e.key==='Enter' && e.target.value.trim()!==''){
+    tasks.push({text:e.target.value.trim(),done:false,priority:document.getElementById('task-priority').value});
+    e.target.value='';
+    saveTasks(); renderTasks();
+  }
+});
+
+// ══════════════════════════════════════
+//  NOTES
+// ══════════════════════════════════════
+const notes=document.getElementById('notes');
+notes.value=localStorage.getItem('ft-notes')||'';
+let saveTimeout=null;
+
+notes.addEventListener('input',()=>{
+  const words=notes.value.trim()===''?0:notes.value.trim().split(/\s+/).length;
+  document.getElementById('notes-meta').innerText=`${words} palabra${words!==1?'s':''} · guardado automático`;
+  document.getElementById('save-indicator').innerText='...';
+  clearTimeout(saveTimeout);
+  saveTimeout=setTimeout(()=>{
+    localStorage.setItem('ft-notes',notes.value);
+    document.getElementById('save-indicator').innerText='✓ Guardado';
+  },1200);
+});
+
+function copyNotes(){
+  if(!notes.value.trim()) return showToast('Las notas están vacías');
+  navigator.clipboard.writeText(notes.value).then(()=>showToast('📋 Notas copiadas'));
+}
+
+function downloadNotes(){
+  if(!notes.value.trim()) return showToast('Las notas están vacías');
+  const blob=new Blob([notes.value],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`notas-${new Date().toISOString().slice(0,10)}.txt`;
+  a.click(); showToast('⬇ Descargando notas...');
+}
+
+function clearNotes(){
+  if(confirm('¿Limpiar todas las notas?')){
+    notes.value=''; localStorage.removeItem('ft-notes');
+    document.getElementById('notes-meta').innerText='0 palabras · guardado automático';
+    showToast('🗑 Notas eliminadas');
+  }
+}
+
+// ══════════════════════════════════════
+//  QUOTES
+// ══════════════════════════════════════
+function nextQuote(){
+  quoteIdx=(quoteIdx+1)%QUOTES.length;
+  const el=document.getElementById('quote-text');
+  el.style.opacity=0;
+  setTimeout(()=>{el.innerText=QUOTES[quoteIdx]; el.style.opacity=1;},300);
+}
+document.getElementById('quote-text').style.transition='opacity 0.3s';
+
+// Auto-rotate quotes every 60s
+setInterval(()=>{
+  quoteIdx=(quoteIdx+Math.floor(Math.random()*3)+1)%QUOTES.length;
+  nextQuote();
+},60000);
+
+// ══════════════════════════════════════
+//  BREAK TIMER
+// ══════════════════════════════════════
+function updateBreakClock(){
+  const m=Math.floor(breakLeft/60), s=breakLeft%60;
+  document.getElementById('break-clock').innerText=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+function setBreak(min){breakLeft=min*60; updateBreakClock(); if(breakRunning){resetBreak();}}
+function toggleBreak(){
+  if(breakRunning){
+    clearInterval(breakInterval); breakRunning=false;
+    document.getElementById('break-start').innerText='▶ Iniciar';
+  } else {
+    breakRunning=true;
+    document.getElementById('break-start').innerText='⏸ Pausar';
+    breakInterval=setInterval(()=>{
+      if(breakLeft>0){breakLeft--; updateBreakClock();}
+      else{
+        clearInterval(breakInterval); breakRunning=false;
+        document.getElementById('break-start').innerText='▶ Iniciar';
+        showToast('☕ ¡Descanso terminado! De vuelta al estudio');
+      }
+    },1000);
+  }
+}
+function resetBreak(){clearInterval(breakInterval); breakRunning=false; document.getElementById('break-start').innerText='▶ Iniciar'; updateBreakClock();}
+
+// ══════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════
+let toastTimeout=null;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.innerText=msg; t.style.opacity=1;
+  clearTimeout(toastTimeout);
+  toastTimeout=setTimeout(()=>t.style.opacity=0,3200);
+}
+
+// ══════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════
+updateClock();
+updateStats();
+buildStreak();
+renderTasks();
+updateScore();
+loadTrack(false);
+
+// Randomize starting quote
+quoteIdx=Math.floor(Math.random()*QUOTES.length);
+document.getElementById('quote-text').innerText=QUOTES[quoteIdx];
+</script>
 </body>
-
 </html>
