@@ -226,15 +226,51 @@ header{
   text-align:center;margin-bottom:16px;
 }
 
-/* Genre pills */
-.genre-pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
-.pill{
-  padding:6px 14px;border-radius:50px;font-size:0.72rem;font-weight:700;
-  letter-spacing:0.5px;cursor:pointer;transition:all 0.2s;border:none;font-family:'Nunito',sans-serif;
-  background:rgba(255,255,255,0.5);border:1px solid var(--border2);color:var(--text2);
+/* ── GENRE ACCORDION ── */
+#genre-accordion{display:flex;flex-direction:column;gap:6px;max-height:260px;overflow-y:auto;padding-right:2px;}
+#genre-accordion::-webkit-scrollbar{width:4px;}
+#genre-accordion::-webkit-scrollbar-thumb{background:rgba(100,120,160,0.2);border-radius:4px;}
+
+.genre-group{border-radius:14px;overflow:hidden;border:1px solid var(--border2);}
+.genre-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 14px;cursor:pointer;font-size:0.82rem;font-weight:700;
+  color:var(--text);background:rgba(255,255,255,0.45);
+  transition:background 0.2s;user-select:none;
 }
-.pill.active{background:var(--text);color:white;border-color:transparent;}
-.pill:hover:not(.active){background:rgba(255,255,255,0.8);}
+.genre-header:hover{background:rgba(255,255,255,0.75);}
+.genre-header.open{background:rgba(255,255,255,0.7);color:var(--accent2);}
+.genre-arrow{
+  font-size:1rem;font-weight:400;color:var(--text2);
+  transition:transform 0.25s ease;display:inline-block;
+}
+.genre-header.open .genre-arrow{transform:rotate(90deg);}
+
+.genre-tracks{
+  display:none;flex-direction:column;
+  background:rgba(255,255,255,0.25);
+  border-top:1px solid var(--border2);
+}
+.genre-tracks.open{display:flex;}
+
+.track-row{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 14px;cursor:pointer;
+  transition:background 0.15s;border-bottom:1px solid rgba(200,210,230,0.2);
+}
+.track-row:last-child{border-bottom:none;}
+.track-row:hover{background:rgba(255,255,255,0.5);}
+.track-row.playing{background:rgba(121,134,203,0.12);}
+.track-row.playing .tr-name{color:var(--accent2);font-weight:700;}
+.tr-num{font-size:0.68rem;color:var(--text2);width:16px;text-align:right;flex-shrink:0;}
+.tr-info{flex:1;min-width:0;}
+.tr-name{font-size:0.8rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tr-artist{font-size:0.68rem;color:var(--text2);margin-top:1px;}
+.tr-dur{font-size:0.67rem;color:var(--text2);flex-shrink:0;}
+.tr-eq{width:14px;flex-shrink:0;display:flex;align-items:flex-end;gap:1px;height:12px;}
+.tr-eq-b{width:3px;background:var(--accent2);border-radius:1px;animation:eq-bounce 0.7s ease-in-out infinite alternate;}
+.tr-eq-b:nth-child(2){animation-delay:0.15s;}
+.tr-eq-b:nth-child(3){animation-delay:0.3s;}
 
 /* Music controls */
 .music-controls{display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:18px;}
@@ -546,6 +582,34 @@ input[type=range]::-webkit-slider-thumb{
 }
 body.penalized{animation:penalty-flash 0.8s ease-out;}
 
+/* ── BREAK NOTIFICATION UI ── */
+.notif-pill{
+  padding:7px 14px;border-radius:50px;font-size:0.72rem;font-weight:700;
+  cursor:pointer;transition:all 0.2s;border:none;font-family:'Nunito',sans-serif;
+  background:rgba(255,255,255,0.5);border:1px solid rgba(230,81,0,0.2);color:#bf360c;
+}
+.notif-pill.active{background:#e65100;color:white;border-color:transparent;box-shadow:0 4px 12px rgba(230,81,0,0.3);}
+.notif-pill:hover:not(.active){background:rgba(255,255,255,0.8);}
+.notif-panel{font-size:0.8rem;}
+.alarm-opt{
+  display:flex;align-items:center;gap:7px;
+  padding:6px 10px;border-radius:10px;
+  font-size:0.75rem;color:#6d4c41;cursor:pointer;
+  background:rgba(255,255,255,0.35);border:1px solid rgba(230,81,0,0.1);
+  transition:background 0.2s;
+}
+.alarm-opt:hover{background:rgba(255,255,255,0.6);}
+.alarm-opt input{accent-color:#e65100;cursor:pointer;}
+.btn-google{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;padding:10px 16px;border-radius:14px;
+  background:white;border:1px solid rgba(0,0,0,0.12);
+  font-family:'Nunito',sans-serif;font-size:0.8rem;font-weight:700;
+  color:#3c4043;cursor:pointer;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);transition:all 0.2s;
+}
+.btn-google:hover{box-shadow:0 4px 14px rgba(0,0,0,0.15);transform:translateY(-1px);}
+
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
@@ -625,7 +689,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
       <!-- TIMER CARD -->
       <div class="card" style="text-align:center;">
         <div class="session-label">
-          Sesión de <input type="number" id="m-in" class="session-input" value="25"> min
+          Sesión de <input type="number" id="m-in" class="session-input" value="25" min="1" max="180"> min
         </div>
 
         <!-- Ring Progress -->
@@ -675,26 +739,18 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
       </div>
 
       <!-- MUSIC PLAYER CARD -->
-      <div class="card card-sm">
+      <div class="card card-sm" id="music-card">
+
+        <!-- Now playing display -->
         <div id="album-display" class="album-display" style="background:linear-gradient(135deg,#c5cae9,#9fa8da);">
           <div class="album-shimmer"></div>
           <div class="album-art-emoji" id="album-emoji">🎹</div>
         </div>
-
-        <div class="track-name" id="track-name">Lofi Dream</div>
+        <div class="track-name" id="track-name">Selecciona una pista</div>
         <div class="track-artist" id="track-artist">Focus-Tap Radio</div>
 
-        <!-- Genre Pills -->
-        <div class="genre-pills" id="genre-pills">
-          <button class="pill active" onclick="setGenre('lofi',this)">🎹 Lofi</button>
-          <button class="pill" onclick="setGenre('nature',this)">🌧 Lluvia</button>
-          <button class="pill" onclick="setGenre('cafe',this)">☕ Café</button>
-          <button class="pill" onclick="setGenre('classical',this)">🎻 Clásica</button>
-          <button class="pill" onclick="setGenre('jazz',this)">🎷 Jazz</button>
-        </div>
-
-        <!-- Equalizer + Controls -->
-        <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:16px;">
+        <!-- Equalizer -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:14px;">
           <div class="eq" id="eq">
             <div class="eq-bar"></div><div class="eq-bar"></div>
             <div class="eq-bar"></div><div class="eq-bar"></div>
@@ -702,24 +758,86 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
           </div>
         </div>
 
+        <!-- Progress -->
         <div class="progress-bar-wrap" id="prog-wrap">
           <div class="progress-bar-fill" id="prog-fill"></div>
         </div>
         <div class="time-labels">
           <span id="t-elapsed">0:00</span>
-          <span id="t-total">3:45</span>
+          <span id="t-total">0:00</span>
         </div>
 
+        <!-- Controls -->
         <div class="music-controls">
           <button class="btn-ctrl" onclick="musicPrev()" title="Anterior">⏮</button>
           <button class="btn-ctrl play" onclick="musicToggle()" id="play-btn">▶</button>
           <button class="btn-ctrl" onclick="musicNext()" title="Siguiente">⏭</button>
         </div>
 
-        <div class="volume-row">
+        <!-- Volume -->
+        <div class="volume-row" style="margin-bottom:18px;">
           <span class="vol-icon">🔈</span>
           <input type="range" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)">
           <span class="vol-icon">🔊</span>
+        </div>
+
+        <!-- ══ GENRE ACCORDION ══
+             ┌─────────────────────────────────────────────────────────┐
+             │  Para añadir una NUEVA CANCIÓN a una categoría:         │
+             │  1. Localiza el array tracks:[] de la categoría deseada │
+             │  2. Añade un nuevo objeto con este formato:             │
+             │     { name:'Título', artist:'Artista',                  │
+             │       url:'https://ruta-al-mp3.mp3', dur: SEGUNDOS }    │
+             │                                                         │
+             │  Para añadir una NUEVA CATEGORÍA:                       │
+             │  1. Añade una entrada nueva en PLAYLISTS (en el JS)     │
+             │  2. Añade un bloque .genre-group aquí abajo             │
+             └─────────────────────────────────────────────────────────┘ -->
+        <div style="font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:10px;">
+          Biblioteca
+        </div>
+        <div id="genre-accordion">
+
+          <div class="genre-group" data-genre="lofi">
+            <div class="genre-header" onclick="toggleGenre('lofi',this)">
+              <span>🎹 Lofi</span>
+              <span class="genre-arrow">›</span>
+            </div>
+            <div class="genre-tracks"></div>
+          </div>
+
+          <div class="genre-group" data-genre="nature">
+            <div class="genre-header" onclick="toggleGenre('nature',this)">
+              <span>🌧 Lluvia</span>
+              <span class="genre-arrow">›</span>
+            </div>
+            <div class="genre-tracks"></div>
+          </div>
+
+          <div class="genre-group" data-genre="cafe">
+            <div class="genre-header" onclick="toggleGenre('cafe',this)">
+              <span>☕ Café</span>
+              <span class="genre-arrow">›</span>
+            </div>
+            <div class="genre-tracks"></div>
+          </div>
+
+          <div class="genre-group" data-genre="classical">
+            <div class="genre-header" onclick="toggleGenre('classical',this)">
+              <span>🎻 Clásica</span>
+              <span class="genre-arrow">›</span>
+            </div>
+            <div class="genre-tracks"></div>
+          </div>
+
+          <div class="genre-group" data-genre="jazz">
+            <div class="genre-header" onclick="toggleGenre('jazz',this)">
+              <span>🎷 Jazz</span>
+              <span class="genre-arrow">›</span>
+            </div>
+            <div class="genre-tracks"></div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -835,9 +953,36 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
         <button class="btn-tiny" onclick="setBreak(10)">10 min</button>
         <button class="btn-tiny" onclick="setBreak(15)">15 min</button>
       </div>
-      <div style="display:flex;gap:8px;justify-content:center;">
+      <div style="display:flex;gap:8px;justify-content:center;margin-bottom:16px;">
         <button class="btn-tiny" id="break-start" onclick="toggleBreak()">▶ Iniciar</button>
-        <button class="btn-tiny" onclick="resetBreak()">↺</button>
+        <button class="btn-tiny" onclick="resetBreak()">↺ Reset</button>
+      </div>
+
+      <!-- Divider -->
+      <div style="border-top:1px solid rgba(230,81,0,0.12);margin-bottom:14px;"></div>
+
+      <!-- Web notification panel -->
+      <div style="font-size:0.68rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bf360c;margin-bottom:10px;text-align:center;">
+        Notificación al terminar
+      </div>
+      <div style="font-size:0.75rem;color:#6d4c41;text-align:center;line-height:1.6;margin-bottom:10px;">
+        Suena una alarma hasta que la pares.
+      </div>
+      <div style="text-align:center;margin-bottom:12px;">
+        <button class="btn-tiny" id="perm-btn" onclick="requestNotifPermission()">🔔 Activar avisos</button>
+      </div>
+      <!-- Alarm sounds -->
+      <div style="font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#bf360c;margin-bottom:6px;">Sonido de alarma</div>
+      <div style="display:flex;flex-direction:column;gap:5px;">
+        <label class="alarm-opt"><input type="radio" name="alarm" value="beep" checked> Beep clásico</label>
+        <label class="alarm-opt"><input type="radio" name="alarm" value="bell"> Campana suave</label>
+        <label class="alarm-opt"><input type="radio" name="alarm" value="pulse"> Pulso digital</label>
+      </div>
+
+      <!-- Alarm active banner -->
+      <div id="alarm-banner" style="display:none;margin-top:12px;background:rgba(244,67,54,0.12);border:1px solid rgba(244,67,54,0.3);border-radius:14px;padding:10px 14px;text-align:center;">
+        <div style="font-size:0.8rem;font-weight:700;color:#c62828;margin-bottom:6px;">🔔 ¡Descanso terminado!</div>
+        <button class="btn-tiny" onclick="stopAlarm()" style="background:#c62828;color:white;border:none;">⏹ Parar alarma</button>
       </div>
     </div>
 
@@ -934,14 +1079,21 @@ const PLAYLISTS = {
 // ══════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════
+
+// ── Daily reset: si el día guardado ≠ hoy, reinicia sesiones y minutos ──
+const TODAY = new Date().toISOString().slice(0,10); // "YYYY-MM-DD"
+if(localStorage.getItem('ft-date') !== TODAY){
+  localStorage.setItem('ft-date', TODAY);
+  localStorage.setItem('ft-sessions', '0');
+  localStorage.setItem('ft-totalmin', '0');
+}
+
 let currentMode=null, leaveTime=null;
 let timerInterval=null, timerLeft=25*60, timerRunning=false;
 let totalSec=0;
 let sessionsDone=parseInt(localStorage.getItem('ft-sessions')||'0');
 let totalMin=parseInt(localStorage.getItem('ft-totalmin')||'0');
 let streakDays=JSON.parse(localStorage.getItem('ft-streak')||'[]');
-let currentGenre='lofi', trackIdx=0;
-let musicPlaying=false, progInterval=null, elapsedSec=0;
 let breakLeft=5*60, breakRunning=false, breakInterval=null;
 let quoteIdx=0;
 
@@ -1019,8 +1171,15 @@ document.getElementById('reset').onclick=()=>{
   updateClock(); startBtn.innerHTML='▶ Empezar';
 };
 
+document.getElementById('m-in').addEventListener('input',(e)=>{
+  let v=parseInt(e.target.value)||1;
+  if(v<1){e.target.value=1; v=1;}
+  if(!timerRunning){timerLeft=v*60; updateClock();}
+});
 document.getElementById('m-in').onchange=(e)=>{
-  if(!timerRunning){timerLeft=e.target.value*60; updateClock();}
+  let v=Math.max(1, parseInt(e.target.value)||1);
+  e.target.value=v;
+  if(!timerRunning){timerLeft=v*60; updateClock();}
 };
 
 // Penalty for tab-switching in deep mode
@@ -1084,22 +1243,78 @@ function markStreak(){
 }
 
 // ══════════════════════════════════════
-//  MUSIC PLAYER
+//  MUSIC PLAYER  (accordion + autoplay)
 // ══════════════════════════════════════
 const player=document.getElementById('player');
 const playBtn=document.getElementById('play-btn');
 const eq=document.getElementById('eq');
+let musicPlaying=false, progInterval=null, elapsedSec=0;
+let currentGenre=null, trackIdx=0;
 
-function setGenre(genre, el){
-  currentGenre=genre; trackIdx=0;
-  document.querySelectorAll('.genre-pills .pill').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  loadTrack(false);
+// ── Build accordion track lists from PLAYLISTS data ──
+function buildAccordion(){
+  document.querySelectorAll('.genre-group').forEach(group=>{
+    const genre=group.dataset.genre;
+    const pl=PLAYLISTS[genre];
+    const container=group.querySelector('.genre-tracks');
+    container.innerHTML='';
+    pl.tracks.forEach((t,i)=>{
+      const row=document.createElement('div');
+      row.className='track-row';
+      row.id=`tr-${genre}-${i}`;
+      row.innerHTML=`
+        <span class="tr-num">${i+1}</span>
+        <div class="tr-info">
+          <div class="tr-name">${t.name}</div>
+          <div class="tr-artist">${t.artist}</div>
+        </div>
+        <span class="tr-dur">${formatTime(t.dur)}</span>
+        <div class="tr-eq" style="display:none">
+          <div class="tr-eq-b" style="height:4px"></div>
+          <div class="tr-eq-b" style="height:8px"></div>
+          <div class="tr-eq-b" style="height:6px"></div>
+        </div>`;
+      row.onclick=()=>{ selectTrack(genre, i, true); };
+      container.appendChild(row);
+    });
+  });
 }
 
-function loadTrack(autoplay){
-  const pl=PLAYLISTS[currentGenre];
-  const t=pl.tracks[trackIdx];
+function toggleGenre(genre, headerEl){
+  // Close all others
+  document.querySelectorAll('.genre-header').forEach(h=>{
+    if(h!==headerEl){
+      h.classList.remove('open');
+      h.nextElementSibling.classList.remove('open');
+    }
+  });
+  // Toggle clicked
+  const isOpen=headerEl.classList.contains('open');
+  headerEl.classList.toggle('open',!isOpen);
+  headerEl.nextElementSibling.classList.toggle('open',!isOpen);
+}
+
+function selectTrack(genre, idx, autoplay){
+  // Remove playing state from all rows
+  document.querySelectorAll('.track-row').forEach(r=>{
+    r.classList.remove('playing');
+    const mini=r.querySelector('.tr-eq');
+    if(mini) mini.style.display='none';
+  });
+
+  currentGenre=genre; trackIdx=idx;
+  const pl=PLAYLISTS[genre];
+  const t=pl.tracks[idx];
+
+  // Mark this row as playing
+  const row=document.getElementById(`tr-${genre}-${idx}`);
+  if(row){
+    row.classList.add('playing');
+    const mini=row.querySelector('.tr-eq');
+    if(mini) mini.style.display='flex';
+  }
+
+  // Update player display
   player.src=t.url;
   document.getElementById('album-display').style.background=pl.bg;
   document.getElementById('album-emoji').innerText=pl.emoji;
@@ -1108,52 +1323,76 @@ function loadTrack(autoplay){
   document.getElementById('t-total').innerText=formatTime(t.dur);
   elapsedSec=0;
   updateProg();
-  if(autoplay){player.play().catch(()=>{}); setPlaying(true);}
-  else{setPlaying(false);}
+
+  if(autoplay){ player.play().catch(()=>{}); setPlaying(true); }
+  else { setPlaying(false); }
 }
+
+// Auto-advance when track ends naturally
+player.addEventListener('ended',()=>{
+  if(!currentGenre) return;
+  const tracks=PLAYLISTS[currentGenre].tracks;
+  const next=(trackIdx+1)%tracks.length;
+  selectTrack(currentGenre, next, true);
+});
 
 function setPlaying(v){
   musicPlaying=v;
   playBtn.innerHTML=v?'⏸':'▶';
   eq.classList.toggle('playing',v);
+  // mini EQ in track row
+  const row=currentGenre!=null?document.getElementById(`tr-${currentGenre}-${trackIdx}`):null;
+  if(row){ const mini=row.querySelector('.tr-eq'); if(mini) mini.style.display=v?'flex':'none'; }
   clearInterval(progInterval);
   if(v){
     progInterval=setInterval(()=>{
+      if(!currentGenre) return;
       elapsedSec++;
-      const dur=PLAYLISTS[currentGenre].tracks[trackIdx].dur;
-      if(elapsedSec>=dur){elapsedSec=0;}
       updateProg();
     },1000);
   }
 }
 
 function updateProg(){
+  if(!currentGenre) return;
   const dur=PLAYLISTS[currentGenre].tracks[trackIdx].dur;
-  const pct=(elapsedSec/dur)*100;
+  const pct=Math.min((elapsedSec/dur)*100,100);
   document.getElementById('prog-fill').style.width=pct+'%';
   document.getElementById('t-elapsed').innerText=formatTime(elapsedSec);
 }
 
 function musicToggle(){
-  if(!player.src) loadTrack(false);
-  if(player.paused){player.play().catch(()=>{}); setPlaying(true);}
-  else{player.pause(); setPlaying(false);}
+  if(!currentGenre){ showToast('Elige una canción de la biblioteca 🎵'); return; }
+  if(player.paused){ player.play().catch(()=>{}); setPlaying(true); }
+  else{ player.pause(); setPlaying(false); }
 }
 
-function musicNext(){trackIdx=(trackIdx+1)%PLAYLISTS[currentGenre].tracks.length; loadTrack(musicPlaying);}
-function musicPrev(){trackIdx=(trackIdx-1+PLAYLISTS[currentGenre].tracks.length)%PLAYLISTS[currentGenre].tracks.length; loadTrack(musicPlaying);}
-function setVol(v){player.volume=v;}
+function musicNext(){
+  if(!currentGenre) return;
+  const next=(trackIdx+1)%PLAYLISTS[currentGenre].tracks.length;
+  selectTrack(currentGenre, next, musicPlaying);
+}
+function musicPrev(){
+  if(!currentGenre) return;
+  // If >3s in, restart current; else go previous
+  if(elapsedSec>3){ elapsedSec=0; player.currentTime=0; updateProg(); return; }
+  const prev=(trackIdx-1+PLAYLISTS[currentGenre].tracks.length)%PLAYLISTS[currentGenre].tracks.length;
+  selectTrack(currentGenre, prev, musicPlaying);
+}
+function setVol(v){ player.volume=v; }
 
 function formatTime(sec){
   return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,'0')}`;
 }
 
-// Click on progress bar to seek
+// Progress bar click to seek
 document.getElementById('prog-wrap').addEventListener('click',e=>{
+  if(!currentGenre) return;
   const rect=e.currentTarget.getBoundingClientRect();
   const pct=(e.clientX-rect.left)/rect.width;
   const dur=PLAYLISTS[currentGenre].tracks[trackIdx].dur;
   elapsedSec=Math.floor(pct*dur);
+  player.currentTime=elapsedSec;
   updateProg();
 });
 
@@ -1289,31 +1528,140 @@ function startQuoteTimer(){
 }
 
 // ══════════════════════════════════════
-//  BREAK TIMER
+//  BREAK TIMER  (fixed + notifications)
 // ══════════════════════════════════════
+let breakDuration = 5*60; // duración seleccionada, para el reset
+
 function updateBreakClock(){
   const m=Math.floor(breakLeft/60), s=breakLeft%60;
   document.getElementById('break-clock').innerText=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
 }
-function setBreak(min){breakLeft=min*60; updateBreakClock(); if(breakRunning){resetBreak();}}
+
+function setBreak(min){
+  breakDuration = min * 60;
+  breakLeft = breakDuration;
+  if(breakRunning){ clearInterval(breakInterval); breakRunning=false; document.getElementById('break-start').innerText='▶ Iniciar'; }
+  updateBreakClock();
+}
+
 function toggleBreak(){
   if(breakRunning){
     clearInterval(breakInterval); breakRunning=false;
     document.getElementById('break-start').innerText='▶ Iniciar';
   } else {
+    if(breakLeft===0) breakLeft=breakDuration; // si ya llegó a 0, reinicia
     breakRunning=true;
     document.getElementById('break-start').innerText='⏸ Pausar';
     breakInterval=setInterval(()=>{
-      if(breakLeft>0){breakLeft--; updateBreakClock();}
+      if(breakLeft>0){ breakLeft--; updateBreakClock(); }
       else{
         clearInterval(breakInterval); breakRunning=false;
         document.getElementById('break-start').innerText='▶ Iniciar';
-        showToast('☕ ¡Descanso terminado! De vuelta al estudio');
+        fireBreakNotification();
       }
     },1000);
   }
 }
-function resetBreak(){clearInterval(breakInterval); breakRunning=false; document.getElementById('break-start').innerText='▶ Iniciar'; updateBreakClock();}
+
+function resetBreak(){
+  clearInterval(breakInterval);
+  breakRunning=false;
+  breakLeft=breakDuration; // ← usa la duración guardada, no 0
+  document.getElementById('break-start').innerText='▶ Iniciar';
+  updateBreakClock();
+  stopAlarm();
+}
+
+// ── Notification permission ──
+function requestNotifPermission(){
+  Notification.requestPermission().then(p=>{
+    if(p==='granted'){
+      document.getElementById('perm-btn').innerText='✅ Avisos activos';
+      document.getElementById('perm-btn').disabled=true;
+      showToast('🔔 Notificaciones activadas');
+    } else {
+      showToast('⚠️ Permisos denegados — sonará solo la alarma');
+    }
+  });
+}
+
+// Check if already granted on load
+if(Notification.permission==='granted'){
+  document.getElementById('perm-btn').innerText='✅ Avisos activos';
+  document.getElementById('perm-btn').disabled=true;
+}
+let alarmCtx=null, alarmNodes=[], alarmLoop=null;
+
+function requestNotifPermission(){
+  Notification.requestPermission().then(p=>{
+    if(p==='granted'){
+      document.getElementById('perm-btn').innerText='✅ Permisos activos';
+      document.getElementById('perm-btn').disabled=true;
+      showToast('🔔 Notificaciones activadas');
+    } else {
+      showToast('⚠️ Permisos denegados — usa solo la alarma sonora');
+    }
+  });
+}
+
+function getAlarmType(){
+  return document.querySelector('input[name="alarm"]:checked')?.value || 'beep';
+}
+
+function playAlarm(){
+  stopAlarm();
+  alarmCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const type = getAlarmType();
+
+  function beepOnce(startAt, freq, dur){
+    const osc = alarmCtx.createOscillator();
+    const gain = alarmCtx.createGain();
+    osc.connect(gain); gain.connect(alarmCtx.destination);
+    osc.frequency.value = freq;
+    osc.type = type==='pulse' ? 'square' : 'sine';
+    gain.gain.setValueAtTime(0, startAt);
+    gain.gain.linearRampToValueAtTime(0.4, startAt+0.02);
+    gain.gain.linearRampToValueAtTime(0, startAt+dur);
+    osc.start(startAt); osc.stop(startAt+dur+0.05);
+    alarmNodes.push(osc);
+  }
+
+  function schedulePattern(){
+    const now = alarmCtx.currentTime;
+    if(type==='beep'){
+      beepOnce(now+0.0, 880, 0.18);
+      beepOnce(now+0.25, 880, 0.18);
+      beepOnce(now+0.5, 1100, 0.25);
+    } else if(type==='bell'){
+      beepOnce(now+0.0, 660, 0.6);
+      beepOnce(now+0.8, 880, 0.5);
+    } else { // pulse
+      for(let i=0;i<4;i++) beepOnce(now+i*0.18, 660+i*80, 0.12);
+    }
+    alarmLoop = setTimeout(schedulePattern, 1400);
+  }
+  schedulePattern();
+}
+
+function stopAlarm(){
+  clearTimeout(alarmLoop);
+  alarmNodes.forEach(n=>{ try{n.stop();}catch(e){} });
+  alarmNodes=[];
+  if(alarmCtx){ alarmCtx.close(); alarmCtx=null; }
+  document.getElementById('alarm-banner').style.display='none';
+}
+
+// ── Main trigger when break ends ──
+function fireBreakNotification(){
+  if(Notification.permission==='granted'){
+    new Notification('🐼 ¡Descanso terminado! — Focus-Tap',{
+      body:'Es hora de volver al estudio. ¡Tú puedes!',
+      icon:'panda png.png'
+    });
+  }
+  document.getElementById('alarm-banner').style.display='block';
+  playAlarm();
+}
 
 // ══════════════════════════════════════
 //  TOAST
@@ -1334,7 +1682,13 @@ updateStats();
 buildStreak();
 renderTasks();
 updateScore();
-loadTrack(false);
+buildAccordion(); // builds accordion track lists from PLAYLISTS data
+
+// Ensure score arc is visually 0 on a fresh day
+if(parseInt(localStorage.getItem('ft-sessions')||'0')===0){
+  document.getElementById('score-arc').style.strokeDashoffset='276.5';
+  document.getElementById('score-num').innerText='0';
+}
 
 // Randomize starting quote
 quoteIdx=Math.floor(Math.random()*QUOTES.length);
