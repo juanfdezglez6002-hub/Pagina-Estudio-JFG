@@ -602,7 +602,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
     <!-- TASKS -->
     <div class="card">
-      <div class="section-title" id="i18n-tasks" style="color:var(--accent2);"><span class="dot"></span> Metas de Estudio</div>
+      <div class="section-title" style="color:var(--accent2);"><span class="dot"></span> Metas de Estudio</div>
       <div class="task-progress">
         <div class="task-progress-bar"><div class="task-progress-fill" id="task-prog-fill" style="width:0%"></div></div>
         <span class="task-progress-txt" id="task-prog-txt">0 / 0 completadas</span>
@@ -621,7 +621,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
     <!-- NOTES -->
     <div class="card">
       <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div class="section-title" id="i18n-notes" style="color:var(--rose);margin-bottom:0;"><span class="dot rose"></span> Notas Rápidas</div>
+        <div class="section-title" style="color:var(--rose);margin-bottom:0;"><span class="dot rose"></span> Notas Rápidas</div>
         <div style="display:flex;gap:7px;">
           <button class="btn-tiny" onclick="copyNotes()">📋 Copiar</button>
           <button class="btn-tiny" onclick="downloadNotes()">⬇ Guardar .txt</button>
@@ -648,7 +648,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
   <div class="right">
     <!-- SCORE -->
     <div class="sidebar-card">
-      <div class="section-title" id="i18n-score" style="color:var(--accent2);"><span class="dot"></span> Puntuación Hoy</div>
+      <div class="section-title" style="color:var(--accent2);"><span class="dot"></span> Puntuación Hoy</div>
       <div class="score-ring">
         <svg width="100" height="100" style="transform:rotate(-90deg);">
           <circle cx="50" cy="50" r="40" fill="none" stroke="rgba(159,168,218,0.15)" stroke-width="6"/>
@@ -658,20 +658,20 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
         </svg>
         <div class="score-val"><div id="score-num">0</div><div class="score-lbl">/ 100</div></div>
       </div>
-      <div id="i18n-scoredesc" style="font-size:0.72rem;color:var(--text2);text-align:center;line-height:1.5;">90 min de estudio = 100%</div>
+      <div style="font-size:0.72rem;color:var(--text2);text-align:center;line-height:1.5;">Completa sesiones y tareas<br>para subir tu puntuación</div>
     </div>
 
     <!-- STREAK -->
     <div class="sidebar-card">
-      <div class="section-title" id="i18n-streak" style="color:var(--mint2);"><span class="dot mint"></span> Racha Semanal</div>
+      <div class="section-title" style="color:var(--mint2);"><span class="dot mint"></span> Racha Semanal</div>
       <div class="streak-row" id="streak-row"></div>
-      <div id="i18n-streakcta" style="margin-top:10px;font-size:0.72rem;color:var(--text2);">¡Estudia hoy para mantener tu racha! 🔥</div>
+      <div style="margin-top:10px;font-size:0.72rem;color:var(--text2);">¡Estudia hoy para mantener tu racha! 🔥</div>
     </div>
 
     <!-- BREAK TIMER -->
     <div class="sidebar-card break-card">
-      <div class="section-title" id="i18n-brk" style="color:#e65100;margin-bottom:6px;">☕ Descanso Activo</div>
-      <div class="break-label" id="i18n-brklbl">Tiempo de descanso</div>
+      <div class="section-title" style="color:#e65100;margin-bottom:6px;">☕ Descanso Activo</div>
+      <div class="break-label">Tiempo de descanso</div>
       <div class="break-clock" id="break-clock">05:00</div>
       <div style="display:flex;gap:7px;justify-content:center;margin-bottom:9px;">
         <button class="btn-tiny" onclick="setBreak(5)">5 min</button>
@@ -683,11 +683,11 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
         <button class="btn-tiny" onclick="resetBreak()">↺ Reset</button>
       </div>
       <div style="border-top:1px solid rgba(230,81,0,0.12);margin-bottom:12px;"></div>
-      <div id="i18n-notif" style="font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bf360c;margin-bottom:9px;text-align:center;">Notificación al terminar</div>
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bf360c;margin-bottom:9px;text-align:center;">Notificación al terminar</div>
       <div style="text-align:center;margin-bottom:12px;">
         <button class="btn-tiny" id="perm-btn" onclick="requestNotifPermission()">🔔 Activar avisos</button>
       </div>
-      <div id="i18n-alarm" style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#bf360c;margin-bottom:7px;">Sonido de alarma</div>
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#bf360c;margin-bottom:7px;">Sonido de alarma</div>
       <!-- Current alarm chip -->
       <div class="alarm-current-chip">
         <span class="alarm-chip-icon" id="alarm-chip-icon">📳</span>
@@ -850,6 +850,7 @@ if(localStorage.getItem('ft-date') !== TODAY){
 let currentMode=null, leaveTime=null;
 let timerInterval=null, timerLeft=25*60, timerRunning=false;
 let sessionsDone=parseInt(localStorage.getItem('ft-sessions')||'0');
+let streakDays=JSON.parse(localStorage.getItem('ft-streak')||'[]');
 let breakLeft=5*60, breakDuration=5*60, breakRunning=false, breakInterval=null;
 let quoteIdx=0, quoteAutoTimer=null;
 let currentGenre=null, trackIdx=0;
@@ -857,37 +858,6 @@ let musicPlaying=false, progInterval=null, elapsedSec=0;
 let libActiveGenre=null;
 let selectedAlarm='beep';
 let alarmCtx=null, alarmNodes=[], alarmLoop=null;
-
-// ── Date-based streak helpers ──
-function getStudiedDates(){ return new Set(JSON.parse(localStorage.getItem('ft-study-dates')||'[]')); }
-function markStudyDate(){
-  const arr=JSON.parse(localStorage.getItem('ft-study-dates')||'[]');
-  if(!arr.includes(TODAY)){ arr.push(TODAY); localStorage.setItem('ft-study-dates',JSON.stringify(arr)); }
-}
-function getStreakCount(){
-  const dates=getStudiedDates();
-  let count=0, d=new Date(TODAY);
-  if(!dates.has(d.toISOString().slice(0,10))){ d.setDate(d.getDate()-1); }
-  while(dates.has(d.toISOString().slice(0,10))){ count++; d.setDate(d.getDate()-1); }
-  return count;
-}
-
-// ── Permanent theme unlocks ──
-function getUnlockedThemes(){
-  const saved=JSON.parse(localStorage.getItem('ft-unlocked-themes')||'["lofi"]');
-  return new Set(saved);
-}
-function checkAndSaveUnlocks(){
-  const streak=getStreakCount();
-  const unlocked=getUnlockedThemes();
-  let changed=false;
-  Object.entries(THEMES).forEach(([key,th])=>{
-    if(!unlocked.has(key)&&streak>=th.unlock){ unlocked.add(key); changed=true; showToast(`🎉 ¡Tema "${th.label}" desbloqueado!`); }
-  });
-  if(changed) localStorage.setItem('ft-unlocked-themes',JSON.stringify([...unlocked]));
-  return unlocked;
-}
-function isUnlocked(key){ return getUnlockedThemes().has(key); }
 
 // ══════════════════════════════════════
 //  TIMER
@@ -937,7 +907,7 @@ startBtn.onclick=()=>{
         const mins=parseInt(document.getElementById('m-in').value)||25;
         localStorage.setItem('ft-totalmin',prev+mins);
         updateStats(); updateScore(); markStreak(); launchCelebration(mins);
-        playCelebrationFanfare(); // joyful sound at session end
+        playAlarmOnce(selectedAlarm); // alarm at session end
         timerLeft=(parseInt(document.getElementById('m-in').value)||25)*60; updateClock();
       }
     },1000);
@@ -976,15 +946,17 @@ document.addEventListener('visibilitychange',()=>{
 function updateStats(){
   document.getElementById('sessions-done').innerText=parseInt(localStorage.getItem('ft-sessions')||'0');
   document.getElementById('total-min').innerText=parseInt(localStorage.getItem('ft-totalmin')||'0');
-  document.getElementById('streak-count').innerText=streakDays.length; // fixed: was filter(Boolean).length
+  document.getElementById('streak-count').innerText=streakDays.filter(Boolean).length;
 }
 
 // ══════════════════════════════════════
-//  SCORE  — 90 min studied today = 100%
+//  SCORE
 // ══════════════════════════════════════
 function updateScore(){
-  const totalMins=parseInt(localStorage.getItem('ft-totalmin')||'0');
-  const raw=Math.min(100, Math.round(totalMins / 90 * 100));
+  const s=parseInt(localStorage.getItem('ft-sessions')||'0');
+  const t=document.querySelectorAll('.task-item').length;
+  const d=document.querySelectorAll('.task-item.done').length;
+  const raw=Math.min(100,s*10+(t>0?Math.round(d/t*50):0));
   document.getElementById('score-num').innerText=raw;
   document.getElementById('score-arc').style.strokeDashoffset=251.3*(1-raw/100);
 }
@@ -1006,9 +978,8 @@ function markStreak(){
   const today=(new Date().getDay()+6)%7;
   if(!streakDays.includes(today)) streakDays.push(today);
   localStorage.setItem('ft-streak',JSON.stringify(streakDays));
-  checkAndSaveUnlocks(); // check new theme unlocks
   buildStreak(); updateStats();
-  buildThemeSwatches();
+  buildThemeSwatches(); // re-check unlocks when streak changes
 }
 
 // ══════════════════════════════════════
@@ -1296,43 +1267,6 @@ function playAlarmOnce(type){
   setTimeout(()=>ctx.close(),(maxEnd+0.3)*1000);
 }
 
-// ── Joyful fanfare played when a study session completes ──
-function playCelebrationFanfare(){
-  try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    const t=ctx.currentTime;
-    function note(freq,start,dur,vol=0.28,wave='sine'){
-      const o=ctx.createOscillator(), g=ctx.createGain();
-      o.connect(g); g.connect(ctx.destination);
-      o.type=wave; o.frequency.value=freq;
-      g.gain.setValueAtTime(0,start);
-      g.gain.linearRampToValueAtTime(vol,start+0.02);
-      g.gain.exponentialRampToValueAtTime(0.001,start+dur);
-      o.start(start); o.stop(start+dur+0.05);
-    }
-    // Rising arpeggio C-E-G-C (major chord)
-    note(523,t+0.00,0.18,0.22); // C4
-    note(659,t+0.12,0.18,0.22); // E4
-    note(784,t+0.24,0.18,0.22); // G4
-    note(1047,t+0.36,0.35,0.28); // C5
-
-    // Triumphant chord stab
-    note(523,t+0.62,0.30,0.18); note(659,t+0.62,0.30,0.18); note(784,t+0.62,0.30,0.18); note(1047,t+0.62,0.30,0.18);
-
-    // Second sparkle arpeggio E-G-B-E
-    note(659,t+1.05,0.14,0.18,'triangle');
-    note(784,t+1.16,0.14,0.18,'triangle');
-    note(988,t+1.27,0.14,0.18,'triangle');
-    note(1319,t+1.38,0.28,0.22,'triangle');
-
-    // Final high C shimmer
-    note(2093,t+1.55,0.20,0.1,'sine');
-    note(2093,t+1.70,0.20,0.08,'sine');
-
-    setTimeout(()=>ctx.close(),2200);
-  } catch(e){}
-}
-
 function playAlarm(){
   stopAlarm();
   alarmCtx=new(window.AudioContext||window.webkitAudioContext)();
@@ -1460,41 +1394,23 @@ const THEMES = {
   },
 };
 
-function getStreakCount(){ return streakDays.length; } // fixed: was filter(Boolean) which skipped Monday (index 0)
-
-// Permanent theme unlock — separate from streak count
-// A theme is unlocked once streak >= threshold, and stays unlocked even if streak resets
-let unlockedThemes = JSON.parse(localStorage.getItem('ft-unlocked-themes')||'["lofi"]');
-function checkAndSaveUnlocks(){
-  const streak = streakDays.length;
-  let changed = false;
-  Object.entries(THEMES).forEach(([key,th])=>{
-    if(!unlockedThemes.includes(key) && streak >= th.unlock){
-      unlockedThemes.push(key); changed = true;
-      if(th.unlock > 0) showToast(`🎨 ¡Tema "${th.label}" desbloqueado!`);
-    }
-  });
-  if(changed) localStorage.setItem('ft-unlocked-themes', JSON.stringify(unlockedThemes));
-}
+function getStreakCount(){ return streakDays.filter(Boolean).length; }
 
 function buildThemeSwatches(){
   const grid=document.getElementById('bg-presets-grid'); if(!grid) return;
   grid.innerHTML='';
+  const streak=getStreakCount();
   Object.entries(THEMES).forEach(([key,th])=>{
-    const locked = !unlockedThemes.includes(key);
+    const locked=th.unlock>0 && streak<th.unlock;
     const div=document.createElement('div');
     div.className='bg-swatch'+(locked?' locked':'');
     div.dataset.bg=key;
-    div.title=locked?`🔒 Estudia ${th.unlock} días para desbloquear`:th.label;
+    div.title=locked?`🔒 Desbloquea con ${th.unlock} días de racha`:th.label;
     div.style.background=th.swatch;
     div.innerHTML=`<div class="bg-swatch-label">${th.emoji}</div>`;
     if(locked) div.innerHTML+=`<div class="bg-swatch-lock">🔒</div>`;
     if(!locked) div.onclick=()=>setBg(key,div);
-    else div.onclick=()=>{
-      const tip=document.getElementById('bg-unlock-tip');
-      tip.style.display='block';
-      tip.innerText=`🔒 "${th.label}" se desbloquea con ${th.unlock} días de racha (llevas ${streakDays.length}).`;
-    };
+    else div.onclick=()=>{ document.getElementById('bg-unlock-tip').style.display='block'; document.getElementById('bg-unlock-tip').innerText=`🔒 "${th.label}" se desbloquea con ${th.unlock} días de racha (tienes ${streak}).`; };
     grid.appendChild(div);
   });
   // Mark active
@@ -1505,7 +1421,8 @@ function buildThemeSwatches(){
 
 function setBg(key,swatchEl){
   const th=THEMES[key]; if(!th) return;
-  if(!unlockedThemes.includes(key)){ showToast(`🔒 Completa ${th.unlock} días de racha para desbloquear este tema`); return; }
+  const streak=getStreakCount();
+  if(th.unlock>0&&streak<th.unlock){ showToast(`🔒 Desbloquea con ${th.unlock} días de racha`); return; }
   document.body.style.backgroundImage=''; document.body.classList.remove('bg-night');
   document.body.style.background=th.bg; document.body.style.backgroundAttachment='fixed';
   if(th.night) document.body.classList.add('bg-night');
@@ -1535,70 +1452,64 @@ function applyCustomBg(dataUrl){
 
 // Language translations (key UI strings)
 const T={
-  es:{start:'▶ Empezar',pause:'⏸ Pausar',resume:'▶ Reanudar',reset:'↺ Reset',deep:'Modo Enfoque',prod:'Productividad',
-      s1:'Sesiones hoy',s2:'Min enfocado',s3:'Racha días',lib:'Explorar Biblioteca',
+  es:{start:'▶ Empezar',pause:'⏸ Pausar',resume:'▶ Reanudar',reset:'↺ Reset',deep:'🎯 Modo Enfoque',prod:'⚡ Productividad',
+      s1:'Sesiones hoy',s2:'Min enfocado',s3:'Racha días',lib:'🎵 Explorar Biblioteca',
       tasks:'Metas de Estudio',taskph:'+ Nueva tarea... pulsa Enter',notes:'Notas Rápidas',notesph:'Vuelca aquí tus pensamientos para volver al enfoque...',
-      score:'Puntuación Hoy',scoredesc:'90 min de estudio = 100%',
+      score:'Puntuación Hoy',scoredesc:'Completa sesiones y tareas<br>para subir tu puntuación',
       streak:'Racha Semanal',streakcta:'¡Estudia hoy para mantener tu racha! 🔥',
-      brk:'Descanso Activo',brklbl:'Tiempo de descanso',brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reset',
-      notiftitle:'Notificación al terminar',alarmtitle:'Sonido de alarma',
-      perm:'🔔 Activar avisos',permok:'✅ Avisos activos',
-      alarmbrowse:'Cambiar sonido',
+      brk:'☕ Descanso Activo',brklbl:'Tiempo de descanso',brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reset',
+      notif:'Notificación al terminar',perm:'🔔 Activar avisos',permok:'✅ Avisos activos',
+      alarm:'Sonido de alarma',alarmbrowse:'Cambiar sonido',
       copy:'📋 Copiar',save:'⬇ Guardar .txt',clear:'🗑 Limpiar',
       smin:'min',seslbl:'Sesión de'},
-  en:{start:'▶ Start',pause:'⏸ Pause',resume:'▶ Resume',reset:'↺ Reset',deep:'Focus Mode',prod:'Productivity',
-      s1:'Sessions today',s2:'Min focused',s3:'Day streak',lib:'Browse Library',
+  en:{start:'▶ Start',pause:'⏸ Pause',resume:'▶ Resume',reset:'↺ Reset',deep:'🎯 Focus Mode',prod:'⚡ Productivity',
+      s1:'Sessions today',s2:'Min focused',s3:'Day streak',lib:'🎵 Browse Library',
       tasks:'Study Goals',taskph:'+ New task... press Enter',notes:'Quick Notes',notesph:'Dump your thoughts here...',
-      score:'Today\'s Score',scoredesc:'90 min study = 100%',
+      score:'Today\'s Score',scoredesc:'Complete sessions and tasks<br>to raise your score',
       streak:'Weekly Streak',streakcta:'Study today to keep your streak! 🔥',
-      brk:'Active Break',brklbl:'Break time',brkstart:'▶ Start',brkpause:'⏸ Pause',brkreset:'↺ Reset',
-      notiftitle:'Notify when done',alarmtitle:'Alarm sound',
-      perm:'🔔 Enable alerts',permok:'✅ Alerts active',
-      alarmbrowse:'Change sound',
+      brk:'☕ Active Break',brklbl:'Break time',brkstart:'▶ Start',brkpause:'⏸ Pause',brkreset:'↺ Reset',
+      notif:'Notify when done',perm:'🔔 Enable alerts',permok:'✅ Alerts active',
+      alarm:'Alarm sound',alarmbrowse:'Change sound',
       copy:'📋 Copy',save:'⬇ Save .txt',clear:'🗑 Clear',
       smin:'min',seslbl:'Session of'},
-  fr:{start:'▶ Démarrer',pause:'⏸ Pause',resume:'▶ Reprendre',reset:'↺ Réinitialiser',deep:'Mode Focus',prod:'Productivité',
-      s1:'Sessions auj.',s2:'Min concentré',s3:'Jours streak',lib:'Bibliothèque',
+  fr:{start:'▶ Démarrer',pause:'⏸ Pause',resume:'▶ Reprendre',reset:'↺ Réinitialiser',deep:'🎯 Mode Focus',prod:'⚡ Productivité',
+      s1:'Sessions auj.',s2:'Min concentré',s3:'Jours streak',lib:'🎵 Bibliothèque',
       tasks:'Objectifs d\'étude',taskph:'+ Nouvelle tâche... Entrée',notes:'Notes rapides',notesph:'Videz vos pensées ici...',
-      score:'Score du jour',scoredesc:'90 min d\'étude = 100%',
+      score:'Score du jour',scoredesc:'Complétez sessions et tâches<br>pour augmenter votre score',
       streak:'Série hebdomadaire',streakcta:'Étudiez aujourd\'hui pour garder la série ! 🔥',
-      brk:'Pause active',brklbl:'Temps de pause',brkstart:'▶ Démarrer',brkpause:'⏸ Pause',brkreset:'↺ Réinitialiser',
-      notiftitle:'Notifier à la fin',alarmtitle:'Son d\'alarme',
-      perm:'🔔 Activer alertes',permok:'✅ Alertes actives',
-      alarmbrowse:'Changer le son',
+      brk:'☕ Pause active',brklbl:'Temps de pause',brkstart:'▶ Démarrer',brkpause:'⏸ Pause',brkreset:'↺ Réinitialiser',
+      notif:'Notifier à la fin',perm:'🔔 Activer alertes',permok:'✅ Alertes actives',
+      alarm:'Son d\'alarme',alarmbrowse:'Changer le son',
       copy:'📋 Copier',save:'⬇ Sauvegarder .txt',clear:'🗑 Effacer',
       smin:'min',seslbl:'Session de'},
-  de:{start:'▶ Starten',pause:'⏸ Pause',resume:'▶ Fortsetzen',reset:'↺ Zurücksetzen',deep:'Fokusmodus',prod:'Produktivität',
-      s1:'Sitzungen heute',s2:'Min fokussiert',s3:'Tage-Streak',lib:'Bibliothek',
+  de:{start:'▶ Starten',pause:'⏸ Pause',resume:'▶ Fortsetzen',reset:'↺ Zurücksetzen',deep:'🎯 Fokusmodus',prod:'⚡ Produktivität',
+      s1:'Sitzungen heute',s2:'Min fokussiert',s3:'Tage-Streak',lib:'🎵 Bibliothek',
       tasks:'Lernziele',taskph:'+ Neue Aufgabe... Enter',notes:'Schnellnotizen',notesph:'Schreibe deine Gedanken hier...',
-      score:'Heutige Punkte',scoredesc:'90 Min Lernen = 100%',
+      score:'Heutige Punkte',scoredesc:'Schließe Sitzungen und Aufgaben ab<br>um deinen Score zu steigern',
       streak:'Wöchentlicher Streak',streakcta:'Lerne heute, um deinen Streak zu halten! 🔥',
-      brk:'Aktive Pause',brklbl:'Pausenzeit',brkstart:'▶ Starten',brkpause:'⏸ Pause',brkreset:'↺ Zurücksetzen',
-      notiftitle:'Benachrichtigung am Ende',alarmtitle:'Alarmton',
-      perm:'🔔 Benachr. aktivieren',permok:'✅ Benachr. aktiv',
-      alarmbrowse:'Ton ändern',
+      brk:'☕ Aktive Pause',brklbl:'Pausenzeit',brkstart:'▶ Starten',brkpause:'⏸ Pause',brkreset:'↺ Zurücksetzen',
+      notif:'Benachrichtigung am Ende',perm:'🔔 Benachr. aktivieren',permok:'✅ Benachr. aktiv',
+      alarm:'Alarmton',alarmbrowse:'Ton ändern',
       copy:'📋 Kopieren',save:'⬇ Speichern .txt',clear:'🗑 Löschen',
       smin:'Min',seslbl:'Sitzung von'},
-  pt:{start:'▶ Começar',pause:'⏸ Pausar',resume:'▶ Retomar',reset:'↺ Reiniciar',deep:'Modo Foco',prod:'Produtividade',
-      s1:'Sessões hoje',s2:'Min focado',s3:'Dias seguidos',lib:'Biblioteca',
+  pt:{start:'▶ Começar',pause:'⏸ Pausar',resume:'▶ Retomar',reset:'↺ Reiniciar',deep:'🎯 Modo Foco',prod:'⚡ Produtividade',
+      s1:'Sessões hoje',s2:'Min focado',s3:'Dias seguidos',lib:'🎵 Biblioteca',
       tasks:'Metas de Estudo',taskph:'+ Nova tarefa... Enter',notes:'Notas Rápidas',notesph:'Escreva seus pensamentos aqui...',
-      score:'Pontuação Hoje',scoredesc:'90 min de estudo = 100%',
+      score:'Pontuação Hoje',scoredesc:'Complete sessões e tarefas<br>para aumentar sua pontuação',
       streak:'Sequência Semanal',streakcta:'Estude hoje para manter sua sequência! 🔥',
-      brk:'Pausa Ativa',brklbl:'Tempo de pausa',brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reiniciar',
-      notiftitle:'Notificar ao terminar',alarmtitle:'Som do alarme',
-      perm:'🔔 Ativar avisos',permok:'✅ Avisos ativos',
-      alarmbrowse:'Mudar som',
+      brk:'☕ Pausa Ativa',brklbl:'Tempo de pausa',brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reiniciar',
+      notif:'Notificar ao terminar',perm:'🔔 Ativar avisos',permok:'✅ Avisos ativos',
+      alarm:'Som do alarme',alarmbrowse:'Mudar som',
       copy:'📋 Copiar',save:'⬇ Salvar .txt',clear:'🗑 Limpar',
       smin:'min',seslbl:'Sessão de'},
-  it:{start:'▶ Inizia',pause:'⏸ Pausa',resume:'▶ Riprendi',reset:'↺ Reimposta',deep:'Modalità Focus',prod:'Produttività',
-      s1:'Sessioni oggi',s2:'Min concentrato',s3:'Giorni streak',lib:'Libreria',
+  it:{start:'▶ Inizia',pause:'⏸ Pausa',resume:'▶ Riprendi',reset:'↺ Reimposta',deep:'🎯 Modalità Focus',prod:'⚡ Produttività',
+      s1:'Sessioni oggi',s2:'Min concentrato',s3:'Giorni streak',lib:'🎵 Libreria',
       tasks:'Obiettivi di Studio',taskph:'+ Nuova attività... Invio',notes:'Note Veloci',notesph:'Scrivi i tuoi pensieri qui...',
-      score:'Punteggio Oggi',scoredesc:'90 min di studio = 100%',
+      score:'Punteggio Oggi',scoredesc:'Completa sessioni e attività<br>per aumentare il tuo punteggio',
       streak:'Serie Settimanale',streakcta:'Studia oggi per mantenere la serie! 🔥',
-      brk:'Pausa Attiva',brklbl:'Tempo di pausa',brkstart:'▶ Inizia',brkpause:'⏸ Pausa',brkreset:'↺ Reimposta',
-      notiftitle:'Notifica alla fine',alarmtitle:'Suono sveglia',
-      perm:'🔔 Attiva avvisi',permok:'✅ Avvisi attivi',
-      alarmbrowse:'Cambia suono',
+      brk:'☕ Pausa Attiva',brklbl:'Tempo di pausa',brkstart:'▶ Inizia',brkpause:'⏸ Pausa',brkreset:'↺ Reimposta',
+      notif:'Notifica alla fine',perm:'🔔 Attiva avvisi',permok:'✅ Avvisi attivi',
+      alarm:'Suono sveglia',alarmbrowse:'Cambia suono',
       copy:'📋 Copia',save:'⬇ Salva .txt',clear:'🗑 Cancella',
       smin:'min',seslbl:'Sessione di'},
 };
@@ -1615,48 +1526,34 @@ function setLang(lang,btn){
   document.querySelector('.session-label').innerHTML=`${t.seslbl} <input type="number" id="m-in" class="session-input" value="${val}" min="1" max="180"> ${t.smin}`;
   reattachMinInput();
   if(timerRunning) document.getElementById('start').innerHTML=t.pause;
-  else{
-    const cur=document.getElementById('start').innerHTML;
-    const isResume=/Reanudar|Resume|Reprendre|Fortsetzen|Retomar|Riprendi/.test(cur);
-    document.getElementById('start').innerHTML=isResume?t.resume:t.start;
-  }
+  else document.getElementById('start').innerHTML=startBtn.innerHTML.includes('Reanudar')||startBtn.innerHTML.includes('Resume')||startBtn.innerHTML.includes('Reprendre')||startBtn.innerHTML.includes('Fortsetzen')||startBtn.innerHTML.includes('Retomar')||startBtn.innerHTML.includes('Riprendi')?t.resume:t.start;
   document.getElementById('reset').innerHTML=t.reset;
-  // Mode buttons — keep emoji in HTML, only translate text part
-  document.getElementById('btn-deep').innerHTML=`🎯 ${t.deep}`;
-  document.getElementById('btn-prod').innerHTML=`⚡ ${t.prod}`;
+  document.getElementById('btn-deep').innerHTML=t.deep;
+  document.getElementById('btn-prod').innerHTML=t.prod;
   document.querySelectorAll('.stat-lbl')[0].innerText=t.s1;
   document.querySelectorAll('.stat-lbl')[1].innerText=t.s2;
   document.querySelectorAll('.stat-lbl')[2].innerText=t.s3;
-  // Library button — emoji added here, NOT in t.lib
   document.querySelector('.btn-library').innerHTML=`<span>🎵</span> ${t.lib} <span class="lib-arrow">›</span>`;
-  // Section titles
+  // Tasks
   document.querySelectorAll('.section-title').forEach(el=>{
     const txt=el.textContent;
     if(txt.match(/Meta|Goal|Objectif|Ziel|Objetivo|Obiettivo/i)) el.innerHTML=`<span class="dot"></span> ${t.tasks}`;
     if(txt.match(/Nota|Note|Notiz/i)) el.innerHTML=`<span class="dot rose"></span> ${t.notes}`;
     if(txt.match(/Puntuac|Score|Punkte|Punteggi/i)) el.innerHTML=`<span class="dot"></span> ${t.score}`;
-    if(txt.match(/Racha|Streak|Série|Serie|Sequência/i)) el.innerHTML=`<span class="dot mint"></span> ${t.streak}`;
+    if(txt.match(/Racha|Streak|Série|Serie/i)) el.innerHTML=`<span class="dot mint"></span> ${t.streak}`;
   });
   document.getElementById('task-in').placeholder=t.taskph;
   document.getElementById('notes').placeholder=t.notesph;
-  // Score description
-  const scoreDesc=document.getElementById('i18n-scoredesc');
-  if(scoreDesc) scoreDesc.innerText=t.scoredesc;
+  document.querySelector('.sidebar-card:nth-child(1) div[style*="font-size"]').innerHTML=t.scoredesc;
   document.getElementById('streak-row').nextElementSibling.innerText=t.streakcta;
-  // Break card — section title has no dot span, just text
-  document.querySelector('.break-card .section-title').innerHTML=`☕ ${t.brk}`;
+  // Break
+  document.querySelector('.break-card .section-title').innerHTML=t.brk;
   document.querySelector('.break-label').innerText=t.brklbl;
   const bs=document.getElementById('break-start');
   bs.innerText=breakRunning?t.brkpause:t.brkstart;
   document.querySelector('[onclick="resetBreak()"]').innerText=t.brkreset;
-  // Break card inline headers
-  const notifHdr=document.getElementById('i18n-notif');
-  const alarmHdr=document.getElementById('i18n-alarm');
-  if(notifHdr) notifHdr.innerText=t.notiftitle;
-  if(alarmHdr) alarmHdr.innerText=t.alarmtitle;
   const pb=document.getElementById('perm-btn');
   if(!pb.disabled) pb.innerText=t.perm; else pb.innerText=t.permok;
-  // Alarm browse — emoji added here, NOT in t.alarmbrowse
   document.querySelector('.btn-alarm-browse').innerHTML=`<span>🔔</span> ${t.alarmbrowse} <span class="lib-arrow">›</span>`;
   // Notes buttons
   document.querySelectorAll('[onclick="copyNotes()"]').forEach(b=>b.innerText=t.copy);
@@ -1701,8 +1598,7 @@ function spawnConfetti(){
 //  INIT
 // ══════════════════════════════════════
 updateClock(); updateStats(); buildStreak(); renderTasks(); updateScore(); buildAccordion();
-checkAndSaveUnlocks(); // apply any unlocks from existing streak data
-buildThemeSwatches();
+buildThemeSwatches(); // build theme grid with unlock state
 
 // Restore alarm selection
 const savedAlarm=localStorage.getItem('ft-alarm');
