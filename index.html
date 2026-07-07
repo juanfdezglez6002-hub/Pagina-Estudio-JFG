@@ -65,6 +65,17 @@ header{display:flex;align-items:center;gap:14px;margin-bottom:28px;z-index:1;pos
 .gear-btn:hover{color:var(--text);transform:rotate(45deg);background:rgba(255,255,255,0.9);}
 .gear-btn.open{transform:rotate(90deg);color:var(--accent2);background:rgba(255,255,255,0.95);}
 
+/* Botón de cuenta — igual que gear-btn pero SIN rotación */
+.account-btn{
+  width:40px;height:40px;border-radius:50%;
+  background:var(--glass);backdrop-filter:blur(16px);
+  border:1px solid var(--border);color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;box-shadow:0 4px 14px var(--shadow);transition:all 0.25s;
+}
+.account-btn:hover{background:rgba(255,255,255,0.9);transform:scale(1.08);color:var(--accent2);}
+.account-btn.open{background:rgba(255,255,255,0.95);color:var(--accent2);}
+
 /* Floating language button */
 .lang-float-btn{
   width:40px;height:40px;border-radius:50%;
@@ -464,8 +475,8 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
     </svg>
   </button>
 
-  <!-- Account button -->
-  <button class="gear-btn" id="account-btn" onclick="toggleAccountPanel()" title="Cuenta">👤</button>
+  <!-- Account button — clase propia para que no herede la rotación del engranaje -->
+  <button class="account-btn" id="account-btn" onclick="toggleAccountPanel()" title="Cuenta">👤</button>
 
   <!-- Language float button -->
   <button class="lang-float-btn" id="lang-float-btn" onclick="toggleLangPanel()" title="Idioma">🌐</button>
@@ -968,7 +979,14 @@ if(localStorage.getItem('ft-date') !== TODAY){
 let currentMode=null, leaveTime=null;
 let timerInterval=null, timerLeft=25*60, timerRunning=false;
 let sessionsDone=parseInt(localStorage.getItem('ft-sessions')||'0');
-let streakDays=JSON.parse(localStorage.getItem('ft-streak')||'[]');
+
+// ── RACHA REAL: array de fechas YYYY-MM-DD en las que el usuario estudió ──
+// (sustituye al antiguo streakDays que solo guardaba índices de día de semana)
+let studiedDates=JSON.parse(localStorage.getItem('ft-studied-dates')||'[]');
+
+// Retrocompat: si había datos del sistema viejo, los descartamos
+// (los índices 0-6 no son fechas válidas)
+
 let breakLeft=5*60, breakDuration=5*60, breakRunning=false, breakInterval=null;
 let quoteIdx=0, quoteAutoTimer=null;
 let currentGenre=null, trackIdx=0;
@@ -1065,40 +1083,82 @@ document.addEventListener('visibilitychange',()=>{
 function updateStats(){
   document.getElementById('sessions-done').innerText=parseInt(localStorage.getItem('ft-sessions')||'0');
   document.getElementById('total-min').innerText=parseInt(localStorage.getItem('ft-totalmin')||'0');
-  document.getElementById('streak-count').innerText=streakDays.filter(Boolean).length;
+  document.getElementById('streak-count').innerText=getRealStreakCount();
 }
 
 // ══════════════════════════════════════
-//  SCORE
+//  SCORE — 90 min de estudio hoy = 100%
 // ══════════════════════════════════════
 function updateScore(){
-  const s=parseInt(localStorage.getItem('ft-sessions')||'0');
-  const t=document.querySelectorAll('.task-item').length;
-  const d=document.querySelectorAll('.task-item.done').length;
-  const raw=Math.min(100,s*10+(t>0?Math.round(d/t*50):0));
+  const mins=parseInt(localStorage.getItem('ft-totalmin')||'0');
+  const raw=Math.min(100,Math.round(mins/90*100));
   document.getElementById('score-num').innerText=raw;
   document.getElementById('score-arc').style.strokeDashoffset=251.3*(1-raw/100);
 }
 
 // ══════════════════════════════════════
-//  STREAK
+//  STREAK — basada en fechas reales YYYY-MM-DD
 // ══════════════════════════════════════
 const DAYS=['L','M','X','J','V','S','D'];
+
+// Cuenta los días consecutivos estudiados hasta hoy (o hasta ayer si hoy aún no)
+function getRealStreakCount(){
+  if(studiedDates.length===0) return 0;
+  const unique=[...new Set(studiedDates)].sort().reverse(); // más reciente primero
+  let streak=0;
+  let expected=new Date(TODAY);
+  // Si hoy no está estudiado, empezamos contando desde ayer
+  if(!unique.includes(TODAY)){
+    expected.setDate(expected.getDate()-1);
+  }
+  for(const dateStr of unique){
+    const d=new Date(dateStr);
+    const exp=expected.toISOString().slice(0,10);
+    if(dateStr===exp){
+      streak++;
+      expected.setDate(expected.getDate()-1);
+    } else if(dateStr<exp){
+      break; // gap encontrado, racha rota
+    }
+  }
+  return streak;
+}
+
 function buildStreak(){
   const row=document.getElementById('streak-row'); row.innerHTML='';
-  const today=(new Date().getDay()+6)%7;
+  const todayIdx=(new Date().getDay()+6)%7; // 0=Lun…6=Dom
+
+  // Obtener las fechas de los últimos 7 días para marcar cuáles se estudiaron
+  const last7=new Set();
+  for(let i=0;i<7;i++){
+    const d=new Date(TODAY);
+    d.setDate(d.getDate()-i);
+    if(studiedDates.includes(d.toISOString().slice(0,10))) last7.add(i);
+  }
+  // i=0 → hoy, i=1 → ayer, etc.
+  // necesitamos mapear a los días de la semana que corresponden
   DAYS.forEach((d,i)=>{
+    // Calcular qué fecha cayó en este día de la semana dentro de los últimos 7 días
+    const daysAgo=(todayIdx-i+7)%7;
+    const date=new Date(TODAY);
+    date.setDate(date.getDate()-daysAgo);
+    const dateStr=date.toISOString().slice(0,10);
+    const studied=studiedDates.includes(dateStr);
     const el=document.createElement('div');
-    el.className='streak-day'+(i===today?' today':streakDays.includes(i)?' done':'');
-    el.innerText=d; row.appendChild(el);
+    el.className='streak-day'+(i===todayIdx?' today':studied?' done':'');
+    el.innerText=d;
+    row.appendChild(el);
   });
+
+  // Actualizar contador de racha en sidebar
+  document.getElementById('streak-count').innerText=getRealStreakCount();
 }
+
 function markStreak(){
-  const today=(new Date().getDay()+6)%7;
-  if(!streakDays.includes(today)) streakDays.push(today);
-  localStorage.setItem('ft-streak',JSON.stringify(streakDays));
+  if(!studiedDates.includes(TODAY)) studiedDates.push(TODAY);
+  localStorage.setItem('ft-studied-dates',JSON.stringify(studiedDates));
   buildStreak(); updateStats();
-  buildThemeSwatches(); // re-check unlocks when streak changes
+  buildThemeSwatches(); // re-comprobar desbloqueos cuando crece la racha
 }
 
 // ══════════════════════════════════════
@@ -1530,26 +1590,26 @@ const THEMES = {
   },
 };
 
-function getStreakCount(){ return streakDays.filter(Boolean).length; }
+// getStreakCount ahora delega en getRealStreakCount (declarada junto a markStreak)
+function getStreakCount(){ return getRealStreakCount(); }
 
 function buildThemeSwatches(){
   const grid=document.getElementById('bg-presets-grid'); if(!grid) return;
   grid.innerHTML='';
-  const streak=getStreakCount();
+  const streak=getRealStreakCount();
   Object.entries(THEMES).forEach(([key,th])=>{
     const locked=th.unlock>0 && streak<th.unlock;
     const div=document.createElement('div');
     div.className='bg-swatch'+(locked?' locked':'');
     div.dataset.bg=key;
-    div.title=locked?`🔒 Desbloquea con ${th.unlock} días de racha`:th.label;
+    div.title=locked?`🔒 Desbloquea con ${th.unlock} días de racha consecutivos`:th.label;
     div.style.background=th.swatch;
     div.innerHTML=`<div class="bg-swatch-label">${th.emoji}</div>`;
     if(locked) div.innerHTML+=`<div class="bg-swatch-lock">🔒</div>`;
     if(!locked) div.onclick=()=>setBg(key,div);
-    else div.onclick=()=>{ document.getElementById('bg-unlock-tip').style.display='block'; document.getElementById('bg-unlock-tip').innerText=`🔒 "${th.label}" se desbloquea con ${th.unlock} días de racha (tienes ${streak}).`; };
+    else div.onclick=()=>{ document.getElementById('bg-unlock-tip').style.display='block'; document.getElementById('bg-unlock-tip').innerText=`🔒 "${th.label}" se desbloquea con ${th.unlock} días consecutivos (llevas ${streak}).`; };
     grid.appendChild(div);
   });
-  // Mark active
   const savedKey=localStorage.getItem('ft-bg-key')||'lofi';
   const activeSw=grid.querySelector(`[data-bg="${savedKey}"]`);
   if(activeSw) activeSw.classList.add('active');
@@ -1557,8 +1617,8 @@ function buildThemeSwatches(){
 
 function setBg(key,swatchEl){
   const th=THEMES[key]; if(!th) return;
-  const streak=getStreakCount();
-  if(th.unlock>0&&streak<th.unlock){ showToast(`🔒 Desbloquea con ${th.unlock} días de racha`); return; }
+  const streak=getRealStreakCount();
+  if(th.unlock>0&&streak<th.unlock){ showToast(`🔒 Desbloquea con ${th.unlock} días consecutivos de racha`); return; }
   document.body.style.backgroundImage=''; document.body.classList.remove('bg-night');
   document.body.style.background=th.bg; document.body.style.backgroundAttachment='fixed';
   if(th.night) document.body.classList.add('bg-night');
@@ -1807,22 +1867,35 @@ async function loadCloudData(uid){
     const doc=await firebase.firestore().collection('users').doc(uid).get();
     if(doc.exists){
       const d=doc.data();
+
+      // Sesiones y minutos del día actual
       if(d.date===TODAY){
         sessionsDone=d.sessions||0;
         localStorage.setItem('ft-sessions',sessionsDone);
         localStorage.setItem('ft-totalmin',d.totalMin||0);
+      } else {
+        // Es un día nuevo — reiniciar contadores de hoy en local
+        localStorage.setItem('ft-sessions','0');
+        localStorage.setItem('ft-totalmin','0');
+        sessionsDone=0;
       }
-      streakDays=d.streakDays||streakDays;
+
+      // ── Racha basada en fechas reales ──
+      if(Array.isArray(d.studiedDates) && d.studiedDates.length>0){
+        studiedDates=d.studiedDates;
+      }
+      localStorage.setItem('ft-studied-dates',JSON.stringify(studiedDates));
+
       if(Array.isArray(d.tasks)) tasks=d.tasks;
       if(typeof d.notes==='string') notes.value=d.notes;
       localStorage.setItem('ft-tasks',JSON.stringify(tasks));
-      localStorage.setItem('ft-streak',JSON.stringify(streakDays));
       if(d.alarm) selectAlarm(d.alarm);
       if(d.bgKey){ const sw=document.querySelector(`[data-bg="${d.bgKey}"]`); setBg(d.bgKey,sw); }
       if(d.lang){ const btn=document.getElementById(`lang-${d.lang}`); setLang(d.lang,btn); }
       updateStats(); buildStreak(); renderTasks(); updateScore(); buildThemeSwatches();
       showToast('☁️ Datos sincronizados desde la nube');
     } else {
+      // Usuario nuevo — guardar estado inicial en Firestore
       await saveCloudDataNow();
     }
   }catch(e){ console.error(e); showToast('⚠️ Error al sincronizar con la nube'); }
@@ -1831,11 +1904,15 @@ async function loadCloudData(uid){
 async function saveCloudDataNow(){
   if(!cloudSyncEnabled||!currentUser) return;
   try{
+    const totalMin=parseInt(localStorage.getItem('ft-totalmin')||'0');
+    const score=Math.min(100,Math.round(totalMin/90*100));
     await firebase.firestore().collection('users').doc(currentUser.uid).set({
       date:TODAY,
       sessions:sessionsDone,
-      totalMin:parseInt(localStorage.getItem('ft-totalmin')||'0'),
-      streakDays,
+      totalMin,
+      score,                    // puntuación 0-100 del día actual
+      studiedDates,             // array de fechas YYYY-MM-DD — racha real
+      streakCount:getRealStreakCount(), // racha actual en días consecutivos
       tasks,
       notes:notes.value,
       alarm:selectedAlarm,
@@ -1854,8 +1931,12 @@ function saveCloudData(){
 // ══════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════
+// Restaurar fechas estudiadas desde localStorage (si no hay sesión Firebase aún)
+const _savedDates=localStorage.getItem('ft-studied-dates');
+if(_savedDates){ try{ studiedDates=JSON.parse(_savedDates); }catch(e){} }
+
 updateClock(); updateStats(); buildStreak(); renderTasks(); updateScore(); buildAccordion();
-buildThemeSwatches(); // build theme grid with unlock state
+buildThemeSwatches();
 
 // Restore alarm selection
 const savedAlarm=localStorage.getItem('ft-alarm');
