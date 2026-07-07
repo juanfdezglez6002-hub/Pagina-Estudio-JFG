@@ -464,6 +464,9 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
     </svg>
   </button>
 
+  <!-- Account button -->
+  <button class="gear-btn" id="account-btn" onclick="toggleAccountPanel()" title="Cuenta">👤</button>
+
   <!-- Language float button -->
   <button class="lang-float-btn" id="lang-float-btn" onclick="toggleLangPanel()" title="Idioma">🌐</button>
 
@@ -492,6 +495,26 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
       <a class="feedback-btn" href="https://docs.google.com/forms/d/e/XXXXXXXXXXXXXXXX/viewform" target="_blank" rel="noopener">
         📝 Abrir formulario
       </a>
+    </div>
+  </div>
+
+  <!-- Account panel (login / register / logout) -->
+  <div class="lang-float-panel" id="account-panel" style="width:250px;">
+    <div class="lang-float-title">👤 Cuenta · Sincronización</div>
+    <div style="padding:14px;">
+      <p class="settings-desc" style="margin-bottom:10px;">Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.</p>
+      <div id="account-logged-out">
+        <input type="email" id="acc-email" placeholder="Email" style="width:100%;margin-bottom:6px;padding:8px 10px;border-radius:9px;border:1px solid var(--border2);font-family:'Nunito',sans-serif;font-size:0.78rem;outline:none;">
+        <input type="password" id="acc-pass" placeholder="Contraseña (mín. 6)" style="width:100%;margin-bottom:9px;padding:8px 10px;border-radius:9px;border:1px solid var(--border2);font-family:'Nunito',sans-serif;font-size:0.78rem;outline:none;">
+        <button class="btn-tiny" onclick="doRegister()" style="width:100%;margin-bottom:5px;">✨ Crear cuenta</button>
+        <button class="btn-tiny" onclick="doLogin()" style="width:100%;">🔑 Iniciar sesión</button>
+        <div id="acc-msg" style="font-size:0.68rem;margin-top:7px;color:var(--text2);"></div>
+      </div>
+      <div id="account-logged-in" style="display:none;">
+        <div style="font-size:0.78rem;font-weight:700;margin-bottom:3px;">✅ Conectado como:</div>
+        <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;word-break:break-all;" id="acc-email-display"></div>
+        <button class="btn-tiny" onclick="doLogout()" style="width:100%;">🚪 Cerrar sesión</button>
+      </div>
     </div>
   </div>
 
@@ -756,6 +779,11 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <div id="toast"></div>
 <audio id="player" loop></audio>
 
+<!-- ══════ FIREBASE SDK (compat) ══════ -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
 // ══════════════════════════════════════
 //  DATA
@@ -777,6 +805,96 @@ const QUOTES = [
   {text:'El conocimiento es el único bien que crece cuando se comparte.',author:'Sócrates'},
   {text:'Cada minuto de estudio hoy es un problema menos mañana.',author:'Focus-Tap'},
 ];
+
+// Same quotes, translated, so the rotating box respects the chosen language
+const QUOTES_I18N = {
+  es: QUOTES,
+  en: [
+    {text:'Focus is not about what you do, but about what you choose not to do.',author:'Steve Jobs'},
+    {text:'Success is the sum of small efforts repeated day after day.',author:'Robert Collier'},
+    {text:'Discipline is the bridge between goals and accomplishment.',author:'Jim Rohn'},
+    {text:'Studying is not a sacrifice, it is an investment in your future.',author:'Anonymous'},
+    {text:'Do today what others won\u2019t, live tomorrow like others can\u2019t.',author:'Jerry Rogers'},
+    {text:'Concentration is the root of all human power.',author:'Bruce Lee'},
+    {text:'A river cuts through rock not by its power, but by its persistence.',author:'Ovid'},
+    {text:'Don\u2019t wait for the perfect moment. Take the moment and make it perfect.',author:'Zig Ziglar'},
+    {text:'The mind that opens to a new idea never returns to its original size.',author:'Albert Einstein'},
+    {text:'Every study session is a step toward the person you want to be.',author:'Focus-Tap'},
+    {text:'You don\u2019t have to be perfect today. You just have to start.',author:'Focus-Tap'},
+    {text:'Your brain grows stronger every time you choose to study instead of getting distracted.',author:'Focus-Tap'},
+    {text:'You don\u2019t study for the exams. You study for life.',author:'Anonymous'},
+    {text:'Knowledge is the only wealth that grows when it is shared.',author:'Socrates'},
+    {text:'Every minute you study today is one less problem tomorrow.',author:'Focus-Tap'},
+  ],
+  fr: [
+    {text:'La concentration n\u2019est pas ce que tu fais, mais ce que tu choisis de ne pas faire.',author:'Steve Jobs'},
+    {text:'Le succès est la somme de petits efforts répétés chaque jour.',author:'Robert Collier'},
+    {text:'La discipline est le pont entre les objectifs et les réussites.',author:'Jim Rohn'},
+    {text:'Étudier n\u2019est pas un sacrifice, c\u2019est un investissement pour ton avenir.',author:'Anonyme'},
+    {text:'Fais aujourd\u2019hui ce que les autres ne feront pas, vis demain comme les autres ne peuvent pas.',author:'Jerry Rogers'},
+    {text:'La concentration est la racine de tous les pouvoirs humains.',author:'Bruce Lee'},
+    {text:'Une rivière creuse la roche non par sa force, mais par sa constance.',author:'Ovide'},
+    {text:'N\u2019attends pas le moment parfait. Prends le moment et rends-le parfait.',author:'Zig Ziglar'},
+    {text:'L\u2019esprit qui s\u2019ouvre à une nouvelle idée ne revient jamais à sa taille initiale.',author:'Albert Einstein'},
+    {text:'Chaque session d\u2019étude est un pas vers la personne que tu veux devenir.',author:'Focus-Tap'},
+    {text:'Tu n\u2019as pas besoin d\u2019être parfait aujourd\u2019hui. Il faut juste commencer.',author:'Focus-Tap'},
+    {text:'Ton cerveau se renforce chaque fois que tu choisis d\u2019étudier plutôt que de te distraire.',author:'Focus-Tap'},
+    {text:'Tu n\u2019étudies pas pour les examens. Tu étudies pour la vie.',author:'Anonyme'},
+    {text:'Le savoir est la seule richesse qui grandit quand on la partage.',author:'Socrate'},
+    {text:'Chaque minute d\u2019étude aujourd\u2019hui est un problème de moins demain.',author:'Focus-Tap'},
+  ],
+  de: [
+    {text:'Fokus bedeutet nicht, was du tust, sondern was du bewusst nicht tust.',author:'Steve Jobs'},
+    {text:'Erfolg ist die Summe kleiner Anstrengungen, die man Tag für Tag wiederholt.',author:'Robert Collier'},
+    {text:'Disziplin ist die Brücke zwischen Zielen und Erfolgen.',author:'Jim Rohn'},
+    {text:'Lernen ist kein Opfer, sondern eine Investition in deine Zukunft.',author:'Anonym'},
+    {text:'Tu heute, was andere nicht tun, lebe morgen, wie andere es nicht können.',author:'Jerry Rogers'},
+    {text:'Konzentration ist die Wurzel aller menschlichen Kraft.',author:'Bruce Lee'},
+    {text:'Ein Fluss durchbricht den Fels nicht durch Kraft, sondern durch Beständigkeit.',author:'Ovid'},
+    {text:'Warte nicht auf den perfekten Moment. Nimm den Moment und mach ihn perfekt.',author:'Zig Ziglar'},
+    {text:'Ein Geist, der sich einer neuen Idee öffnet, kehrt nie zu seiner ursprünglichen Größe zurück.',author:'Albert Einstein'},
+    {text:'Jede Lernsitzung ist ein Schritt zu der Person, die du sein willst.',author:'Focus-Tap'},
+    {text:'Du musst heute nicht perfekt sein. Du musst nur anfangen.',author:'Focus-Tap'},
+    {text:'Dein Gehirn wird jedes Mal stärker, wenn du dich fürs Lernen statt für Ablenkung entscheidest.',author:'Focus-Tap'},
+    {text:'Du lernst nicht für Prüfungen. Du lernst für das Leben.',author:'Anonym'},
+    {text:'Wissen ist der einzige Reichtum, der wächst, wenn man ihn teilt.',author:'Sokrates'},
+    {text:'Jede Minute, die du heute lernst, ist morgen ein Problem weniger.',author:'Focus-Tap'},
+  ],
+  pt: [
+    {text:'Foco não é o que você faz, mas sim o que você decide não fazer.',author:'Steve Jobs'},
+    {text:'O sucesso é a soma de pequenos esforços repetidos todos os dias.',author:'Robert Collier'},
+    {text:'A disciplina é a ponte entre metas e conquistas.',author:'Jim Rohn'},
+    {text:'Estudar não é um sacrifício, é um investimento no seu futuro.',author:'Anônimo'},
+    {text:'Faça hoje o que outros não farão, viva amanhã como outros não podem.',author:'Jerry Rogers'},
+    {text:'A concentração é a raiz de todos os poderes humanos.',author:'Bruce Lee'},
+    {text:'Um rio corta a rocha não pela força, mas pela constância.',author:'Ovídio'},
+    {text:'Não espere o momento perfeito. Aproveite o momento e o torne perfeito.',author:'Zig Ziglar'},
+    {text:'A mente que se abre a uma nova ideia nunca volta ao seu tamanho original.',author:'Albert Einstein'},
+    {text:'Cada sessão de estudo é um passo rumo à pessoa que você quer ser.',author:'Focus-Tap'},
+    {text:'Você não precisa ser perfeito hoje. Só precisa começar.',author:'Focus-Tap'},
+    {text:'Seu cérebro fica mais forte cada vez que você escolhe estudar em vez de se distrair.',author:'Focus-Tap'},
+    {text:'Você não estuda para as provas. Você estuda para a vida.',author:'Anônimo'},
+    {text:'O conhecimento é a única riqueza que cresce quando é compartilhada.',author:'Sócrates'},
+    {text:'Cada minuto de estudo hoje é um problema a menos amanhã.',author:'Focus-Tap'},
+  ],
+  it: [
+    {text:'La concentrazione non è ciò che fai, ma ciò che scegli di non fare.',author:'Steve Jobs'},
+    {text:'Il successo è la somma di piccoli sforzi ripetuti ogni giorno.',author:'Robert Collier'},
+    {text:'La disciplina è il ponte tra gli obiettivi e i risultati.',author:'Jim Rohn'},
+    {text:'Studiare non è un sacrificio, è un investimento nel tuo futuro.',author:'Anonimo'},
+    {text:'Fai oggi ciò che altri non faranno, vivi domani come altri non possono.',author:'Jerry Rogers'},
+    {text:'La concentrazione è la radice di tutti i poteri umani.',author:'Bruce Lee'},
+    {text:'Un fiume scava la roccia non con la forza, ma con la costanza.',author:'Ovidio'},
+    {text:'Non aspettare il momento perfetto. Prendi il momento e rendilo perfetto.',author:'Zig Ziglar'},
+    {text:'La mente che si apre a una nuova idea non torna mai alla sua dimensione originale.',author:'Albert Einstein'},
+    {text:'Ogni sessione di studio è un passo verso la persona che vuoi diventare.',author:'Focus-Tap'},
+    {text:'Non devi essere perfetto oggi. Devi solo iniziare.',author:'Focus-Tap'},
+    {text:'Il tuo cervello si rafforza ogni volta che scegli di studiare invece di distrarti.',author:'Focus-Tap'},
+    {text:'Non studi per gli esami. Studi per la vita.',author:'Anonimo'},
+    {text:'La conoscenza è l\u2019unica ricchezza che cresce quando viene condivisa.',author:'Socrate'},
+    {text:'Ogni minuto di studio oggi è un problema in meno domani.',author:'Focus-Tap'},
+  ],
+};
 
 // ══════════════════════════════════════
 //  PLAYLISTS
@@ -804,7 +922,7 @@ const PLAYLISTS = {
     label:'Café', emoji:'☕',
     bg:'linear-gradient(135deg,#ffe0b2,#ffcc80)',
     tracks:[
-      {name:'Cafe Free Music',     artist:'LiteSaturation', url:'litesaturation-cafe-free-music-469564.mp3',  dur:197},
+      {name:'Pastel Café',     artist:'Coffee Sounds', url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',  dur:221},
       {name:'Morning Brew',    artist:'Urban Café',    url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',  dur:189},
     ]
   },
@@ -812,7 +930,7 @@ const PLAYLISTS = {
     label:'Clásica', emoji:'🎻',
     bg:'linear-gradient(135deg,#f8bbd0,#f48fb1)',
     tracks:[
-      {name:'Cafe Free Music', artist:'LiteSaturation',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',dur:245},
+      {name:'Moonlight Study', artist:'Classical Essentials',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',dur:245},
       {name:'Piano Afternoon', artist:'Solo Piano',    url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',  dur:230},
     ]
   },
@@ -908,6 +1026,7 @@ startBtn.onclick=()=>{
         localStorage.setItem('ft-totalmin',prev+mins);
         updateStats(); updateScore(); markStreak(); launchCelebration(mins);
         playAlarmOnce(selectedAlarm); // alarm at session end
+        saveCloudData();
         timerLeft=(parseInt(document.getElementById('m-in').value)||25)*60; updateClock();
       }
     },1000);
@@ -1092,7 +1211,7 @@ document.getElementById('prog-wrap').addEventListener('click',e=>{
 // ══════════════════════════════════════
 let tasks=JSON.parse(localStorage.getItem('ft-tasks')||'[]');
 
-function saveTasks(){ localStorage.setItem('ft-tasks',JSON.stringify(tasks)); updateTaskProgress(); updateScore(); }
+function saveTasks(){ localStorage.setItem('ft-tasks',JSON.stringify(tasks)); updateTaskProgress(); updateScore(); saveCloudData(); }
 
 function renderTasks(){
   const list=document.getElementById('task-list'); list.innerHTML='';
@@ -1138,7 +1257,7 @@ notes.addEventListener('input',()=>{
   document.getElementById('notes-meta').innerText=`${words} palabra${words!==1?'s':''} · guardado automático`;
   document.getElementById('save-indicator').innerText='...';
   clearTimeout(saveTimeout);
-  saveTimeout=setTimeout(()=>{ localStorage.setItem('ft-notes',notes.value); document.getElementById('save-indicator').innerText='✓ Guardado'; },1200);
+  saveTimeout=setTimeout(()=>{ localStorage.setItem('ft-notes',notes.value); document.getElementById('save-indicator').innerText='✓ Guardado'; saveCloudData(); },1200);
 });
 
 function copyNotes(){ if(!notes.value.trim()) return showToast('Las notas están vacías'); navigator.clipboard.writeText(notes.value).then(()=>showToast('📋 Notas copiadas')); }
@@ -1147,14 +1266,16 @@ function downloadNotes(){
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([notes.value],{type:'text/plain'}));
   a.download=`notas-${TODAY}.txt`; a.click(); showToast('⬇ Descargando notas...');
 }
-function clearNotes(){ if(confirm('¿Limpiar todas las notas?')){ notes.value=''; localStorage.removeItem('ft-notes'); document.getElementById('notes-meta').innerText='0 palabras · guardado automático'; showToast('🗑 Notas eliminadas'); } }
+function clearNotes(){ if(confirm('¿Limpiar todas las notas?')){ notes.value=''; localStorage.removeItem('ft-notes'); document.getElementById('notes-meta').innerText='0 palabras · guardado automático'; showToast('🗑 Notas eliminadas'); saveCloudData(); } }
 
 // ══════════════════════════════════════
 //  QUOTES
 // ══════════════════════════════════════
 const QUOTE_INTERVAL=18000;
+function getQuotes(){ return QUOTES_I18N[currentLang]||QUOTES_I18N.es; }
 function showQuote(idx,restart){
-  const q=QUOTES[idx],textEl=document.getElementById('quote-text'),authEl=document.getElementById('quote-author');
+  const list=getQuotes();
+  const q=list[idx % list.length],textEl=document.getElementById('quote-text'),authEl=document.getElementById('quote-author');
   textEl.classList.add('fade-out');
   setTimeout(()=>{ textEl.innerText='\u201C'+q.text+'\u201D'; authEl.innerText='— '+q.author; textEl.classList.remove('fade-out'); },350);
   const bar=document.getElementById('quote-timer');
@@ -1162,8 +1283,8 @@ function showQuote(idx,restart){
   bar.style.setProperty('--quote-dur',QUOTE_INTERVAL/1000+'s'); bar.style.animation='';
   if(restart) startQuoteTimer();
 }
-function nextQuote(manual){ quoteIdx=(quoteIdx+1)%QUOTES.length; showQuote(quoteIdx,true); if(manual) clearTimeout(quoteAutoTimer); }
-function startQuoteTimer(){ clearTimeout(quoteAutoTimer); quoteAutoTimer=setTimeout(()=>{ quoteIdx=(quoteIdx+1)%QUOTES.length; showQuote(quoteIdx,true); },QUOTE_INTERVAL); }
+function nextQuote(manual){ quoteIdx=(quoteIdx+1)%getQuotes().length; showQuote(quoteIdx,true); if(manual) clearTimeout(quoteAutoTimer); }
+function startQuoteTimer(){ clearTimeout(quoteAutoTimer); quoteAutoTimer=setTimeout(()=>{ quoteIdx=(quoteIdx+1)%getQuotes().length; showQuote(quoteIdx,true); },QUOTE_INTERVAL); }
 
 // ══════════════════════════════════════
 //  BREAK TIMER
@@ -1235,6 +1356,7 @@ function selectAlarm(id){
     r.querySelector('.alarm-row-check').innerText=isSel?'✓':'';
   });
   localStorage.setItem('ft-alarm',id);
+  saveCloudData();
 }
 
 function previewAlarm(type,evt){ if(evt) evt.stopPropagation(); playAlarmOnce(type); }
@@ -1291,37 +1413,51 @@ function showToast(msg){ const t=document.getElementById('toast'); t.innerText=m
 // ══════════════════════════════════════
 //  SETTINGS — Gear / Background / Language
 // ══════════════════════════════════════
-function toggleSettings(){
-  const p=document.getElementById('settings-panel'),b=document.getElementById('gear-btn');
-  const open=p.classList.toggle('open'); b.classList.toggle('open',open);
-  // close lang panel if open
+function closeAllFloatPanels(){
+  document.getElementById('settings-panel').classList.remove('open');
+  document.getElementById('gear-btn').classList.remove('open');
   document.getElementById('lang-float-panel').classList.remove('open');
   document.getElementById('lang-float-btn').classList.remove('active');
-  if(open) setTimeout(()=>document.addEventListener('click',outsideSettings,true),10);
-  else document.removeEventListener('click',outsideSettings,true);
+  document.getElementById('account-panel').classList.remove('open');
+  document.getElementById('account-btn').classList.remove('open');
+}
+function toggleSettings(){
+  const wasOpen=document.getElementById('settings-panel').classList.contains('open');
+  closeAllFloatPanels();
+  if(!wasOpen){
+    document.getElementById('settings-panel').classList.add('open');
+    document.getElementById('gear-btn').classList.add('open');
+    setTimeout(()=>document.addEventListener('click',outsideSettings,true),10);
+  } else document.removeEventListener('click',outsideSettings,true);
 }
 function outsideSettings(e){
   const wrap=document.getElementById('settings-wrap');
   if(!wrap.contains(e.target)){
-    document.getElementById('settings-panel').classList.remove('open');
-    document.getElementById('gear-btn').classList.remove('open');
-    document.getElementById('lang-float-panel').classList.remove('open');
-    document.getElementById('lang-float-btn').classList.remove('active');
+    closeAllFloatPanels();
     document.removeEventListener('click',outsideSettings,true);
   }
 }
 function toggleLangPanel(){
-  const p=document.getElementById('lang-float-panel'),b=document.getElementById('lang-float-btn');
-  const open=p.classList.toggle('open'); b.classList.toggle('active',open);
-  // close settings if open
-  document.getElementById('settings-panel').classList.remove('open');
-  document.getElementById('gear-btn').classList.remove('open');
-  if(open) setTimeout(()=>document.addEventListener('click',outsideSettings,true),10);
-  else document.removeEventListener('click',outsideSettings,true);
+  const wasOpen=document.getElementById('lang-float-panel').classList.contains('open');
+  closeAllFloatPanels();
+  if(!wasOpen){
+    document.getElementById('lang-float-panel').classList.add('open');
+    document.getElementById('lang-float-btn').classList.add('active');
+    setTimeout(()=>document.addEventListener('click',outsideSettings,true),10);
+  } else document.removeEventListener('click',outsideSettings,true);
 }
 function closeLangPanel(){
   document.getElementById('lang-float-panel').classList.remove('open');
   document.getElementById('lang-float-btn').classList.remove('active');
+}
+function toggleAccountPanel(){
+  const wasOpen=document.getElementById('account-panel').classList.contains('open');
+  closeAllFloatPanels();
+  if(!wasOpen){
+    document.getElementById('account-panel').classList.add('open');
+    document.getElementById('account-btn').classList.add('open');
+    setTimeout(()=>document.addEventListener('click',outsideSettings,true),10);
+  } else document.removeEventListener('click',outsideSettings,true);
 }
 
 // ══════════════════════════════════════
@@ -1430,6 +1566,7 @@ function setBg(key,swatchEl){
   if(swatchEl) swatchEl.classList.add('active');
   localStorage.setItem('ft-bg-key',key); localStorage.removeItem('ft-bg-img');
   document.getElementById('bg-unlock-tip').style.display='none';
+  saveCloudData();
 }
 
 function uploadBg(input){
@@ -1560,6 +1697,10 @@ function setLang(lang,btn){
   document.querySelectorAll('[onclick="downloadNotes()"]').forEach(b=>b.innerText=t.save);
   document.querySelectorAll('[onclick="clearNotes()"]').forEach(b=>b.innerText=t.clear);
   localStorage.setItem('ft-lang',lang);
+  // Refresh the rotating quote in the new language, right away, without waiting for the rotation timer
+  quoteIdx=quoteIdx%getQuotes().length;
+  showQuote(quoteIdx,true);
+  saveCloudData();
 }
 
 function reattachMinInput(){
@@ -1595,6 +1736,122 @@ function spawnConfetti(){
 }
 
 // ══════════════════════════════════════
+//  FIREBASE — cloud sync (real cross-device streak/score record)
+//  1) Reemplaza firebaseConfig con el que te dé la consola de Firebase.
+//  2) Activa Email/Password en Authentication y crea Firestore Database.
+// ══════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "AIzaSyCk7yodGvQWXcEQmHqG0RxdmOdBU1CZh_0",
+  authDomain: "pagina-estudio-df7df.firebaseapp.com",
+  projectId: "pagina-estudio-df7df",
+  storageBucket: "pagina-estudio-df7df.firebasestorage.app",
+  messagingSenderId: "980378888757",
+  appId: "1:980378888757:web:4665165b9348306e5fdf7c",
+  measurementId: "G-SEMGRT1WLG"
+};
+
+let firebaseReady=false, currentUser=null, cloudSyncEnabled=false, syncTimeout=null;
+try{
+  if(firebaseConfig.apiKey!=="TU_API_KEY"){
+    firebase.initializeApp(firebaseConfig);
+    firebaseReady=true;
+    firebase.auth().onAuthStateChanged(async (user)=>{
+      currentUser=user; updateAccountUI();
+      if(user){ cloudSyncEnabled=true; await loadCloudData(user.uid); }
+      else cloudSyncEnabled=false;
+    });
+  }
+}catch(e){ console.warn('Firebase no configurado todavía:',e); }
+
+function updateAccountUI(){
+  const out=document.getElementById('account-logged-out'), inEl=document.getElementById('account-logged-in');
+  if(currentUser){
+    out.style.display='none'; inEl.style.display='block';
+    document.getElementById('acc-email-display').innerText=currentUser.email;
+  } else {
+    out.style.display='block'; inEl.style.display='none';
+  }
+}
+
+function doRegister(){
+  if(!firebaseReady) return showToast('⚠️ Configura Firebase primero (ver instrucciones)');
+  const email=document.getElementById('acc-email').value.trim();
+  const pass=document.getElementById('acc-pass').value;
+  if(!email||pass.length<6) return document.getElementById('acc-msg').innerText='Email válido y contraseña de 6+ caracteres.';
+  firebase.auth().createUserWithEmailAndPassword(email,pass)
+    .then(()=>{ showToast('✅ Cuenta creada y sesión iniciada'); toggleAccountPanel(); })
+    .catch(err=>document.getElementById('acc-msg').innerText=translateFirebaseError(err));
+}
+function doLogin(){
+  if(!firebaseReady) return showToast('⚠️ Configura Firebase primero (ver instrucciones)');
+  const email=document.getElementById('acc-email').value.trim();
+  const pass=document.getElementById('acc-pass').value;
+  firebase.auth().signInWithEmailAndPassword(email,pass)
+    .then(()=>{ showToast('✅ Sesión iniciada'); toggleAccountPanel(); })
+    .catch(err=>document.getElementById('acc-msg').innerText=translateFirebaseError(err));
+}
+function doLogout(){
+  firebase.auth().signOut().then(()=>showToast('👋 Sesión cerrada'));
+}
+function translateFirebaseError(err){
+  const code=err.code||'';
+  if(code.includes('email-already-in-use')) return 'Ese email ya tiene una cuenta. Prueba a iniciar sesión.';
+  if(code.includes('invalid-email')) return 'Email no válido.';
+  if(code.includes('weak-password')) return 'La contraseña debe tener 6+ caracteres.';
+  if(code.includes('user-not-found')||code.includes('wrong-password')||code.includes('invalid-credential')) return 'Email o contraseña incorrectos.';
+  return 'Error: '+err.message;
+}
+
+async function loadCloudData(uid){
+  try{
+    const doc=await firebase.firestore().collection('users').doc(uid).get();
+    if(doc.exists){
+      const d=doc.data();
+      if(d.date===TODAY){
+        sessionsDone=d.sessions||0;
+        localStorage.setItem('ft-sessions',sessionsDone);
+        localStorage.setItem('ft-totalmin',d.totalMin||0);
+      }
+      streakDays=d.streakDays||streakDays;
+      if(Array.isArray(d.tasks)) tasks=d.tasks;
+      if(typeof d.notes==='string') notes.value=d.notes;
+      localStorage.setItem('ft-tasks',JSON.stringify(tasks));
+      localStorage.setItem('ft-streak',JSON.stringify(streakDays));
+      if(d.alarm) selectAlarm(d.alarm);
+      if(d.bgKey){ const sw=document.querySelector(`[data-bg="${d.bgKey}"]`); setBg(d.bgKey,sw); }
+      if(d.lang){ const btn=document.getElementById(`lang-${d.lang}`); setLang(d.lang,btn); }
+      updateStats(); buildStreak(); renderTasks(); updateScore(); buildThemeSwatches();
+      showToast('☁️ Datos sincronizados desde la nube');
+    } else {
+      await saveCloudDataNow();
+    }
+  }catch(e){ console.error(e); showToast('⚠️ Error al sincronizar con la nube'); }
+}
+
+async function saveCloudDataNow(){
+  if(!cloudSyncEnabled||!currentUser) return;
+  try{
+    await firebase.firestore().collection('users').doc(currentUser.uid).set({
+      date:TODAY,
+      sessions:sessionsDone,
+      totalMin:parseInt(localStorage.getItem('ft-totalmin')||'0'),
+      streakDays,
+      tasks,
+      notes:notes.value,
+      alarm:selectedAlarm,
+      bgKey:localStorage.getItem('ft-bg-key')||'lofi',
+      lang:currentLang,
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+    },{merge:true});
+  }catch(e){ console.error(e); }
+}
+function saveCloudData(){
+  if(!cloudSyncEnabled||!currentUser) return;
+  clearTimeout(syncTimeout);
+  syncTimeout=setTimeout(saveCloudDataNow,800);
+}
+
+// ══════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════
 updateClock(); updateStats(); buildStreak(); renderTasks(); updateScore(); buildAccordion();
@@ -1620,9 +1877,9 @@ if(savedAlarm&&ALARMS.find(a=>a.id===savedAlarm)) selectAlarm(savedAlarm);
   else document.getElementById('lang-es').classList.add('active');
 })();
 
-// First quote
-quoteIdx=Math.floor(Math.random()*QUOTES.length);
-const _q=QUOTES[quoteIdx];
+// First quote (respects restored language)
+quoteIdx=Math.floor(Math.random()*getQuotes().length);
+const _q=getQuotes()[quoteIdx];
 document.getElementById('quote-text').innerText='\u201C'+_q.text+'\u201D';
 document.getElementById('quote-author').innerText='— '+_q.author;
 document.getElementById('quote-timer').style.setProperty('--quote-dur',QUOTE_INTERVAL/1000+'s');
