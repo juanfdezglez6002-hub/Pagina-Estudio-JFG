@@ -483,27 +483,23 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
   <!-- Settings panel (Background + Feedback only) -->
   <div class="settings-panel" id="settings-panel">
-    <div class="settings-title">⚙️ Ajustes</div>
+    <div class="settings-title" id="settings-title-el">⚙️ Ajustes</div>
 
     <!-- BG THEMES with unlock -->
     <div class="settings-section">
-      <div class="settings-lbl">🖼 Tema de fondo</div>
+      <div class="settings-lbl" id="lbl-bgtheme">🖼 Tema de fondo</div>
       <div id="bg-unlock-tip" class="bg-unlock-tip" style="display:none;"></div>
-      <div class="bg-presets" id="bg-presets-grid">
-        <!-- Built by JS from THEMES data -->
-      </div>
-      <label class="bg-upload-btn">
-        <input type="file" id="bg-file-input" accept="image/*" onchange="uploadBg(this)" style="display:none">
-        📁 Subir imagen propia
-      </label>
-      <button class="bg-reset-btn" onclick="setBg('lofi',document.querySelector('[data-bg=lofi]'))">↺ Restablecer</button>
+      <div class="bg-presets" id="bg-presets-grid"></div>
+      <!-- Upload rendered dynamically by buildThemeSwatches() -->
+      <div id="bg-upload-area"></div>
+      <button class="bg-reset-btn" id="btn-bg-reset" onclick="setBg('lofi',document.querySelector('[data-bg=lofi]'))">↺ Restablecer</button>
     </div>
 
     <!-- FEEDBACK -->
     <div class="settings-section">
-      <div class="settings-lbl">💬 Feedback</div>
-      <p class="settings-desc">Ayúdanos a mejorar Focus-Tap con tu opinión anónima. Solo tarda 2 minutos.</p>
-      <a class="feedback-btn" href="https://docs.google.com/forms/d/e/XXXXXXXXXXXXXXXX/viewform" target="_blank" rel="noopener">
+      <div class="settings-lbl" id="lbl-feedback">💬 Feedback</div>
+      <p class="settings-desc" id="feedback-desc-el">Ayúdanos a mejorar Focus-Tap con tu opinión anónima. Solo tarda 2 minutos.</p>
+      <a class="feedback-btn" id="feedback-btn-el" href="https://docs.google.com/forms/d/e/XXXXXXXXXXXXXXXX/viewform" target="_blank" rel="noopener">
         📝 Abrir formulario
       </a>
     </div>
@@ -511,27 +507,27 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
   <!-- Account panel (login / register / logout) -->
   <div class="lang-float-panel" id="account-panel" style="width:250px;">
-    <div class="lang-float-title">👤 Cuenta · Sincronización</div>
+    <div class="lang-float-title" id="acc-title-el">👤 Cuenta · Sincronización</div>
     <div style="padding:14px;">
-      <p class="settings-desc" style="margin-bottom:10px;">Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.</p>
+      <p class="settings-desc" id="acc-desc-el" style="margin-bottom:10px;">Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.</p>
       <div id="account-logged-out">
         <input type="email" id="acc-email" placeholder="Email" style="width:100%;margin-bottom:6px;padding:8px 10px;border-radius:9px;border:1px solid var(--border2);font-family:'Nunito',sans-serif;font-size:0.78rem;outline:none;">
         <input type="password" id="acc-pass" placeholder="Contraseña (mín. 6)" style="width:100%;margin-bottom:9px;padding:8px 10px;border-radius:9px;border:1px solid var(--border2);font-family:'Nunito',sans-serif;font-size:0.78rem;outline:none;">
-        <button class="btn-tiny" onclick="doRegister()" style="width:100%;margin-bottom:5px;">✨ Crear cuenta</button>
-        <button class="btn-tiny" onclick="doLogin()" style="width:100%;">🔑 Iniciar sesión</button>
+        <button class="btn-tiny" id="acc-register-btn" onclick="doRegister()" style="width:100%;margin-bottom:5px;">✨ Crear cuenta</button>
+        <button class="btn-tiny" id="acc-login-btn" onclick="doLogin()" style="width:100%;">🔑 Iniciar sesión</button>
         <div id="acc-msg" style="font-size:0.68rem;margin-top:7px;color:var(--text2);"></div>
       </div>
       <div id="account-logged-in" style="display:none;">
-        <div style="font-size:0.78rem;font-weight:700;margin-bottom:3px;">✅ Conectado como:</div>
+        <div id="acc-loggedas-el" style="font-size:0.78rem;font-weight:700;margin-bottom:3px;">✅ Conectado como:</div>
         <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;word-break:break-all;" id="acc-email-display"></div>
-        <button class="btn-tiny" onclick="doLogout()" style="width:100%;">🚪 Cerrar sesión</button>
+        <button class="btn-tiny" id="acc-logout-btn" onclick="doLogout()" style="width:100%;">🚪 Cerrar sesión</button>
       </div>
     </div>
   </div>
 
   <!-- Language float panel -->
   <div class="lang-float-panel" id="lang-float-panel">
-    <div class="lang-float-title">🌐 Idioma</div>
+    <div class="lang-float-title" id="lang-panel-title">🌐 Idioma</div>
     <div class="lang-float-grid">
       <button class="lang-btn active" id="lang-es" onclick="setLang('es',this);closeLangPanel()">🇪🇸 Español</button>
       <button class="lang-btn"        id="lang-en" onclick="setLang('en',this);closeLangPanel()">🇬🇧 English</button>
@@ -572,7 +568,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
           </svg>
           <div class="clock-over">
             <div class="clock" id="clock">25:00</div>
-            <div style="font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-top:3px;font-weight:600;">restante</div>
+            <div id="restante-lbl" style="font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-top:3px;font-weight:600;">restante</div>
           </div>
         </div>
         <div class="timer-actions">
@@ -692,20 +688,20 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
         </svg>
         <div class="score-val"><div id="score-num">0</div><div class="score-lbl">/ 100</div></div>
       </div>
-      <div style="font-size:0.72rem;color:var(--text2);text-align:center;line-height:1.5;">Completa sesiones y tareas<br>para subir tu puntuación</div>
+      <div id="scoredesc-lbl" style="font-size:0.72rem;color:var(--text2);text-align:center;line-height:1.5;">90 min de estudio = 100%</div>
     </div>
 
     <!-- STREAK -->
     <div class="sidebar-card">
       <div class="section-title" style="color:var(--mint2);"><span class="dot mint"></span> Racha Semanal</div>
       <div class="streak-row" id="streak-row"></div>
-      <div style="margin-top:10px;font-size:0.72rem;color:var(--text2);">¡Estudia hoy para mantener tu racha! 🔥</div>
+      <div id="streakcta-lbl" style="margin-top:10px;font-size:0.72rem;color:var(--text2);">¡Estudia hoy para mantener tu racha! 🔥</div>
     </div>
 
     <!-- BREAK TIMER -->
     <div class="sidebar-card break-card">
-      <div class="section-title" style="color:#e65100;margin-bottom:6px;">☕ Descanso Activo</div>
-      <div class="break-label">Tiempo de descanso</div>
+      <div class="section-title" id="brk-title" style="color:#e65100;margin-bottom:6px;">☕ Descanso Activo</div>
+      <div class="break-label" id="brk-lbl">Tiempo de descanso</div>
       <div class="break-clock" id="break-clock">05:00</div>
       <div style="display:flex;gap:7px;justify-content:center;margin-bottom:9px;">
         <button class="btn-tiny" onclick="setBreak(5)">5 min</button>
@@ -717,11 +713,11 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
         <button class="btn-tiny" onclick="resetBreak()">↺ Reset</button>
       </div>
       <div style="border-top:1px solid rgba(230,81,0,0.12);margin-bottom:12px;"></div>
-      <div style="font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bf360c;margin-bottom:9px;text-align:center;">Notificación al terminar</div>
+      <div id="notiftitle-lbl" style="font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bf360c;margin-bottom:9px;text-align:center;">Notificación al terminar</div>
       <div style="text-align:center;margin-bottom:12px;">
         <button class="btn-tiny" id="perm-btn" onclick="requestNotifPermission()">🔔 Activar avisos</button>
       </div>
-      <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#bf360c;margin-bottom:7px;">Sonido de alarma</div>
+      <div id="alarmtitle-lbl" style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#bf360c;margin-bottom:7px;">Sonido de alarma</div>
       <!-- Current alarm chip -->
       <div class="alarm-current-chip">
         <span class="alarm-chip-icon" id="alarm-chip-icon">📳</span>
@@ -729,11 +725,11 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
         <button class="alarm-chip-preview" onclick="previewAlarmCurrent(event)" title="Escuchar">▶</button>
       </div>
       <button class="btn-alarm-browse" onclick="openAlarmModal()">
-        <span>🔔</span> Cambiar sonido <span class="lib-arrow">›</span>
+        <span>🔔</span> <span id="alarmbrowse-lbl">Cambiar sonido</span> <span class="lib-arrow">›</span>
       </button>
       <div id="alarm-banner" style="display:none;margin-top:11px;background:rgba(244,67,54,0.12);border:1px solid rgba(244,67,54,0.3);border-radius:12px;padding:9px 12px;text-align:center;">
-        <div style="font-size:0.78rem;font-weight:700;color:#c62828;margin-bottom:5px;">🔔 ¡Descanso terminado!</div>
-        <button class="btn-tiny" onclick="stopAlarm()" style="background:#c62828;color:white;border:none;">⏹ Parar alarma</button>
+        <div id="breakdone-lbl" style="font-size:0.78rem;font-weight:700;color:#c62828;margin-bottom:5px;">🔔 ¡Descanso terminado!</div>
+        <button class="btn-tiny" onclick="stopAlarm()" id="stopbtn-lbl" style="background:#c62828;color:white;border:none;">⏹ Parar alarma</button>
       </div>
     </div>
 
@@ -752,7 +748,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <div id="library-modal" class="lib-modal" onclick="if(event.target===this)closeLibrary()">
   <div class="lib-panel" style="width:min(680px,94vw);">
     <div class="lib-header">
-      <div class="lib-title">🎵 Biblioteca de Música</div>
+      <div class="lib-title" id="libmodal-title">🎵 Biblioteca de Música</div>
       <button class="lib-close" onclick="closeLibrary()">✕</button>
     </div>
     <div class="lib-body">
@@ -769,7 +765,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <div id="alarm-modal" class="lib-modal" onclick="if(event.target===this)closeAlarmModal()">
   <div class="lib-panel" style="width:min(420px,94vw);">
     <div class="lib-header">
-      <div class="lib-title">🔔 Sonido de Alarma</div>
+      <div class="lib-title" id="alarmmodal-title">🔔 Sonido de Alarma</div>
       <button class="lib-close" onclick="closeAlarmModal()">✕</button>
     </div>
     <div class="alarm-modal-list-wrap">
@@ -784,7 +780,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
     <span class="celeb-emoji">🎉</span>
     <div class="celeb-title" id="celeb-title">¡Sesión Completada!</div>
     <div class="celeb-sub" id="celeb-sub">Has terminado tu sesión de estudio.<br>¡Eres increíble, sigue así! 🐼✨</div>
-    <button class="celeb-dismiss" onclick="closeCelebration()">¡A por el descanso! ☕</button>
+    <button class="celeb-dismiss" id="celeb-dismiss" onclick="closeCelebration()">¡A por el descanso! ☕</button>
   </div>
 </div>
 <div id="toast"></div>
@@ -1293,7 +1289,8 @@ function updateTaskProgress(){
   const total=tasks.length, done=tasks.filter(t=>t.done).length;
   const pct=total>0?Math.round(done/total*100):0;
   document.getElementById('task-prog-fill').style.width=pct+'%';
-  document.getElementById('task-prog-txt').innerText=`${done} / ${total} completadas`;
+  const t=T[currentLang]||T.es;
+  document.getElementById('task-prog-txt').innerText=`${done} / ${total} ${t.progcompleted||'completadas'}`;
 }
 
 function toggleTask(i){ tasks[i].done=!tasks[i].done; saveTasks(); renderTasks(); }
@@ -1525,70 +1522,95 @@ function toggleAccountPanel(){
 // ══════════════════════════════════════
 // Para añadir un tema: agregar una entrada en THEMES con key, label, emoji, unlock, swatch, bg, nightMode
 const THEMES = {
-  lofi:{
-    label:'Lofi Dream', emoji:'🎹', unlock:0,
-    swatch:'linear-gradient(135deg,#c5cae9 0%,#9fa8da 50%,#b2dfdb 100%)',
+  lofi:{label:'Lofi Dream',emoji:'🎹',unlock:0,
+    swatch:'linear-gradient(135deg,#c5cae9,#9fa8da,#b2dfdb)',
     bg:`radial-gradient(ellipse at 10% 0%,rgba(167,180,255,0.38) 0%,transparent 55%),
         radial-gradient(ellipse at 90% 10%,rgba(128,203,196,0.28) 0%,transparent 50%),
         radial-gradient(ellipse at 50% 100%,rgba(244,143,177,0.16) 0%,transparent 50%),
-        linear-gradient(160deg,#dde8fa 0%,#e8f2f8 50%,#eef4fb 100%)`,
-    night:false
-  },
-  sakura:{
-    label:'Sakura', emoji:'🌸', unlock:2,
-    swatch:'linear-gradient(135deg,#fce4ec 0%,#f8bbd0 45%,#ffccbc 100%)',
+        linear-gradient(160deg,#dde8fa 0%,#e8f2f8 50%,#eef4fb 100%)`,night:false},
+  sakura:{label:'Sakura',emoji:'🌸',unlock:2,
+    swatch:'linear-gradient(135deg,#fce4ec,#f8bbd0,#ffccbc)',
     bg:`radial-gradient(ellipse at 15% 5%,rgba(248,187,208,0.55) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 15%,rgba(255,204,188,0.35) 0%,transparent 50%),
         radial-gradient(ellipse at 50% 90%,rgba(240,160,180,0.2) 0%,transparent 50%),
-        linear-gradient(155deg,#fce4f0 0%,#fdeef5 50%,#fff5f8 100%)`,
-    night:false
-  },
-  midnight:{
-    label:'Midnight', emoji:'🌙', unlock:3,
-    swatch:'linear-gradient(135deg,#1a1a3e 0%,#2d1b5e 50%,#0f2040 100%)',
+        linear-gradient(155deg,#fce4f0 0%,#fdeef5 50%,#fff5f8 100%)`,night:false},
+  midnight:{label:'Midnight',emoji:'🌙',unlock:3,
+    swatch:'linear-gradient(135deg,#1a1a3e,#2d1b5e,#0f2040)',
     bg:`radial-gradient(ellipse at 20% 10%,rgba(120,80,200,0.3) 0%,transparent 55%),
         radial-gradient(ellipse at 80% 5%,rgba(40,80,160,0.25) 0%,transparent 50%),
         radial-gradient(ellipse at 50% 90%,rgba(60,20,100,0.2) 0%,transparent 50%),
-        linear-gradient(155deg,#0d0d26 0%,#1a1640 50%,#0a1020 100%)`,
-    night:true
-  },
-  forest:{
-    label:'Deep Forest', emoji:'🌲', unlock:4,
-    swatch:'linear-gradient(135deg,#1b4332 0%,#2d6a4f 50%,#40916c 100%)',
+        linear-gradient(155deg,#0d0d26 0%,#1a1640 50%,#0a1020 100%)`,night:true},
+  forest:{label:'Deep Forest',emoji:'🌲',unlock:4,
+    swatch:'linear-gradient(135deg,#1b4332,#2d6a4f,#40916c)',
     bg:`radial-gradient(ellipse at 10% 0%,rgba(64,145,108,0.35) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 20%,rgba(45,106,79,0.25) 0%,transparent 50%),
         radial-gradient(ellipse at 50% 100%,rgba(27,67,50,0.2) 0%,transparent 50%),
-        linear-gradient(155deg,#e8f5e9 0%,#c8e6c9 45%,#d4ede4 100%)`,
-    night:false
-  },
-  ocean:{
-    label:'Deep Ocean', emoji:'🌊', unlock:5,
-    swatch:'linear-gradient(135deg,#0077b6 0%,#00b4d8 50%,#90e0ef 100%)',
+        linear-gradient(155deg,#e8f5e9 0%,#c8e6c9 45%,#d4ede4 100%)`,night:false},
+  ocean:{label:'Deep Ocean',emoji:'🌊',unlock:5,
+    swatch:'linear-gradient(135deg,#0077b6,#00b4d8,#90e0ef)',
     bg:`radial-gradient(ellipse at 15% 5%,rgba(0,180,216,0.35) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 15%,rgba(144,224,239,0.3) 0%,transparent 50%),
         radial-gradient(ellipse at 50% 90%,rgba(0,119,182,0.2) 0%,transparent 50%),
-        linear-gradient(155deg,#caf0f8 0%,#ade8f4 45%,#e0f7fa 100%)`,
-    night:false
-  },
-  golden:{
-    label:'Golden Hour', emoji:'🌅', unlock:6,
-    swatch:'linear-gradient(135deg,#ff9f43 0%,#ffd32a 50%,#ff6b6b 100%)',
+        linear-gradient(155deg,#caf0f8 0%,#ade8f4 45%,#e0f7fa 100%)`,night:false},
+  golden:{label:'Golden Hour',emoji:'🌅',unlock:6,
+    swatch:'linear-gradient(135deg,#ff9f43,#ffd32a,#ff6b6b)',
     bg:`radial-gradient(ellipse at 10% 5%,rgba(255,159,67,0.4) 0%,transparent 55%),
         radial-gradient(ellipse at 90% 10%,rgba(255,211,42,0.3) 0%,transparent 50%),
         radial-gradient(ellipse at 50% 95%,rgba(255,107,107,0.2) 0%,transparent 50%),
-        linear-gradient(155deg,#fff3e0 0%,#ffe0b2 45%,#fff8e1 100%)`,
-    night:false
-  },
-  neon:{
-    label:'Neon Night', emoji:'⚡', unlock:7,
-    swatch:'linear-gradient(135deg,#0f0f1a 0%,#1a0533 50%,#001a33 100%)',
+        linear-gradient(155deg,#fff3e0 0%,#ffe0b2 45%,#fff8e1 100%)`,night:false},
+  neon:{label:'Neon Night',emoji:'⚡',unlock:7,
+    swatch:'linear-gradient(135deg,#0f0f1a,#1a0533,#001a33)',
     bg:`radial-gradient(ellipse at 15% 10%,rgba(0,255,200,0.15) 0%,transparent 50%),
         radial-gradient(ellipse at 85% 5%,rgba(160,0,255,0.2) 0%,transparent 50%),
         radial-gradient(ellipse at 50% 90%,rgba(0,150,255,0.15) 0%,transparent 50%),
-        linear-gradient(155deg,#080818 0%,#100020 50%,#040c18 100%)`,
-    night:true
-  },
+        linear-gradient(155deg,#080818 0%,#100020 50%,#040c18 100%)`,night:true},
+  lavender:{label:'Lavender Fields',emoji:'💜',unlock:10,
+    swatch:'linear-gradient(135deg,#e9d5ff,#c084fc,#a855f7)',
+    bg:`radial-gradient(ellipse at 10% 5%,rgba(192,132,252,0.4) 0%,transparent 55%),
+        radial-gradient(ellipse at 85% 15%,rgba(168,85,247,0.25) 0%,transparent 50%),
+        radial-gradient(ellipse at 50% 90%,rgba(139,92,246,0.15) 0%,transparent 50%),
+        linear-gradient(155deg,#f5f3ff 0%,#ede9fe 50%,#faf5ff 100%)`,night:false},
+  aurora:{label:'Aurora',emoji:'🌌',unlock:14,
+    swatch:'linear-gradient(135deg,#0f766e,#0891b2,#7c3aed)',
+    bg:`radial-gradient(ellipse at 5% 30%,rgba(16,185,129,0.35) 0%,transparent 50%),
+        radial-gradient(ellipse at 95% 10%,rgba(124,58,237,0.3) 0%,transparent 50%),
+        radial-gradient(ellipse at 50% 80%,rgba(8,145,178,0.25) 0%,transparent 50%),
+        linear-gradient(155deg,#0d1117 0%,#0f172a 50%,#020617 100%)`,night:true},
+  desert:{label:'Desert Dusk',emoji:'🏜️',unlock:21,
+    swatch:'linear-gradient(135deg,#c2410c,#ea580c,#f97316)',
+    bg:`radial-gradient(ellipse at 15% 5%,rgba(234,88,12,0.4) 0%,transparent 55%),
+        radial-gradient(ellipse at 90% 20%,rgba(249,115,22,0.3) 0%,transparent 50%),
+        radial-gradient(ellipse at 50% 90%,rgba(251,146,60,0.2) 0%,transparent 50%),
+        linear-gradient(155deg,#fff7ed 0%,#fed7aa 45%,#ffedd5 100%)`,night:false},
+  vintage:{label:'Vintage Paper',emoji:'📜',unlock:30,
+    swatch:'linear-gradient(135deg,#92400e,#b45309,#d97706)',
+    bg:`radial-gradient(ellipse at 10% 5%,rgba(180,83,9,0.2) 0%,transparent 55%),
+        radial-gradient(ellipse at 85% 15%,rgba(217,119,6,0.15) 0%,transparent 50%),
+        radial-gradient(ellipse at 50% 90%,rgba(146,64,14,0.1) 0%,transparent 50%),
+        linear-gradient(155deg,#fdf8f0 0%,#f5ebe0 50%,#fef9f3 100%)`,night:false},
+  cyberpunk:{label:'Cyberpunk',emoji:'🤖',unlock:45,
+    swatch:'linear-gradient(135deg,#0a0a0a,#ff0080,#00ffff)',
+    bg:`radial-gradient(ellipse at 10% 20%,rgba(255,0,128,0.25) 0%,transparent 50%),
+        radial-gradient(ellipse at 90% 10%,rgba(0,255,255,0.2) 0%,transparent 50%),
+        radial-gradient(ellipse at 50% 85%,rgba(255,0,255,0.15) 0%,transparent 50%),
+        linear-gradient(155deg,#050505 0%,#0a0012 50%,#000a0a 100%)`,night:true},
 };
+
+// ── IMAGEN PERSONALIZADA: se desbloquea a los 50 días de racha consecutiva ──
+const CUSTOM_BG_UNLOCK_DAYS=50;
+
+function getUploadAreaHTML(streak,t){
+  if(streak>=CUSTOM_BG_UNLOCK_DAYS){
+    return `<label class="bg-upload-btn" id="bg-upload-label">
+      <input type="file" id="bg-file-input" accept="image/*" onchange="uploadBg(this)" style="display:none">
+      ${t.bgupload||'📁 Subir imagen propia'}
+    </label>`;
+  }
+  const left=CUSTOM_BG_UNLOCK_DAYS-streak;
+  return `<div class="bg-upload-btn" id="bg-upload-label" style="cursor:not-allowed;opacity:0.5;" title="${t.bguploadlocked||'🔒 Desbloquea con 50 días de racha'}">
+    🔒 ${t.bguploadlocked||'Imagen propia — 50 días de racha'} (faltan ${left})
+  </div>`;
+}
 
 // getStreakCount ahora delega en getRealStreakCount (declarada junto a markStreak)
 function getStreakCount(){ return getRealStreakCount(); }
@@ -1597,22 +1619,31 @@ function buildThemeSwatches(){
   const grid=document.getElementById('bg-presets-grid'); if(!grid) return;
   grid.innerHTML='';
   const streak=getRealStreakCount();
+  const t=T[currentLang]||T.es;
   Object.entries(THEMES).forEach(([key,th])=>{
     const locked=th.unlock>0 && streak<th.unlock;
     const div=document.createElement('div');
     div.className='bg-swatch'+(locked?' locked':'');
     div.dataset.bg=key;
-    div.title=locked?`🔒 Desbloquea con ${th.unlock} días de racha consecutivos`:th.label;
+    div.title=locked?`🔒 ${th.label} — ${th.unlock} días consecutivos (llevas ${streak})`:th.label;
     div.style.background=th.swatch;
     div.innerHTML=`<div class="bg-swatch-label">${th.emoji}</div>`;
     if(locked) div.innerHTML+=`<div class="bg-swatch-lock">🔒</div>`;
     if(!locked) div.onclick=()=>setBg(key,div);
-    else div.onclick=()=>{ document.getElementById('bg-unlock-tip').style.display='block'; document.getElementById('bg-unlock-tip').innerText=`🔒 "${th.label}" se desbloquea con ${th.unlock} días consecutivos (llevas ${streak}).`; };
+    else div.onclick=()=>{
+      const tip=document.getElementById('bg-unlock-tip');
+      tip.style.display='block';
+      tip.innerText=`🔒 "${th.label}" se desbloquea con ${th.unlock} días consecutivos de racha (llevas ${streak}).`;
+    };
     grid.appendChild(div);
   });
   const savedKey=localStorage.getItem('ft-bg-key')||'lofi';
   const activeSw=grid.querySelector(`[data-bg="${savedKey}"]`);
   if(activeSw) activeSw.classList.add('active');
+
+  // Render upload area dinámicamente según racha
+  const uploadArea=document.getElementById('bg-upload-area');
+  if(uploadArea) uploadArea.innerHTML=getUploadAreaHTML(streak,t);
 }
 
 function setBg(key,swatchEl){
@@ -1630,6 +1661,10 @@ function setBg(key,swatchEl){
 }
 
 function uploadBg(input){
+  if(getRealStreakCount()<CUSTOM_BG_UNLOCK_DAYS){
+    showToast(`🔒 Necesitas ${CUSTOM_BG_UNLOCK_DAYS} días de racha para subir una imagen`);
+    return;
+  }
   const file=input.files[0]; if(!file) return;
   const reader=new FileReader();
   reader.onload=e=>{
@@ -1647,119 +1682,296 @@ function applyCustomBg(dataUrl){
   document.body.style.backgroundSize='cover'; document.body.style.backgroundPosition='center'; document.body.style.backgroundAttachment='fixed';
 }
 
-// Language translations (key UI strings)
+// Language translations
 const T={
-  es:{start:'▶ Empezar',pause:'⏸ Pausar',resume:'▶ Reanudar',reset:'↺ Reset',deep:'🎯 Modo Enfoque',prod:'⚡ Productividad',
-      s1:'Sesiones hoy',s2:'Min enfocado',s3:'Racha días',lib:'🎵 Explorar Biblioteca',
-      tasks:'Metas de Estudio',taskph:'+ Nueva tarea... pulsa Enter',notes:'Notas Rápidas',notesph:'Vuelca aquí tus pensamientos para volver al enfoque...',
-      score:'Puntuación Hoy',scoredesc:'Completa sesiones y tareas<br>para subir tu puntuación',
-      streak:'Racha Semanal',streakcta:'¡Estudia hoy para mantener tu racha! 🔥',
-      brk:'☕ Descanso Activo',brklbl:'Tiempo de descanso',brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reset',
-      notif:'Notificación al terminar',perm:'🔔 Activar avisos',permok:'✅ Avisos activos',
-      alarm:'Sonido de alarma',alarmbrowse:'Cambiar sonido',
-      copy:'📋 Copiar',save:'⬇ Guardar .txt',clear:'🗑 Limpiar',
-      smin:'min',seslbl:'Sesión de'},
-  en:{start:'▶ Start',pause:'⏸ Pause',resume:'▶ Resume',reset:'↺ Reset',deep:'🎯 Focus Mode',prod:'⚡ Productivity',
-      s1:'Sessions today',s2:'Min focused',s3:'Day streak',lib:'🎵 Browse Library',
-      tasks:'Study Goals',taskph:'+ New task... press Enter',notes:'Quick Notes',notesph:'Dump your thoughts here...',
-      score:'Today\'s Score',scoredesc:'Complete sessions and tasks<br>to raise your score',
-      streak:'Weekly Streak',streakcta:'Study today to keep your streak! 🔥',
-      brk:'☕ Active Break',brklbl:'Break time',brkstart:'▶ Start',brkpause:'⏸ Pause',brkreset:'↺ Reset',
-      notif:'Notify when done',perm:'🔔 Enable alerts',permok:'✅ Alerts active',
-      alarm:'Alarm sound',alarmbrowse:'Change sound',
-      copy:'📋 Copy',save:'⬇ Save .txt',clear:'🗑 Clear',
-      smin:'min',seslbl:'Session of'},
-  fr:{start:'▶ Démarrer',pause:'⏸ Pause',resume:'▶ Reprendre',reset:'↺ Réinitialiser',deep:'🎯 Mode Focus',prod:'⚡ Productivité',
-      s1:'Sessions auj.',s2:'Min concentré',s3:'Jours streak',lib:'🎵 Bibliothèque',
-      tasks:'Objectifs d\'étude',taskph:'+ Nouvelle tâche... Entrée',notes:'Notes rapides',notesph:'Videz vos pensées ici...',
-      score:'Score du jour',scoredesc:'Complétez sessions et tâches<br>pour augmenter votre score',
-      streak:'Série hebdomadaire',streakcta:'Étudiez aujourd\'hui pour garder la série ! 🔥',
-      brk:'☕ Pause active',brklbl:'Temps de pause',brkstart:'▶ Démarrer',brkpause:'⏸ Pause',brkreset:'↺ Réinitialiser',
-      notif:'Notifier à la fin',perm:'🔔 Activer alertes',permok:'✅ Alertes actives',
-      alarm:'Son d\'alarme',alarmbrowse:'Changer le son',
-      copy:'📋 Copier',save:'⬇ Sauvegarder .txt',clear:'🗑 Effacer',
-      smin:'min',seslbl:'Session de'},
-  de:{start:'▶ Starten',pause:'⏸ Pause',resume:'▶ Fortsetzen',reset:'↺ Zurücksetzen',deep:'🎯 Fokusmodus',prod:'⚡ Produktivität',
-      s1:'Sitzungen heute',s2:'Min fokussiert',s3:'Tage-Streak',lib:'🎵 Bibliothek',
-      tasks:'Lernziele',taskph:'+ Neue Aufgabe... Enter',notes:'Schnellnotizen',notesph:'Schreibe deine Gedanken hier...',
-      score:'Heutige Punkte',scoredesc:'Schließe Sitzungen und Aufgaben ab<br>um deinen Score zu steigern',
-      streak:'Wöchentlicher Streak',streakcta:'Lerne heute, um deinen Streak zu halten! 🔥',
-      brk:'☕ Aktive Pause',brklbl:'Pausenzeit',brkstart:'▶ Starten',brkpause:'⏸ Pause',brkreset:'↺ Zurücksetzen',
-      notif:'Benachrichtigung am Ende',perm:'🔔 Benachr. aktivieren',permok:'✅ Benachr. aktiv',
-      alarm:'Alarmton',alarmbrowse:'Ton ändern',
-      copy:'📋 Kopieren',save:'⬇ Speichern .txt',clear:'🗑 Löschen',
-      smin:'Min',seslbl:'Sitzung von'},
-  pt:{start:'▶ Começar',pause:'⏸ Pausar',resume:'▶ Retomar',reset:'↺ Reiniciar',deep:'🎯 Modo Foco',prod:'⚡ Produtividade',
-      s1:'Sessões hoje',s2:'Min focado',s3:'Dias seguidos',lib:'🎵 Biblioteca',
-      tasks:'Metas de Estudo',taskph:'+ Nova tarefa... Enter',notes:'Notas Rápidas',notesph:'Escreva seus pensamentos aqui...',
-      score:'Pontuação Hoje',scoredesc:'Complete sessões e tarefas<br>para aumentar sua pontuação',
-      streak:'Sequência Semanal',streakcta:'Estude hoje para manter sua sequência! 🔥',
-      brk:'☕ Pausa Ativa',brklbl:'Tempo de pausa',brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reiniciar',
-      notif:'Notificar ao terminar',perm:'🔔 Ativar avisos',permok:'✅ Avisos ativos',
-      alarm:'Som do alarme',alarmbrowse:'Mudar som',
-      copy:'📋 Copiar',save:'⬇ Salvar .txt',clear:'🗑 Limpar',
-      smin:'min',seslbl:'Sessão de'},
-  it:{start:'▶ Inizia',pause:'⏸ Pausa',resume:'▶ Riprendi',reset:'↺ Reimposta',deep:'🎯 Modalità Focus',prod:'⚡ Produttività',
-      s1:'Sessioni oggi',s2:'Min concentrato',s3:'Giorni streak',lib:'🎵 Libreria',
-      tasks:'Obiettivi di Studio',taskph:'+ Nuova attività... Invio',notes:'Note Veloci',notesph:'Scrivi i tuoi pensieri qui...',
-      score:'Punteggio Oggi',scoredesc:'Completa sessioni e attività<br>per aumentare il tuo punteggio',
-      streak:'Serie Settimanale',streakcta:'Studia oggi per mantenere la serie! 🔥',
-      brk:'☕ Pausa Attiva',brklbl:'Tempo di pausa',brkstart:'▶ Inizia',brkpause:'⏸ Pausa',brkreset:'↺ Reimposta',
-      notif:'Notifica alla fine',perm:'🔔 Attiva avvisi',permok:'✅ Avvisi attivi',
-      alarm:'Suono sveglia',alarmbrowse:'Cambia suono',
-      copy:'📋 Copia',save:'⬇ Salva .txt',clear:'🗑 Cancella',
-      smin:'min',seslbl:'Sessione di'},
+  es:{
+    start:'▶ Empezar',pause:'⏸ Pausar',resume:'▶ Reanudar',reset:'↺ Reset',
+    deep:'🎯 Modo Enfoque',prod:'⚡ Productividad',
+    s1:'Sesiones hoy',s2:'Min enfocado',s3:'Racha días',
+    lib:'Explorar Biblioteca',           // ← SIN emoji, setLang lo añade
+    tasks:'Metas de Estudio',taskph:'+ Nueva tarea... pulsa Enter',
+    notes:'Notas Rápidas',notesph:'Vuelca aquí tus pensamientos para volver al enfoque...',
+    score:'Puntuación Hoy',scoredesc:'90 min de estudio = 100%',
+    streak:'Racha Semanal',streakcta:'¡Estudia hoy para mantener tu racha! 🔥',
+    brk:'☕ Descanso Activo',brklbl:'Tiempo de descanso',
+    brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reset',
+    notiftitle:'Notificación al terminar',alarmtitle:'Sonido de alarma',
+    perm:'🔔 Activar avisos',permok:'✅ Avisos activos',
+    alarmbrowse:'Cambiar sonido',
+    copy:'📋 Copiar',save:'⬇ Guardar .txt',clear:'🗑 Limpiar',
+    smin:'min',seslbl:'Sesión de',restante:'restante',
+    libmodal:'🎵 Biblioteca de Música',alarmmodal:'🔔 Sonido de Alarma',
+    settingstitle:'⚙️ Ajustes',bgtheme:'🖼 Tema de fondo',
+    feedbacklbl:'💬 Feedback',feedbackdesc:'Ayúdanos a mejorar Focus-Tap con tu opinión anónima. Solo tarda 2 minutos.',feedbackbtn:'📝 Abrir formulario',
+    bgupload:'📁 Subir imagen propia',bguploadlocked:'🔒 Desbloquea con 50 días de racha',bgreset:'↺ Restablecer',
+    acctitle:'👤 Cuenta · Sincronización',accdesc:'Crea una cuenta gratis para guardar tu racha en la nube y verla desde cualquier dispositivo.',
+    accregister:'✨ Crear cuenta',acclogin:'🔑 Iniciar sesión',acclogout:'🚪 Cerrar sesión',accloggedas:'✅ Conectado como:',
+    progcompleted:'completadas',
+    priority:{high:'🔴 Alta',med:'🟡 Media',low:'🟢 Baja'},
+    celeb:[['¡Sesión Completada! 🎉','¡Sigue así, campeón! 🐼✨'],['¡Increíble! 🚀','¡Estás imparable!'],['¡Lo has conseguido! 🏆','Cada sesión te acerca más a tu objetivo.'],['¡Panda Feliz! 🐼','El esfuerzo constante siempre da frutos.']],
+    celebbtn:'¡A por el descanso! ☕',
+    breakdone:'¡Descanso terminado!',stopbtn:'⏹ Parar alarma',
+    idioma:'🌐 Idioma',
+  },
+  en:{
+    start:'▶ Start',pause:'⏸ Pause',resume:'▶ Resume',reset:'↺ Reset',
+    deep:'🎯 Focus Mode',prod:'⚡ Productivity',
+    s1:'Sessions today',s2:'Min focused',s3:'Day streak',
+    lib:'Browse Library',
+    tasks:'Study Goals',taskph:'+ New task... press Enter',
+    notes:'Quick Notes',notesph:'Dump your thoughts here...',
+    score:'Today\'s Score',scoredesc:'90 min of study = 100%',
+    streak:'Weekly Streak',streakcta:'Study today to keep your streak! 🔥',
+    brk:'☕ Active Break',brklbl:'Break time',
+    brkstart:'▶ Start',brkpause:'⏸ Pause',brkreset:'↺ Reset',
+    notiftitle:'Notify when done',alarmtitle:'Alarm sound',
+    perm:'🔔 Enable alerts',permok:'✅ Alerts active',
+    alarmbrowse:'Change sound',
+    copy:'📋 Copy',save:'⬇ Save .txt',clear:'🗑 Clear',
+    smin:'min',seslbl:'Session of',restante:'remaining',
+    libmodal:'🎵 Music Library',alarmmodal:'🔔 Alarm Sound',
+    settingstitle:'⚙️ Settings',bgtheme:'🖼 Background theme',
+    feedbacklbl:'💬 Feedback',feedbackdesc:'Help us improve Focus-Tap with your anonymous opinion. Takes 2 minutes.',feedbackbtn:'📝 Open form',
+    bgupload:'📁 Upload your own image',bguploadlocked:'🔒 Unlock with 50-day streak',bgreset:'↺ Reset',
+    acctitle:'👤 Account · Sync',accdesc:'Create a free account to save your streak in the cloud and view it from any device.',
+    accregister:'✨ Create account',acclogin:'🔑 Sign in',acclogout:'🚪 Sign out',accloggedas:'✅ Signed in as:',
+    progcompleted:'completed',
+    priority:{high:'🔴 High',med:'🟡 Medium',low:'🟢 Low'},
+    celeb:[['Session Complete! 🎉','Keep it up, champion! 🐼✨'],['Incredible! 🚀','You\'re unstoppable!'],['You did it! 🏆','Every session brings you closer to your goal.'],['Happy Panda! 🐼','Consistent effort always pays off.']],
+    celebbtn:'Time for a break! ☕',
+    breakdone:'Break time\'s over!',stopbtn:'⏹ Stop alarm',
+    idioma:'🌐 Language',
+  },
+  fr:{
+    start:'▶ Démarrer',pause:'⏸ Pause',resume:'▶ Reprendre',reset:'↺ Réinitialiser',
+    deep:'🎯 Mode Focus',prod:'⚡ Productivité',
+    s1:'Sessions auj.',s2:'Min concentré',s3:'Jours streak',
+    lib:'Bibliothèque',
+    tasks:'Objectifs d\'étude',taskph:'+ Nouvelle tâche... Entrée',
+    notes:'Notes rapides',notesph:'Videz vos pensées ici...',
+    score:'Score du jour',scoredesc:'90 min d\'étude = 100%',
+    streak:'Série hebdomadaire',streakcta:'Étudiez aujourd\'hui pour garder la série ! 🔥',
+    brk:'☕ Pause active',brklbl:'Temps de pause',
+    brkstart:'▶ Démarrer',brkpause:'⏸ Pause',brkreset:'↺ Réinitialiser',
+    notiftitle:'Notifier à la fin',alarmtitle:'Son d\'alarme',
+    perm:'🔔 Activer alertes',permok:'✅ Alertes actives',
+    alarmbrowse:'Changer le son',
+    copy:'📋 Copier',save:'⬇ Sauvegarder .txt',clear:'🗑 Effacer',
+    smin:'min',seslbl:'Session de',restante:'restant',
+    libmodal:'🎵 Bibliothèque musicale',alarmmodal:'🔔 Son d\'alarme',
+    settingstitle:'⚙️ Paramètres',bgtheme:'🖼 Thème de fond',
+    feedbacklbl:'💬 Avis',feedbackdesc:'Aidez-nous à améliorer Focus-Tap. Anonyme, 2 minutes.',feedbackbtn:'📝 Ouvrir le formulaire',
+    bgupload:'📁 Télécharger une image',bguploadlocked:'🔒 Débloque avec 50 jours de série',bgreset:'↺ Réinitialiser',
+    acctitle:'👤 Compte · Synchronisation',accdesc:'Créez un compte gratuit pour sauvegarder votre série dans le cloud.',
+    accregister:'✨ Créer un compte',acclogin:'🔑 Se connecter',acclogout:'🚪 Se déconnecter',accloggedas:'✅ Connecté en tant que :',
+    progcompleted:'terminées',
+    priority:{high:'🔴 Haute',med:'🟡 Moyenne',low:'🟢 Basse'},
+    celeb:[['Session terminée ! 🎉','Continue comme ça, champion ! 🐼✨'],['Incroyable ! 🚀','Tu es inarrêtable !'],['Tu l\'as fait ! 🏆','Chaque session te rapproche de ton objectif.'],['Panda heureux ! 🐼','L\'effort constant porte toujours ses fruits.']],
+    celebbtn:'À la pause ! ☕',
+    breakdone:'Pause terminée !',stopbtn:'⏹ Arrêter l\'alarme',
+    idioma:'🌐 Langue',
+  },
+  de:{
+    start:'▶ Starten',pause:'⏸ Pause',resume:'▶ Fortsetzen',reset:'↺ Zurücksetzen',
+    deep:'🎯 Fokusmodus',prod:'⚡ Produktivität',
+    s1:'Sitzungen heute',s2:'Min fokussiert',s3:'Tage-Streak',
+    lib:'Bibliothek',
+    tasks:'Lernziele',taskph:'+ Neue Aufgabe... Enter',
+    notes:'Schnellnotizen',notesph:'Schreibe deine Gedanken hier...',
+    score:'Heutige Punkte',scoredesc:'90 Min Lernen = 100%',
+    streak:'Wöchentlicher Streak',streakcta:'Lerne heute, um deinen Streak zu halten! 🔥',
+    brk:'☕ Aktive Pause',brklbl:'Pausenzeit',
+    brkstart:'▶ Starten',brkpause:'⏸ Pause',brkreset:'↺ Zurücksetzen',
+    notiftitle:'Benachrichtigung am Ende',alarmtitle:'Alarmton',
+    perm:'🔔 Benachr. aktivieren',permok:'✅ Benachr. aktiv',
+    alarmbrowse:'Ton ändern',
+    copy:'📋 Kopieren',save:'⬇ Speichern .txt',clear:'🗑 Löschen',
+    smin:'Min',seslbl:'Sitzung von',restante:'verbleibend',
+    libmodal:'🎵 Musikbibliothek',alarmmodal:'🔔 Alarmton',
+    settingstitle:'⚙️ Einstellungen',bgtheme:'🖼 Hintergrundthema',
+    feedbacklbl:'💬 Feedback',feedbackdesc:'Hilf uns, Focus-Tap zu verbessern. Anonym, 2 Minuten.',feedbackbtn:'📝 Formular öffnen',
+    bgupload:'📁 Eigenes Bild hochladen',bguploadlocked:'🔒 Freischalten mit 50-Tage-Streak',bgreset:'↺ Zurücksetzen',
+    acctitle:'👤 Konto · Synchronisation',accdesc:'Erstelle ein kostenloses Konto, um deinen Streak in der Cloud zu speichern.',
+    accregister:'✨ Konto erstellen',acclogin:'🔑 Anmelden',acclogout:'🚪 Abmelden',accloggedas:'✅ Angemeldet als:',
+    progcompleted:'abgeschlossen',
+    priority:{high:'🔴 Hoch',med:'🟡 Mittel',low:'🟢 Niedrig'},
+    celeb:[['Sitzung abgeschlossen! 🎉','Weiter so, Champion! 🐼✨'],['Unglaublich! 🚀','Du bist nicht aufzuhalten!'],['Du hast es geschafft! 🏆','Jede Sitzung bringt dich näher an dein Ziel.'],['Glücklicher Panda! 🐼','Beständige Mühe zahlt sich immer aus.']],
+    celebbtn:'Ab in die Pause! ☕',
+    breakdone:'Pause beendet!',stopbtn:'⏹ Alarm stoppen',
+    idioma:'🌐 Sprache',
+  },
+  pt:{
+    start:'▶ Começar',pause:'⏸ Pausar',resume:'▶ Retomar',reset:'↺ Reiniciar',
+    deep:'🎯 Modo Foco',prod:'⚡ Produtividade',
+    s1:'Sessões hoje',s2:'Min focado',s3:'Dias seguidos',
+    lib:'Biblioteca',
+    tasks:'Metas de Estudo',taskph:'+ Nova tarefa... Enter',
+    notes:'Notas Rápidas',notesph:'Escreva seus pensamentos aqui...',
+    score:'Pontuação Hoje',scoredesc:'90 min de estudo = 100%',
+    streak:'Sequência Semanal',streakcta:'Estude hoje para manter sua sequência! 🔥',
+    brk:'☕ Pausa Ativa',brklbl:'Tempo de pausa',
+    brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reiniciar',
+    notiftitle:'Notificar ao terminar',alarmtitle:'Som do alarme',
+    perm:'🔔 Ativar avisos',permok:'✅ Avisos ativos',
+    alarmbrowse:'Mudar som',
+    copy:'📋 Copiar',save:'⬇ Salvar .txt',clear:'🗑 Limpar',
+    smin:'min',seslbl:'Sessão de',restante:'restante',
+    libmodal:'🎵 Biblioteca Musical',alarmmodal:'🔔 Som do Alarme',
+    settingstitle:'⚙️ Configurações',bgtheme:'🖼 Tema de fundo',
+    feedbacklbl:'💬 Feedback',feedbackdesc:'Ajude-nos a melhorar o Focus-Tap. Anônimo, 2 minutos.',feedbackbtn:'📝 Abrir formulário',
+    bgupload:'📁 Enviar imagem própria',bguploadlocked:'🔒 Desbloqueie com 50 dias seguidos',bgreset:'↺ Restaurar',
+    acctitle:'👤 Conta · Sincronização',accdesc:'Crie uma conta gratuita para salvar sua sequência na nuvem.',
+    accregister:'✨ Criar conta',acclogin:'🔑 Entrar',acclogout:'🚪 Sair',accloggedas:'✅ Conectado como:',
+    progcompleted:'concluídas',
+    priority:{high:'🔴 Alta',med:'🟡 Média',low:'🟢 Baixa'},
+    celeb:[['Sessão Concluída! 🎉','Continue assim, campeão! 🐼✨'],['Incrível! 🚀','Você é imparável!'],['Conseguiu! 🏆','Cada sessão te aproxima do seu objetivo.'],['Panda Feliz! 🐼','O esforço constante sempre dá frutos.']],
+    celebbtn:'Para o descanso! ☕',
+    breakdone:'Descanso terminado!',stopbtn:'⏹ Parar alarme',
+    idioma:'🌐 Idioma',
+  },
+  it:{
+    start:'▶ Inizia',pause:'⏸ Pausa',resume:'▶ Riprendi',reset:'↺ Reimposta',
+    deep:'🎯 Modalità Focus',prod:'⚡ Produttività',
+    s1:'Sessioni oggi',s2:'Min concentrato',s3:'Giorni streak',
+    lib:'Libreria',
+    tasks:'Obiettivi di Studio',taskph:'+ Nuova attività... Invio',
+    notes:'Note Veloci',notesph:'Scrivi i tuoi pensieri qui...',
+    score:'Punteggio Oggi',scoredesc:'90 min di studio = 100%',
+    streak:'Serie Settimanale',streakcta:'Studia oggi per mantenere la serie! 🔥',
+    brk:'☕ Pausa Attiva',brklbl:'Tempo di pausa',
+    brkstart:'▶ Inizia',brkpause:'⏸ Pausa',brkreset:'↺ Reimposta',
+    notiftitle:'Notifica alla fine',alarmtitle:'Suono sveglia',
+    perm:'🔔 Attiva avvisi',permok:'✅ Avvisi attivi',
+    alarmbrowse:'Cambia suono',
+    copy:'📋 Copia',save:'⬇ Salva .txt',clear:'🗑 Cancella',
+    smin:'min',seslbl:'Sessione di',restante:'rimanente',
+    libmodal:'🎵 Libreria Musicale',alarmmodal:'🔔 Suono Sveglia',
+    settingstitle:'⚙️ Impostazioni',bgtheme:'🖼 Tema di sfondo',
+    feedbacklbl:'💬 Feedback',feedbackdesc:'Aiutaci a migliorare Focus-Tap. Anonimo, 2 minuti.',feedbackbtn:'📝 Apri modulo',
+    bgupload:'📁 Carica immagine',bguploadlocked:'🔒 Sblocca con 50 giorni di serie',bgreset:'↺ Ripristina',
+    acctitle:'👤 Account · Sincronizzazione',accdesc:'Crea un account gratuito per salvare la tua serie nel cloud.',
+    accregister:'✨ Crea account',acclogin:'🔑 Accedi',acclogout:'🚪 Esci',accloggedas:'✅ Connesso come:',
+    progcompleted:'completate',
+    priority:{high:'🔴 Alta',med:'🟡 Media',low:'🟢 Bassa'},
+    celeb:[['Sessione Completata! 🎉','Continua così, campione! 🐼✨'],['Incredibile! 🚀','Sei inarrestabile!'],['Ce l\'hai fatta! 🏆','Ogni sessione ti avvicina al tuo obiettivo.'],['Panda Felice! 🐼','Lo sforzo costante ripaga sempre.']],
+    celebbtn:'Vai alla pausa! ☕',
+    breakdone:'Pausa terminata!',stopbtn:'⏹ Ferma allarme',
+    idioma:'🌐 Lingua',
+  },
 };
 
 let currentLang='es';
+function setEl(id,html,useInner=false){ const el=document.getElementById(id); if(el){ if(useInner) el.innerText=html; else el.innerHTML=html; } }
 function setLang(lang,btn){
   currentLang=lang; document.documentElement.lang=lang;
   const t=T[lang]||T.es;
   document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
   if(btn) btn.classList.add('active');
-  // Timer
+
+  // ── Timer ──
   const minIn=document.getElementById('m-in');
   const val=minIn?minIn.value:25;
   document.querySelector('.session-label').innerHTML=`${t.seslbl} <input type="number" id="m-in" class="session-input" value="${val}" min="1" max="180"> ${t.smin}`;
   reattachMinInput();
-  if(timerRunning) document.getElementById('start').innerHTML=t.pause;
-  else document.getElementById('start').innerHTML=startBtn.innerHTML.includes('Reanudar')||startBtn.innerHTML.includes('Resume')||startBtn.innerHTML.includes('Reprendre')||startBtn.innerHTML.includes('Fortsetzen')||startBtn.innerHTML.includes('Retomar')||startBtn.innerHTML.includes('Riprendi')?t.resume:t.start;
-  document.getElementById('reset').innerHTML=t.reset;
-  document.getElementById('btn-deep').innerHTML=t.deep;
-  document.getElementById('btn-prod').innerHTML=t.prod;
-  document.querySelectorAll('.stat-lbl')[0].innerText=t.s1;
-  document.querySelectorAll('.stat-lbl')[1].innerText=t.s2;
-  document.querySelectorAll('.stat-lbl')[2].innerText=t.s3;
+  setEl('restante-lbl',t.restante,true);
+  if(timerRunning) setEl('start',t.pause);
+  else{
+    const cur=document.getElementById('start').innerHTML;
+    const isResume=/Reanudar|Resume|Reprendre|Fortsetzen|Retomar|Riprendi/.test(cur);
+    setEl('start',isResume?t.resume:t.start);
+  }
+  setEl('reset',t.reset);
+  // Mode buttons — emojis in HTML, text from T
+  document.getElementById('btn-deep').innerHTML=`🎯 ${t.deep}`;
+  document.getElementById('btn-prod').innerHTML=`⚡ ${t.prod}`;
+  // Stat labels
+  const statLbls=document.querySelectorAll('.stat-lbl');
+  if(statLbls[0]) statLbls[0].innerText=t.s1;
+  if(statLbls[1]) statLbls[1].innerText=t.s2;
+  if(statLbls[2]) statLbls[2].innerText=t.s3;
+  // Library button — emoji added here once, NOT in t.lib
   document.querySelector('.btn-library').innerHTML=`<span>🎵</span> ${t.lib} <span class="lib-arrow">›</span>`;
-  // Tasks
+
+  // ── Section titles ──
   document.querySelectorAll('.section-title').forEach(el=>{
     const txt=el.textContent;
     if(txt.match(/Meta|Goal|Objectif|Ziel|Objetivo|Obiettivo/i)) el.innerHTML=`<span class="dot"></span> ${t.tasks}`;
-    if(txt.match(/Nota|Note|Notiz/i)) el.innerHTML=`<span class="dot rose"></span> ${t.notes}`;
+    if(txt.match(/Nota|Note(?!s rapi)|Notiz/i)) el.innerHTML=`<span class="dot rose"></span> ${t.notes}`;
     if(txt.match(/Puntuac|Score|Punkte|Punteggi/i)) el.innerHTML=`<span class="dot"></span> ${t.score}`;
-    if(txt.match(/Racha|Streak|Série|Serie/i)) el.innerHTML=`<span class="dot mint"></span> ${t.streak}`;
+    if(txt.match(/Racha|Streak|Série|Serie|Sequência/i)) el.innerHTML=`<span class="dot mint"></span> ${t.streak}`;
   });
   document.getElementById('task-in').placeholder=t.taskph;
   document.getElementById('notes').placeholder=t.notesph;
-  document.querySelector('.sidebar-card:nth-child(1) div[style*="font-size"]').innerHTML=t.scoredesc;
-  document.getElementById('streak-row').nextElementSibling.innerText=t.streakcta;
-  // Break
+
+  // ── Score description ──
+  setEl('scoredesc-lbl',t.scoredesc,true);
+
+  // ── Streak CTA ──
+  setEl('streakcta-lbl',t.streakcta,true);
+
+  // ── Break card ──
   document.querySelector('.break-card .section-title').innerHTML=t.brk;
   document.querySelector('.break-label').innerText=t.brklbl;
   const bs=document.getElementById('break-start');
-  bs.innerText=breakRunning?t.brkpause:t.brkstart;
+  if(bs) bs.innerText=breakRunning?t.brkpause:t.brkstart;
   document.querySelector('[onclick="resetBreak()"]').innerText=t.brkreset;
+  setEl('i18n-notif',t.notiftitle,true);
+  setEl('i18n-alarm',t.alarmtitle,true);
   const pb=document.getElementById('perm-btn');
-  if(!pb.disabled) pb.innerText=t.perm; else pb.innerText=t.permok;
+  if(pb) pb.innerText=pb.disabled?t.permok:t.perm;
+  // Alarm browse — emoji added here
   document.querySelector('.btn-alarm-browse').innerHTML=`<span>🔔</span> ${t.alarmbrowse} <span class="lib-arrow">›</span>`;
-  // Notes buttons
+  // Alarm banner
+  setEl('breakdone-lbl',`🔔 ${t.breakdone}`,true);
+  setEl('stopbtn-lbl',t.stopbtn,true);
+
+  // ── Notes buttons ──
   document.querySelectorAll('[onclick="copyNotes()"]').forEach(b=>b.innerText=t.copy);
   document.querySelectorAll('[onclick="downloadNotes()"]').forEach(b=>b.innerText=t.save);
   document.querySelectorAll('[onclick="clearNotes()"]').forEach(b=>b.innerText=t.clear);
-  localStorage.setItem('ft-lang',lang);
-  // Refresh the rotating quote in the new language, right away, without waiting for the rotation timer
+
+  // ── Modals ──
+  setEl('libmodal-title',t.libmodal,true);   // no extra emoji — emoji is already inside t.libmodal
+  setEl('alarmmodal-title',t.alarmmodal,true);
+
+  // ── Settings panel ──
+  setEl('settings-title-el',t.settingstitle,true);
+  setEl('lbl-bgtheme',t.bgtheme,true);
+  setEl('btn-bg-reset',t.bgreset,true);
+  setEl('lbl-feedback',t.feedbacklbl,true);
+  setEl('feedback-desc-el',t.feedbackdesc,true);
+  setEl('feedback-btn-el',t.feedbackbtn,true);
+
+  // ── Account panel ──
+  setEl('acc-title-el',t.acctitle,true);
+  setEl('acc-desc-el',t.accdesc,true);
+  setEl('acc-register-btn',t.accregister,true);
+  setEl('acc-login-btn',t.acclogin,true);
+  setEl('acc-logout-btn',t.acclogout,true);
+  setEl('acc-loggedas-el',t.accloggedas,true);
+
+  // ── Language panel title ──
+  setEl('lang-panel-title',t.idioma,true);
+
+  // ── Priority selector ──
+  const sel=document.getElementById('task-priority');
+  if(sel&&t.priority){
+    sel.options[0].text=t.priority.high;
+    sel.options[1].text=t.priority.med;
+    sel.options[2].text=t.priority.low;
+  }
+
+  // ── Task progress ──
+  updateTaskProgress();
+
+  // ── Upload area (re-render with new lang) ──
+  buildThemeSwatches();
+
+  // ── Quote — refresh in new language immediately ──
   quoteIdx=quoteIdx%getQuotes().length;
   showQuote(quoteIdx,true);
+
+  localStorage.setItem('ft-lang',lang);
   saveCloudData();
 }
 
@@ -1780,9 +1992,13 @@ const CELEB_MSGS=[
   ['¡Panda Feliz! 🐼','El esfuerzo constante siempre da frutos. ¡Descansa!'],
 ];
 function launchCelebration(mins){
-  const[title,sub]=CELEB_MSGS[Math.floor(Math.random()*CELEB_MSGS.length)];
+  const t=T[currentLang]||T.es;
+  const msgs=t.celeb||T.es.celeb;
+  const[title,sub]=msgs[Math.floor(Math.random()*msgs.length)];
   document.getElementById('celeb-title').innerText=title;
-  document.getElementById('celeb-sub').innerText=`Has completado ${mins} minutos de estudio.\n${sub}`;
+  document.getElementById('celeb-sub').innerText=`${mins} min ✓\n${sub}`;
+  const dismissBtn=document.getElementById('celeb-dismiss');
+  if(dismissBtn) dismissBtn.innerText=t.celebbtn||T.es.celebbtn;
   document.getElementById('celebration').classList.add('show');
   spawnConfetti();
 }
