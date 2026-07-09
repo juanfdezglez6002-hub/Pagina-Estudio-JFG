@@ -1110,10 +1110,8 @@ function updateStats(){
 //  SCORE
 // ══════════════════════════════════════
 function updateScore(){
-  const s=parseInt(localStorage.getItem('ft-sessions')||'0');
-  const t=document.querySelectorAll('.task-item').length;
-  const d=document.querySelectorAll('.task-item.done').length;
-  const raw=Math.min(100,s*10+(t>0?Math.round(d/t*50):0));
+  const totalMin=parseInt(localStorage.getItem('ft-totalmin')||'0');
+  const raw=Math.min(100,Math.round(totalMin/90*100));
   document.getElementById('score-num').innerText=raw;
   document.getElementById('score-arc').style.strokeDashoffset=251.3*(1-raw/100);
 }
@@ -1163,12 +1161,26 @@ const player=document.getElementById('player');
 const playBtn=document.getElementById('play-btn');
 const eq=document.getElementById('eq');
 
+// Category names only — track titles, artists and durations are intentionally NEVER translated
+const GENRE_LABELS_I18N = {
+  es:{lofi:'Lofi', nature:'Lluvia', cafe:'Café',  classical:'Clásica',  jazz:'Jazz'},
+  en:{lofi:'Lofi', nature:'Rain',   cafe:'Café',  classical:'Classical',jazz:'Jazz'},
+  fr:{lofi:'Lofi', nature:'Pluie',  cafe:'Café',  classical:'Classique',jazz:'Jazz'},
+  de:{lofi:'Lofi', nature:'Regen',  cafe:'Café',  classical:'Klassik',  jazz:'Jazz'},
+  pt:{lofi:'Lofi', nature:'Chuva',  cafe:'Café',  classical:'Clássica', jazz:'Jazz'},
+  it:{lofi:'Lofi', nature:'Pioggia',cafe:'Caffè', classical:'Classica', jazz:'Jazz'},
+};
+function genreLabel(key){
+  const g=GENRE_LABELS_I18N[currentLang]||GENRE_LABELS_I18N.es;
+  return (g&&g[key])||PLAYLISTS[key].label;
+}
+
 function buildAccordion(){
   const sidebar=document.getElementById('lib-genres'); sidebar.innerHTML='';
   Object.entries(PLAYLISTS).forEach(([key,pl])=>{
     const btn=document.createElement('button');
     btn.className='lib-genre-btn'; btn.id=`lgb-${key}`;
-    btn.innerHTML=`<span>${pl.emoji} ${pl.label}</span><span class="lib-genre-count">${pl.tracks.length}</span>`;
+    btn.innerHTML=`<span>${pl.emoji} ${genreLabel(key)}</span><span class="lib-genre-count">${pl.tracks.length}</span>`;
     btn.onclick=()=>showLibGenre(key);
     sidebar.appendChild(btn);
   });
@@ -1180,7 +1192,7 @@ function showLibGenre(genre){
   const activeBtn=document.getElementById(`lgb-${genre}`);
   if(activeBtn) activeBtn.classList.add('active');
   const pl=PLAYLISTS[genre];
-  document.getElementById('lib-genre-title').innerText=`${pl.emoji} ${pl.label} — ${pl.tracks.length} pistas`;
+  document.getElementById('lib-genre-title').innerText=`${pl.emoji} ${genreLabel(genre)} — ${pl.tracks.length} ${tr('libTracksWord')}`;
   const list=document.getElementById('lib-tracks-list'); list.innerHTML='';
   pl.tracks.forEach((t,i)=>{
     const isPlaying=currentGenre===genre&&trackIdx===i;
@@ -1624,6 +1636,33 @@ const THEMES = {
         linear-gradient(155deg,#f0fbff 0%,#e0f7fa 50%,#eafdff 100%)`,
     night:false
   },
+  lavender:{
+    label:'Lavender Fields', emoji:'💜', unlock:10,
+    swatch:'linear-gradient(135deg,#e9d5ff 0%,#c084fc 50%,#a855f7 100%)',
+    bg:`radial-gradient(ellipse at 10% 5%,rgba(192,132,252,0.4) 0%,transparent 55%),
+        radial-gradient(ellipse at 85% 15%,rgba(168,85,247,0.25) 0%,transparent 50%),
+        radial-gradient(ellipse at 50% 90%,rgba(139,92,246,0.15) 0%,transparent 50%),
+        linear-gradient(155deg,#f5f3ff 0%,#ede9fe 50%,#faf5ff 100%)`,
+    night:false
+  },
+  vintage:{
+    label:'Vintage Paper', emoji:'📜', unlock:30,
+    swatch:'linear-gradient(135deg,#92400e 0%,#b45309 50%,#d97706 100%)',
+    bg:`radial-gradient(ellipse at 10% 5%,rgba(180,83,9,0.2) 0%,transparent 55%),
+        radial-gradient(ellipse at 85% 15%,rgba(217,119,6,0.15) 0%,transparent 50%),
+        radial-gradient(ellipse at 50% 90%,rgba(146,64,14,0.1) 0%,transparent 50%),
+        linear-gradient(155deg,#fdf8f0 0%,#f5ebe0 50%,#fef9f3 100%)`,
+    night:false
+  },
+  cyberpunk:{
+    label:'Cyberpunk', emoji:'🤖', unlock:45,
+    swatch:'linear-gradient(135deg,#0a0a0a 0%,#ff0080 50%,#00ffff 100%)',
+    bg:`radial-gradient(ellipse at 10% 20%,rgba(255,0,128,0.25) 0%,transparent 50%),
+        radial-gradient(ellipse at 90% 10%,rgba(0,255,255,0.2) 0%,transparent 50%),
+        radial-gradient(ellipse at 50% 85%,rgba(255,0,255,0.15) 0%,transparent 50%),
+        linear-gradient(155deg,#050505 0%,#0a0012 50%,#000a0a 100%)`,
+    night:true
+  },
   legend:{
     label:'Leyenda Dorada', emoji:'👑', unlock:50, custom:true,
     swatch:'linear-gradient(135deg,#fff8dc 0%,#ffd700 45%,#b8860b 100%)',
@@ -2002,6 +2041,7 @@ function setLang(lang,btn){
   document.getElementById('txt-lang-title').innerText=t.langTitle;
   // Rebuild dynamic pieces that depend on the language
   buildStreak();
+  buildAccordion();
   updateTaskProgress();
   updateNotesMeta();
   updateCustomBgLockUI();
