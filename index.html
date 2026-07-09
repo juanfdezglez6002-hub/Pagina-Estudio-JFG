@@ -1036,20 +1036,20 @@ function toggleMode(mode){
   if(currentMode===mode){
     currentMode=null; bd.className='btn-mode'; bp.className='btn-mode';
     if(document.fullscreenElement) document.exitFullscreen();
-    showToast('Modo desactivado');
+    showToast(tr('modeOff'));
   } else {
     currentMode=mode;
     bd.className=mode==='deep'?'btn-mode active-deep':'btn-mode';
     bp.className=mode==='prod'?'btn-mode active-prod':'btn-mode';
-    if(mode==='deep'){ document.documentElement.requestFullscreen().catch(()=>{}); showToast('🎯 Modo Enfoque — ¡Sin distracciones!'); }
-    else showToast('⚡ Modo Productividad activado');
+    if(mode==='deep'){ document.documentElement.requestFullscreen().catch(()=>{}); showToast(tr('modeDeepOn')); }
+    else showToast(tr('modeProdOn'));
   }
 }
 
 startBtn.onclick=()=>{
   if(timerRunning){
     clearInterval(timerInterval); timerRunning=false;
-    startBtn.innerHTML='▶ Reanudar'; showToast('Pausado — Respira profundo');
+    startBtn.innerHTML='▶ Reanudar'; showToast(tr('pausedBreath'));
   } else {
     timerRunning=true; startBtn.innerHTML='⏸ Pausar';
     timerInterval=setInterval(()=>{
@@ -1089,11 +1089,11 @@ document.getElementById('m-in').onchange=e=>{
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden&&currentMode&&timerRunning){
     leaveTime=Date.now(); clearInterval(timerInterval); timerRunning=false;
-    startBtn.innerHTML='▶ Reanudar'; showToast('⚠️ ¡Pausa automática! Vuelve al estudio');
+    startBtn.innerHTML='▶ Reanudar'; showToast(tr('autoPauseWarn'));
   } else if(!document.hidden&&leaveTime&&currentMode==='deep'){
     const away=Math.floor((Date.now()-leaveTime)/1000);
     timerLeft=Math.min(timerLeft+away,(parseInt(document.getElementById('m-in').value)||25)*60);
-    updateClock(); showToast(`⏱ Penalización: +${away}s`);
+    updateClock(); showToast(tr('penaltyPrefix').replace('{s}',away));
     document.body.classList.add('penalized');
     setTimeout(()=>document.body.classList.remove('penalized'),900);
     leaveTime=null;
@@ -1253,7 +1253,7 @@ function updateProg(){
 }
 
 function musicToggle(){
-  if(!currentGenre){ showToast('Elige una canción 🎵'); return; }
+  if(!currentGenre){ showToast(tr('chooseATrack')); return; }
   if(player.paused){ player.play().catch(()=>{}); setPlaying(true); }
   else{ player.pause(); setPlaying(false); }
 }
@@ -1379,8 +1379,8 @@ function resetBreak(){ clearInterval(breakInterval); breakRunning=false; breakLe
 // ══════════════════════════════════════
 function requestNotifPermission(){
   Notification.requestPermission().then(p=>{
-    if(p==='granted'){ document.getElementById('perm-btn').innerText='✅ Avisos activos'; document.getElementById('perm-btn').disabled=true; showToast('🔔 Notificaciones activadas'); }
-    else showToast('⚠️ Permisos denegados — sonará solo la alarma');
+    if(p==='granted'){ document.getElementById('perm-btn').innerText='✅ Avisos activos'; document.getElementById('perm-btn').disabled=true; showToast(tr('notifEnabled')); }
+    else showToast(tr('notifDenied'));
   });
 }
 if(Notification.permission==='granted'){ document.getElementById('perm-btn').innerText='✅ Avisos activos'; document.getElementById('perm-btn').disabled=true; }
