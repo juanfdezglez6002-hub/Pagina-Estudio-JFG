@@ -784,7 +784,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
   </div>
 </div>
 <div id="toast"></div>
-<audio id="player" loop></audio>
+<audio id="player"></audio>
 
 <!-- ══════ FIREBASE SDK (compat) ══════ -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -1007,6 +1007,11 @@ let streakDays=JSON.parse(localStorage.getItem('ft-streak')||'[]');
 // Real running streak: consecutive calendar days with at least one completed session
 let consecutiveStreak=parseInt(localStorage.getItem('ft-consecutive')||'0');
 let lastStudyDate=localStorage.getItem('ft-laststudy')||'';
+
+// ── Desbloqueos PERMANENTES: una vez alcanzado el hito, se queda desbloqueado
+// aunque la racha se rompa después. Se guardan aparte de la racha en sí. ──
+let unlockedThemes=JSON.parse(localStorage.getItem('ft-unlocked-themes')||'[]');
+let customImgUnlocked=localStorage.getItem('ft-custom-img-unlocked')==='1';
 let breakLeft=5*60, breakDuration=5*60, breakRunning=false, breakInterval=null;
 let quoteIdx=0, quoteAutoTimer=null;
 let currentGenre=null, trackIdx=0;
@@ -1151,6 +1156,7 @@ function markStreak(){
   }
 
   buildStreak(); updateStats();
+  checkPermanentUnlocks(); // registra desbloqueos alcanzados hoy, para siempre
   buildThemeSwatches(); // re-check unlocks when streak changes
 }
 
@@ -1675,14 +1681,36 @@ const THEMES = {
 };
 const CUSTOM_IMG_UNLOCK=50; // días de racha real consecutivos necesarios para poder subir una imagen propia
 
-function getStreakCount(){ return consecutiveStreak; }
+function getStreakCount(){
+  return consecutiveStreak;
+}
+
+// Comprueba si con la racha actual se ha alcanzado algún hito nuevo, y si es así,
+// lo marca como desbloqueado PARA SIEMPRE (persistido), sin importar que la racha luego se rompa.
+function checkPermanentUnlocks(){
+  const streak=getStreakCount();
+  let changed=false;
+  Object.entries(THEMES).forEach(([key,th])=>{
+    if(th.unlock<=streak && !unlockedThemes.includes(key)){
+      unlockedThemes.push(key); changed=true;
+    }
+  });
+  if(streak>=CUSTOM_IMG_UNLOCK && !customImgUnlocked){
+    customImgUnlocked=true; changed=true;
+    localStorage.setItem('ft-custom-img-unlocked','1');
+  }
+  if(changed){
+    localStorage.setItem('ft-unlocked-themes',JSON.stringify(unlockedThemes));
+    saveCloudData();
+  }
+}
 
 function buildThemeSwatches(){
   const grid=document.getElementById('bg-presets-grid'); if(!grid) return;
   grid.innerHTML='';
   const streak=getStreakCount();
   Object.entries(THEMES).forEach(([key,th])=>{
-    const locked=th.unlock>0 && streak<th.unlock;
+    const locked=th.unlock>0 && streak<th.unlock && !unlockedThemes.includes(key);
     const div=document.createElement('div');
     div.className='bg-swatch'+(locked?' locked':'');
     div.dataset.bg=key;
@@ -1703,7 +1731,7 @@ function buildThemeSwatches(){
 
 function updateCustomBgLockUI(){
   const streak=getStreakCount();
-  const unlocked=streak>=CUSTOM_IMG_UNLOCK;
+  const unlocked=customImgUnlocked||streak>=CUSTOM_IMG_UNLOCK;
   const label=document.getElementById('bg-upload-label'), input=document.getElementById('bg-file-input'), txt=document.getElementById('bg-upload-text');
   const tipEl=document.getElementById('bg-upload-tip');
   if(!label||!input||!txt) return;
@@ -1719,7 +1747,7 @@ function updateCustomBgLockUI(){
 function setBg(key,swatchEl){
   const th=THEMES[key]; if(!th) return;
   const streak=getStreakCount();
-  if(th.unlock>0&&streak<th.unlock){ showToast(tr('themeLockToast').replace('{n}',th.unlock)); return; }
+  if(th.unlock>0&&streak<th.unlock&&!unlockedThemes.includes(key)){ showToast(tr('themeLockToast').replace('{n}',th.unlock)); return; }
   document.body.style.backgroundImage=''; document.body.classList.remove('bg-night');
   document.body.style.background=th.bg; document.body.style.backgroundAttachment='fixed';
   if(th.night) document.body.classList.add('bg-night');
@@ -1732,7 +1760,7 @@ function setBg(key,swatchEl){
 
 function uploadBg(input){
   const file=input.files[0]; if(!file) return;
-  if(getStreakCount()<CUSTOM_IMG_UNLOCK){
+  if(!customImgUnlocked&&getStreakCount()<CUSTOM_IMG_UNLOCK){
     showToast(tr('bgUploadLockToast').replace('{n}',CUSTOM_IMG_UNLOCK));
     input.value='';
     return;
@@ -2225,6 +2253,12 @@ async function loadCloudData(uid){
       const sessions=(d.date===TODAY)?(d.sessions||0):0;
       const totalMin=(d.date===TODAY)?(d.totalMin||0):0;
       applyAccountState(sessions,totalMin,d.streakDays||[]);
+      if(typeof d.consecutiveStreak==='number'){ consecutiveStreak=d.consecutiveStreak; localStorage.setItem('ft-consecutive',consecutiveStreak); }
+      if(typeof d.lastStudyDate==='string'){ lastStudyDate=d.lastStudyDate; localStorage.setItem('ft-laststudy',lastStudyDate); }
+      if(Array.isArray(d.unlockedThemes)){ unlockedThemes=d.unlockedThemes; localStorage.setItem('ft-unlocked-themes',JSON.stringify(unlockedThemes)); }
+      if(d.customImgUnlocked){ customImgUnlocked=true; localStorage.setItem('ft-custom-img-unlocked','1'); }
+      checkPermanentUnlocks();
+      buildStreak(); buildThemeSwatches();
       if(Array.isArray(d.tasks)){ tasks=d.tasks; localStorage.setItem('ft-tasks',JSON.stringify(tasks)); renderTasks(); }
       if(typeof d.notes==='string'){ notes.value=d.notes; localStorage.setItem('ft-notes',notes.value); }
       if(d.alarm) selectAlarm(d.alarm);
@@ -2234,6 +2268,10 @@ async function loadCloudData(uid){
     } else {
       // Brand-new account: start this account from a clean zero, never from guest/leftover progress
       applyAccountState(0,0,[]);
+      consecutiveStreak=0; lastStudyDate=''; unlockedThemes=[]; customImgUnlocked=false;
+      localStorage.setItem('ft-consecutive','0'); localStorage.setItem('ft-laststudy','');
+      localStorage.setItem('ft-unlocked-themes','[]'); localStorage.removeItem('ft-custom-img-unlocked');
+      buildStreak(); buildThemeSwatches();
       tasks=[]; localStorage.setItem('ft-tasks','[]'); renderTasks();
       notes.value=''; localStorage.setItem('ft-notes','');
       await saveCloudDataNow();
@@ -2250,6 +2288,10 @@ async function saveCloudDataNow(){
       sessions:sessionsDone,
       totalMin:parseInt(localStorage.getItem('ft-totalmin')||'0'),
       streakDays,
+      consecutiveStreak,
+      lastStudyDate,
+      unlockedThemes,
+      customImgUnlocked,
       tasks,
       notes:notes.value,
       alarm:selectedAlarm,
@@ -2269,6 +2311,7 @@ function saveCloudData(){
 //  INIT
 // ══════════════════════════════════════
 updateClock(); updateStats(); buildStreak(); renderTasks(); updateScore(); buildAccordion();
+checkPermanentUnlocks(); // por si ya se cumplía el hito antes de esta actualización
 buildThemeSwatches(); // build theme grid with unlock state
 
 // Restore alarm selection
