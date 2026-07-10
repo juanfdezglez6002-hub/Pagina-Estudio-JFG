@@ -459,6 +459,10 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 </head>
 <body>
 
+<!-- Fondos animados (vídeo silencioso / gif) — ocultos hasta que se elige un tema de este tipo -->
+<video id="bg-video" muted loop playsinline style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;"></video>
+
+
 <!-- SETTINGS GEAR + LANG FLOAT -->
 <div id="settings-wrap">
   <button class="gear-btn" id="gear-btn" onclick="toggleSettings()" title="Ajustes">
@@ -473,6 +477,10 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
   <!-- Language float button -->
   <button class="lang-float-btn" id="lang-float-btn" onclick="toggleLangPanel()" title="Idioma">🌐</button>
+
+  <!-- ═══════════ DEBUG BUTTON — TEMPORAL, el usuario pedirá quitarlo más adelante ═══════════ -->
+  <button class="lang-float-btn" id="debug-streak-btn" onclick="toggleDebugStreak()" title="DEBUG: racha infinita (para probar temas)">🧪</button>
+  <!-- ═══════════ FIN DEBUG BUTTON ═══════════ -->
 
   <!-- Settings panel (Background + Feedback only) -->
   <div class="settings-panel" id="settings-panel">
@@ -491,6 +499,13 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
           <span id="bg-upload-text">📁 Subir imagen propia</span>
         </label>
         <div id="bg-upload-tip" class="bg-unlock-tip" style="display:none;"></div>
+      </div>
+      <div id="bg-video-upload-wrap" style="margin-top:6px;">
+        <label class="bg-upload-btn" id="bg-video-upload-label">
+          <input type="file" id="bg-video-file-input" accept="video/*" onchange="uploadBgVideo(this)" style="display:none">
+          <span id="bg-video-upload-text">🎬 Subir vídeo propio</span>
+        </label>
+        <div id="bg-video-upload-tip" class="bg-unlock-tip" style="display:none;"></div>
       </div>
       <button class="bg-reset-btn" id="txt-bg-reset" onclick="setBg('lofi',document.querySelector('[data-bg=lofi]'))">↺ Restablecer</button>
     </div>
@@ -929,10 +944,12 @@ const PLAYLISTS = {
     label:'Café', emoji:'☕',
     bg:'linear-gradient(135deg,#ffe0b2,#ffcc80)',
     tracks:[
-      {name:'Cafe Free Music',     artist:'LiteSaturation', url:'litesaturation-cafe-free-music-469564.mp3',  dur:197},
-      {name:'Jazz Cafe',    artist:'Waveloom',    url:'cafe2.mp3',  dur:196},
-      {name:'Jazz Cafe Morning Music',    artist:'alex-morgan',    url:'cafe3.mp3',  dur:134},
-      {name:'Jazz Sunny Cafe Music',    artist:'alex-morgan',    url:'cafe4.mp3',  dur:155},
+      {name:'Pastel Café',     artist:'Coffee Sounds', url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',  dur:221},
+      {name:'Morning Brew',    artist:'Urban Café',    url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',  dur:189},
+      {name:'Cafe Free Music', artist:'LiteSaturation', url:'litesaturation-cafe-free-music-469564.mp3', dur:197},
+      {name:'Jazz Cafe',       artist:'Waveloom',       url:'cafe2.mp3', dur:196},
+      {name:'Jazz Cafe Morning Music', artist:'alex-morgan', url:'cafe3.mp3', dur:134},
+      {name:'Jazz Sunny Cafe Music',   artist:'alex-morgan', url:'cafe4.mp3', dur:155},
     ]
   },
   classical:{
@@ -1014,6 +1031,11 @@ let lastStudyDate=localStorage.getItem('ft-laststudy')||'';
 // aunque la racha se rompa después. Se guardan aparte de la racha en sí. ──
 let unlockedThemes=JSON.parse(localStorage.getItem('ft-unlocked-themes')||'[]');
 let customImgUnlocked=localStorage.getItem('ft-custom-img-unlocked')==='1';
+let customVideoUnlocked=localStorage.getItem('ft-custom-video-unlocked')==='1';
+
+// ═══ DEBUG: bandera de "racha infinita" para probar temas (TEMPORAL — quitar cuando lo pida el usuario) ═══
+let debugInfiniteStreak=false;
+// ═══ FIN DEBUG flag ═══
 let breakLeft=5*60, breakDuration=5*60, breakRunning=false, breakInterval=null;
 let quoteIdx=0, quoteAutoTimer=null;
 let currentGenre=null, trackIdx=0;
@@ -1684,6 +1706,7 @@ const THEMES = {
 const CUSTOM_IMG_UNLOCK=50; // días de racha real consecutivos necesarios para poder subir una imagen propia
 
 function getStreakCount(){
+  if(debugInfiniteStreak) return 9999; // ═══ DEBUG override — quitar junto con el resto del bloque debug ═══
   return consecutiveStreak;
 }
 
@@ -1700,6 +1723,10 @@ function checkPermanentUnlocks(){
   if(streak>=CUSTOM_IMG_UNLOCK && !customImgUnlocked){
     customImgUnlocked=true; changed=true;
     localStorage.setItem('ft-custom-img-unlocked','1');
+  }
+  if(streak>=CUSTOM_VIDEO_UNLOCK && !customVideoUnlocked){
+    customVideoUnlocked=true; changed=true;
+    localStorage.setItem('ft-custom-video-unlocked','1');
   }
   if(changed){
     localStorage.setItem('ft-unlocked-themes',JSON.stringify(unlockedThemes));
@@ -1729,6 +1756,7 @@ function buildThemeSwatches(){
   const activeSw=grid.querySelector(`[data-bg="${savedKey}"]`);
   if(activeSw) activeSw.classList.add('active');
   updateCustomBgLockUI();
+  updateCustomVideoLockUI();
 }
 
 function updateCustomBgLockUI(){
@@ -1746,13 +1774,42 @@ function updateCustomBgLockUI(){
   }
 }
 
+// ═══════════ DEBUG: BOTÓN DE RACHA INFINITA (TEMPORAL — quitar cuando lo pida el usuario) ═══════════
+// Para quitarlo: borrar este bloque completo, la variable debugInfiniteStreak (arriba, en STATE),
+// el "if(debugInfiniteStreak) return 9999;" dentro de getStreakCount(), el botón #debug-streak-btn
+// del HTML, y su bloque de comentarios "DEBUG BUTTON" que lo envuelve.
+function toggleDebugStreak(){
+  debugInfiniteStreak=!debugInfiniteStreak;
+  const btn=document.getElementById('debug-streak-btn');
+  if(btn){
+    btn.classList.toggle('active',debugInfiniteStreak);
+    btn.style.background=debugInfiniteStreak?'var(--accent2)':'';
+    btn.style.color=debugInfiniteStreak?'white':'';
+  }
+  // OJO: no llamamos a checkPermanentUnlocks() aquí a propósito — es solo una VISTA PREVIA.
+  // Con debugInfiniteStreak activo, getStreakCount() ya devuelve 9999 y los temas se ven
+  // desbloqueados en el momento, sin marcarlos como conseguidos de verdad para siempre.
+  buildThemeSwatches();
+  buildStreak();
+  updateStats();
+  showToast(debugInfiniteStreak?'🧪 Racha infinita ACTIVADA (debug)':'🧪 Racha infinita DESACTIVADA (debug)');
+}
+// ═══════════ FIN DEBUG ═══════════
+
 function setBg(key,swatchEl){
   const th=THEMES[key]; if(!th) return;
   const streak=getStreakCount();
   if(th.unlock>0&&streak<th.unlock&&!unlockedThemes.includes(key)){ showToast(tr('themeLockToast').replace('{n}',th.unlock)); return; }
+
+  // Apagar cualquier vídeo personalizado que estuviera activo
+  const videoEl=document.getElementById('bg-video');
+  videoEl.pause(); videoEl.style.display='none'; videoEl.removeAttribute('src');
+  localStorage.removeItem('ft-bg-video');
+
   document.body.style.backgroundImage=''; document.body.classList.remove('bg-night');
   document.body.style.background=th.bg; document.body.style.backgroundAttachment='fixed';
   if(th.night) document.body.classList.add('bg-night');
+
   document.querySelectorAll('.bg-swatch').forEach(s=>s.classList.remove('active'));
   if(swatchEl) swatchEl.classList.add('active');
   localStorage.setItem('ft-bg-key',key); localStorage.removeItem('ft-bg-img');
@@ -1771,7 +1828,7 @@ function uploadBg(input){
   reader.onload=e=>{
     applyCustomBg(e.target.result);
     try{ localStorage.setItem('ft-bg-img',e.target.result); } catch(ex){ showToast(tr('imgTooBig')); }
-    localStorage.removeItem('ft-bg-key');
+    localStorage.removeItem('ft-bg-key'); localStorage.removeItem('ft-bg-video');
     document.querySelectorAll('.bg-swatch').forEach(s=>s.classList.remove('active'));
     showToast(tr('customBgApplied'));
   };
@@ -1779,8 +1836,57 @@ function uploadBg(input){
 }
 
 function applyCustomBg(dataUrl){
+  const videoEl=document.getElementById('bg-video');
+  videoEl.pause(); videoEl.style.display='none'; videoEl.removeAttribute('src');
   document.body.style.background='none'; document.body.style.backgroundImage=`url(${dataUrl})`;
   document.body.style.backgroundSize='cover'; document.body.style.backgroundPosition='center'; document.body.style.backgroundAttachment='fixed';
+}
+
+// ══════════════════════════════════════
+//  VÍDEO PERSONALIZADO — mismo patrón que la imagen, pero se desbloquea a los 100 días
+//  y el vídeo se reproduce en bucle y SIEMPRE silenciado (atributo "muted" en el <video>).
+// ══════════════════════════════════════
+const CUSTOM_VIDEO_UNLOCK=100;
+
+function updateCustomVideoLockUI(){
+  const streak=getStreakCount();
+  const unlocked=customVideoUnlocked||streak>=CUSTOM_VIDEO_UNLOCK;
+  const label=document.getElementById('bg-video-upload-label'), input=document.getElementById('bg-video-file-input'), txt=document.getElementById('bg-video-upload-text');
+  const tipEl=document.getElementById('bg-video-upload-tip');
+  if(!label||!input||!txt) return;
+  input.disabled=!unlocked;
+  label.classList.toggle('locked-upload',!unlocked);
+  txt.innerText=unlocked?`🎬 ${tr('bgVideoUpload')}`:`🔒 ${tr('bgVideoUploadLocked')}`;
+  if(tipEl){
+    tipEl.style.display=unlocked?'none':'block';
+    tipEl.innerText=tr('bgVideoUploadLockTip').replace('{n}',CUSTOM_VIDEO_UNLOCK).replace('{have}',streak);
+  }
+}
+
+function uploadBgVideo(input){
+  const file=input.files[0]; if(!file) return;
+  if(!customVideoUnlocked&&getStreakCount()<CUSTOM_VIDEO_UNLOCK){
+    showToast(tr('bgVideoUploadLockToast').replace('{n}',CUSTOM_VIDEO_UNLOCK));
+    input.value='';
+    return;
+  }
+  const reader=new FileReader();
+  reader.onload=e=>{
+    applyCustomVideoBg(e.target.result);
+    try{ localStorage.setItem('ft-bg-video',e.target.result); } catch(ex){ showToast(tr('videoTooBig')); }
+    localStorage.removeItem('ft-bg-key'); localStorage.removeItem('ft-bg-img');
+    document.querySelectorAll('.bg-swatch').forEach(s=>s.classList.remove('active'));
+    showToast(tr('customVideoApplied'));
+  };
+  reader.readAsDataURL(file);
+}
+
+function applyCustomVideoBg(dataUrl){
+  const videoEl=document.getElementById('bg-video');
+  document.body.style.background='#000'; document.body.style.backgroundImage='';
+  videoEl.src=dataUrl;
+  videoEl.style.display='block';
+  videoEl.play().catch(()=>{}); // algunos navegadores bloquean el autoplay hasta la primera interacción
 }
 
 // Language translations (key UI strings)
@@ -1799,6 +1905,7 @@ const T={
       completedWord:'completadas',wordSingular:'palabra',wordPlural:'palabras',autosaved:'guardado automático',
       notesSaved:'✓ Guardado',notesSaving:'...',confirmClearNotes:'¿Limpiar todas las notas?',
       settingsTitle:'⚙️ Ajustes',bgThemeLbl:'🖼 Tema de fondo',bgUpload:'Subir imagen propia',bgUploadLocked:'Se desbloquea a los 50 días',bgReset:'↺ Restablecer',
+      bgVideoUpload:'Subir vídeo propio',bgVideoUploadLocked:'Se desbloquea a los 100 días',
       feedbackLbl:'💬 Feedback',feedbackDesc:'Ayúdanos a mejorar Focus-Tap con tu opinión anónima. Solo tarda 2 minutos.',feedbackBtn:'📝 Abrir formulario',
       accountTitle:'👤 Cuenta · Sincronización',accountDesc:'Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.',
       accEmailPh:'Email',accPassPh:'Contraseña (mín. 6)',accRegister:'✨ Crear cuenta',accLogin:'🔑 Iniciar sesión',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Cerrar sesión',
@@ -1808,7 +1915,9 @@ const T={
       celebCompleted:'Has completado {mins} minutos de estudio.',
       themeLockTitle:'🔒 Desbloquea con {n} días de racha',themeLockTip:'🔒 "{label}" se desbloquea con {n} días de racha (tienes {have}).',themeLockToast:'🔒 Desbloquea con {n} días de racha',
       bgUploadLockTip:'🔒 Podrás subir una imagen propia al llegar a {n} días de racha consecutivos (llevas {have}).',bgUploadLockToast:'🔒 Necesitas {n} días de racha consecutivos para subir una imagen propia',
+      bgVideoUploadLockTip:'🔒 Podrás subir un vídeo propio al llegar a {n} días de racha consecutivos (llevas {have}).',bgVideoUploadLockToast:'🔒 Necesitas {n} días de racha consecutivos para subir un vídeo propio',
       imgTooBig:'⚠️ Imagen demasiado grande',customBgApplied:'🖼 Fondo personalizado aplicado',
+      videoTooBig:'⚠️ Vídeo demasiado grande para guardarlo',customVideoApplied:'🎬 Vídeo de fondo aplicado (en bucle y sin sonido)',
       modeOff:'Modo desactivado',modeDeepOn:'🎯 Modo Enfoque — ¡Sin distracciones!',modeProdOn:'⚡ Modo Productividad activado',
       pausedBreath:'Pausado — Respira profundo',autoPauseWarn:'⚠️ ¡Pausa automática! Vuelve al estudio',penaltyPrefix:'⏱ Penalización: +{s}s',
       chooseATrack:'Elige una canción 🎵',notesEmpty:'Las notas están vacías',notesCopied:'📋 Notas copiadas',notesDownloading:'⬇ Descargando notas...',notesDeleted:'🗑 Notas eliminadas',
@@ -1832,6 +1941,7 @@ const T={
       completedWord:'completed',wordSingular:'word',wordPlural:'words',autosaved:'autosaved',
       notesSaved:'✓ Saved',notesSaving:'...',confirmClearNotes:'Clear all notes?',
       settingsTitle:'⚙️ Settings',bgThemeLbl:'🖼 Background theme',bgUpload:'Upload your own image',bgUploadLocked:'Unlocks at 50 days',bgReset:'↺ Reset',
+      bgVideoUpload:'Upload your own video',bgVideoUploadLocked:'Unlocks at 100 days',
       feedbackLbl:'💬 Feedback',feedbackDesc:'Help us improve Focus-Tap with your anonymous feedback. Takes only 2 minutes.',feedbackBtn:'📝 Open form',
       accountTitle:'👤 Account · Sync',accountDesc:'Create a free account to store your streak and score in the cloud and see them from any device.',
       accEmailPh:'Email',accPassPh:'Password (6+ chars)',accRegister:'✨ Create account',accLogin:'🔑 Log in',accLoggedAs:'✅ Logged in as:',accLogout:'🚪 Log out',
@@ -1841,7 +1951,9 @@ const T={
       celebCompleted:'You completed {mins} minutes of study.',
       themeLockTitle:'🔒 Unlocks with {n} days of streak',themeLockTip:'🔒 "{label}" unlocks at {n} days of streak (you have {have}).',themeLockToast:'🔒 Unlocks with {n} days of streak',
       bgUploadLockTip:'🔒 You can upload your own image once you reach {n} consecutive days of streak (you have {have}).',bgUploadLockToast:'🔒 You need {n} consecutive days of streak to upload your own image',
+      bgVideoUploadLockTip:'🔒 You can upload your own video once you reach {n} consecutive days of streak (you have {have}).',bgVideoUploadLockToast:'🔒 You need {n} consecutive days of streak to upload your own video',
       imgTooBig:'⚠️ Image too large',customBgApplied:'🖼 Custom background applied',
+      videoTooBig:'⚠️ Video too large to save',customVideoApplied:'🎬 Background video applied (looping, no sound)',
       modeOff:'Mode off',modeDeepOn:'🎯 Focus Mode — No distractions!',modeProdOn:'⚡ Productivity Mode on',
       pausedBreath:'Paused — Take a deep breath',autoPauseWarn:'⚠️ Auto-pause! Get back to studying',penaltyPrefix:'⏱ Penalty: +{s}s',
       chooseATrack:'Choose a song 🎵',notesEmpty:'Your notes are empty',notesCopied:'📋 Notes copied',notesDownloading:'⬇ Downloading notes...',notesDeleted:'🗑 Notes deleted',
@@ -1865,6 +1977,7 @@ const T={
       completedWord:'terminées',wordSingular:'mot',wordPlural:'mots',autosaved:'enregistrement automatique',
       notesSaved:'✓ Enregistré',notesSaving:'...',confirmClearNotes:'Effacer toutes les notes ?',
       settingsTitle:'⚙️ Paramètres',bgThemeLbl:'🖼 Thème de fond',bgUpload:'Importer ta propre image',bgUploadLocked:'Se débloque à 50 jours',bgReset:'↺ Réinitialiser',
+      bgVideoUpload:'Importer ta propre vidéo',bgVideoUploadLocked:'Se débloque à 100 jours',
       feedbackLbl:'💬 Feedback',feedbackDesc:'Aide-nous à améliorer Focus-Tap avec ton avis anonyme. Ça ne prend que 2 minutes.',feedbackBtn:'📝 Ouvrir le formulaire',
       accountTitle:'👤 Compte · Synchronisation',accountDesc:'Crée un compte gratuit pour sauvegarder ta série et ton score dans le cloud et les voir depuis n\'importe quel appareil.',
       accEmailPh:'Email',accPassPh:'Mot de passe (6+ car.)',accRegister:'✨ Créer un compte',accLogin:'🔑 Se connecter',accLoggedAs:'✅ Connecté en tant que :',accLogout:'🚪 Se déconnecter',
@@ -1874,7 +1987,9 @@ const T={
       celebCompleted:'Tu as terminé {mins} minutes d\'étude.',
       themeLockTitle:'🔒 Se débloque avec {n} jours de série',themeLockTip:'🔒 « {label} » se débloque à {n} jours de série (tu en as {have}).',themeLockToast:'🔒 Se débloque avec {n} jours de série',
       bgUploadLockTip:'🔒 Tu pourras importer ta propre image en atteignant {n} jours de série consécutifs (tu en as {have}).',bgUploadLockToast:'🔒 Il te faut {n} jours de série consécutifs pour importer ta propre image',
+      bgVideoUploadLockTip:'🔒 Tu pourras importer ta propre vidéo en atteignant {n} jours de série consécutifs (tu en as {have}).',bgVideoUploadLockToast:'🔒 Il te faut {n} jours de série consécutifs pour importer ta propre vidéo',
       imgTooBig:'⚠️ Image trop volumineuse',customBgApplied:'🖼 Fond personnalisé appliqué',
+      videoTooBig:'⚠️ Vidéo trop volumineuse pour être enregistrée',customVideoApplied:'🎬 Vidéo de fond appliquée (en boucle et sans son)',
       modeOff:'Mode désactivé',modeDeepOn:'🎯 Mode Focus — Sans distractions !',modeProdOn:'⚡ Mode Productivité activé',
       pausedBreath:'En pause — Respire profondément',autoPauseWarn:'⚠️ Pause automatique ! Reviens étudier',penaltyPrefix:'⏱ Pénalité : +{s}s',
       chooseATrack:'Choisis une chanson 🎵',notesEmpty:'Les notes sont vides',notesCopied:'📋 Notes copiées',notesDownloading:'⬇ Téléchargement des notes...',notesDeleted:'🗑 Notes supprimées',
@@ -1898,6 +2013,7 @@ const T={
       completedWord:'erledigt',wordSingular:'Wort',wordPlural:'Wörter',autosaved:'automatisch gespeichert',
       notesSaved:'✓ Gespeichert',notesSaving:'...',confirmClearNotes:'Alle Notizen löschen?',
       settingsTitle:'⚙️ Einstellungen',bgThemeLbl:'🖼 Hintergrundthema',bgUpload:'Eigenes Bild hochladen',bgUploadLocked:'Wird nach 50 Tagen freigeschaltet',bgReset:'↺ Zurücksetzen',
+      bgVideoUpload:'Eigenes Video hochladen',bgVideoUploadLocked:'Wird nach 100 Tagen freigeschaltet',
       feedbackLbl:'💬 Feedback',feedbackDesc:'Hilf uns, Focus-Tap mit deinem anonymen Feedback zu verbessern. Dauert nur 2 Minuten.',feedbackBtn:'📝 Formular öffnen',
       accountTitle:'👤 Konto · Synchronisierung',accountDesc:'Erstelle ein kostenloses Konto, um deinen Streak und Score in der Cloud zu speichern und von jedem Gerät zu sehen.',
       accEmailPh:'E-Mail',accPassPh:'Passwort (mind. 6 Zeichen)',accRegister:'✨ Konto erstellen',accLogin:'🔑 Anmelden',accLoggedAs:'✅ Angemeldet als:',accLogout:'🚪 Abmelden',
@@ -1907,7 +2023,9 @@ const T={
       celebCompleted:'Du hast {mins} Minuten gelernt.',
       themeLockTitle:'🔒 Freischaltung bei {n} Tagen Streak',themeLockTip:'🔒 „{label}" wird bei {n} Tagen Streak freigeschaltet (du hast {have}).',themeLockToast:'🔒 Freischaltung bei {n} Tagen Streak',
       bgUploadLockTip:'🔒 Du kannst ein eigenes Bild hochladen, sobald du {n} Tage in Folge erreichst (du hast {have}).',bgUploadLockToast:'🔒 Du brauchst {n} Tage Streak in Folge, um ein eigenes Bild hochzuladen',
+      bgVideoUploadLockTip:'🔒 Du kannst ein eigenes Video hochladen, sobald du {n} Tage in Folge erreichst (du hast {have}).',bgVideoUploadLockToast:'🔒 Du brauchst {n} Tage Streak in Folge, um ein eigenes Video hochzuladen',
       imgTooBig:'⚠️ Bild zu groß',customBgApplied:'🖼 Eigener Hintergrund angewendet',
+      videoTooBig:'⚠️ Video zu groß zum Speichern',customVideoApplied:'🎬 Hintergrundvideo angewendet (in Schleife, ohne Ton)',
       modeOff:'Modus deaktiviert',modeDeepOn:'🎯 Fokusmodus — Keine Ablenkungen!',modeProdOn:'⚡ Produktivitätsmodus aktiviert',
       pausedBreath:'Pausiert — Tief durchatmen',autoPauseWarn:'⚠️ Auto-Pause! Zurück zum Lernen',penaltyPrefix:'⏱ Strafe: +{s}s',
       chooseATrack:'Wähle einen Song 🎵',notesEmpty:'Die Notizen sind leer',notesCopied:'📋 Notizen kopiert',notesDownloading:'⬇ Notizen werden heruntergeladen...',notesDeleted:'🗑 Notizen gelöscht',
@@ -1931,6 +2049,7 @@ const T={
       completedWord:'concluídas',wordSingular:'palavra',wordPlural:'palavras',autosaved:'salvo automaticamente',
       notesSaved:'✓ Salvo',notesSaving:'...',confirmClearNotes:'Limpar todas as notas?',
       settingsTitle:'⚙️ Configurações',bgThemeLbl:'🖼 Tema de fundo',bgUpload:'Enviar imagem própria',bgUploadLocked:'Desbloqueia aos 50 dias',bgReset:'↺ Restaurar',
+      bgVideoUpload:'Enviar vídeo próprio',bgVideoUploadLocked:'Desbloqueia aos 100 dias',
       feedbackLbl:'💬 Feedback',feedbackDesc:'Ajude-nos a melhorar o Focus-Tap com sua opinião anônima. Leva só 2 minutos.',feedbackBtn:'📝 Abrir formulário',
       accountTitle:'👤 Conta · Sincronização',accountDesc:'Crie uma conta gratuita para guardar sua sequência e pontuação na nuvem e vê-las em qualquer dispositivo.',
       accEmailPh:'Email',accPassPh:'Senha (mín. 6)',accRegister:'✨ Criar conta',accLogin:'🔑 Entrar',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Sair',
@@ -1940,7 +2059,9 @@ const T={
       celebCompleted:'Você completou {mins} minutos de estudo.',
       themeLockTitle:'🔒 Desbloqueia com {n} dias de sequência',themeLockTip:'🔒 "{label}" desbloqueia com {n} dias de sequência (você tem {have}).',themeLockToast:'🔒 Desbloqueia com {n} dias de sequência',
       bgUploadLockTip:'🔒 Você poderá enviar uma imagem própria ao atingir {n} dias seguidos de sequência (você tem {have}).',bgUploadLockToast:'🔒 Você precisa de {n} dias seguidos de sequência para enviar uma imagem própria',
+      bgVideoUploadLockTip:'🔒 Você poderá enviar um vídeo próprio ao atingir {n} dias seguidos de sequência (você tem {have}).',bgVideoUploadLockToast:'🔒 Você precisa de {n} dias seguidos de sequência para enviar um vídeo próprio',
       imgTooBig:'⚠️ Imagem muito grande',customBgApplied:'🖼 Fundo personalizado aplicado',
+      videoTooBig:'⚠️ Vídeo muito grande para salvar',customVideoApplied:'🎬 Vídeo de fundo aplicado (em loop e sem som)',
       modeOff:'Modo desativado',modeDeepOn:'🎯 Modo Foco — Sem distrações!',modeProdOn:'⚡ Modo Produtividade ativado',
       pausedBreath:'Pausado — Respire fundo',autoPauseWarn:'⚠️ Pausa automática! Volte a estudar',penaltyPrefix:'⏱ Penalidade: +{s}s',
       chooseATrack:'Escolha uma música 🎵',notesEmpty:'As notas estão vazias',notesCopied:'📋 Notas copiadas',notesDownloading:'⬇ Baixando notas...',notesDeleted:'🗑 Notas excluídas',
@@ -1964,6 +2085,7 @@ const T={
       completedWord:'completate',wordSingular:'parola',wordPlural:'parole',autosaved:'salvataggio automatico',
       notesSaved:'✓ Salvato',notesSaving:'...',confirmClearNotes:'Cancellare tutte le note?',
       settingsTitle:'⚙️ Impostazioni',bgThemeLbl:'🖼 Tema di sfondo',bgUpload:'Carica una tua immagine',bgUploadLocked:'Si sblocca a 50 giorni',bgReset:'↺ Ripristina',
+      bgVideoUpload:'Carica un tuo video',bgVideoUploadLocked:'Si sblocca a 100 giorni',
       feedbackLbl:'💬 Feedback',feedbackDesc:'Aiutaci a migliorare Focus-Tap con il tuo feedback anonimo. Richiede solo 2 minuti.',feedbackBtn:'📝 Apri modulo',
       accountTitle:'👤 Account · Sincronizzazione',accountDesc:'Crea un account gratuito per salvare la tua serie e il punteggio nel cloud e vederli da qualsiasi dispositivo.',
       accEmailPh:'Email',accPassPh:'Password (min. 6)',accRegister:'✨ Crea account',accLogin:'🔑 Accedi',accLoggedAs:'✅ Connesso come:',accLogout:'🚪 Esci',
@@ -1973,7 +2095,9 @@ const T={
       celebCompleted:'Hai completato {mins} minuti di studio.',
       themeLockTitle:'🔒 Si sblocca con {n} giorni di serie',themeLockTip:'🔒 "{label}" si sblocca a {n} giorni di serie (ne hai {have}).',themeLockToast:'🔒 Si sblocca con {n} giorni di serie',
       bgUploadLockTip:'🔒 Potrai caricare una tua immagine raggiungendo {n} giorni consecutivi di serie (ne hai {have}).',bgUploadLockToast:'🔒 Ti servono {n} giorni consecutivi di serie per caricare una tua immagine',
+      bgVideoUploadLockTip:'🔒 Potrai caricare un tuo video raggiungendo {n} giorni consecutivi di serie (ne hai {have}).',bgVideoUploadLockToast:'🔒 Ti servono {n} giorni consecutivi di serie per caricare un tuo video',
       imgTooBig:'⚠️ Immagine troppo grande',customBgApplied:'🖼 Sfondo personalizzato applicato',
+      videoTooBig:'⚠️ Video troppo grande da salvare',customVideoApplied:'🎬 Video di sfondo applicato (in loop e senza audio)',
       modeOff:'Modalità disattivata',modeDeepOn:'🎯 Modalità Focus — Niente distrazioni!',modeProdOn:'⚡ Modalità Produttività attivata',
       pausedBreath:'In pausa — Fai un respiro profondo',autoPauseWarn:'⚠️ Pausa automatica! Torna a studiare',penaltyPrefix:'⏱ Penalità: +{s}s',
       chooseATrack:'Scegli una canzone 🎵',notesEmpty:'Le note sono vuote',notesCopied:'📋 Note copiate',notesDownloading:'⬇ Scaricamento note...',notesDeleted:'🗑 Note eliminate',
@@ -2322,6 +2446,8 @@ if(savedAlarm&&ALARMS.find(a=>a.id===savedAlarm)) selectAlarm(savedAlarm);
 
 // Restore background
 (()=>{
+  const vid=localStorage.getItem('ft-bg-video');
+  if(vid){ applyCustomVideoBg(vid); return; }
   const img=localStorage.getItem('ft-bg-img');
   if(img){ applyCustomBg(img); return; }
   const key=localStorage.getItem('ft-bg-key')||'lofi';
