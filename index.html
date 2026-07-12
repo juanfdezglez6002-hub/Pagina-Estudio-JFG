@@ -64,8 +64,6 @@ header{display:flex;align-items:center;gap:14px;margin-bottom:28px;z-index:1;pos
 }
 .gear-btn:hover{color:var(--text);transform:rotate(45deg);background:rgba(255,255,255,0.9);}
 .gear-btn.open{transform:rotate(90deg);color:var(--accent2);background:rgba(255,255,255,0.95);}
-#account-btn:hover{transform:scale(1.08);}
-#account-btn.open{transform:scale(1.08);color:var(--accent2);background:rgba(255,255,255,0.95);}
 
 /* Floating language button */
 .lang-float-btn{
@@ -123,8 +121,6 @@ header{display:flex;align-items:center;gap:14px;margin-bottom:28px;z-index:1;pos
   cursor:pointer;transition:all 0.2s;margin-bottom:5px;
 }
 .bg-upload-btn:hover{background:white;color:var(--text);}
-.bg-upload-btn.locked-upload{opacity:0.55;cursor:not-allowed;filter:saturate(0.6);}
-.bg-upload-btn.locked-upload:hover{background:rgba(255,255,255,0.6);color:var(--text2);}
 .bg-reset-btn{background:none;border:none;font-family:'Nunito',sans-serif;font-size:0.68rem;color:var(--text2);opacity:0.5;cursor:pointer;padding:0;transition:opacity 0.2s;}
 .bg-reset-btn:hover{opacity:1;}
 .lang-btn{
@@ -452,16 +448,81 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 /* ── SCROLLBAR ── */
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(100,120,160,0.15);border-radius:10px;}
 
+/* ── COIN DISPLAY ── */
+.coin-display{
+  background:rgba(255,255,255,0.7);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,193,7,0.35);border-radius:50px;
+  padding:7px 16px;font-family:'Nunito',sans-serif;
+  font-size:0.85rem;font-weight:800;color:#9a6700;
+  cursor:pointer;transition:all 0.2s;
+  box-shadow:0 4px 14px rgba(255,193,7,0.18);
+  display:flex;align-items:center;gap:6px;
+  margin-left:auto;
+}
+.coin-display:hover{background:rgba(255,255,255,0.9);transform:scale(1.05);box-shadow:0 6px 20px rgba(255,193,7,0.28);}
+
+/* ── SHOP MODAL ── */
+#shop-modal{position:fixed;inset:0;z-index:9992;background:rgba(40,55,80,0.5);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.3s;}
+#shop-modal.open{opacity:1;pointer-events:all;}
+.shop-panel{
+  background:rgba(245,249,255,0.98);backdrop-filter:blur(20px);
+  border:1px solid var(--border);border-radius:28px;
+  width:min(680px,94vw);max-height:82vh;display:flex;flex-direction:column;
+  box-shadow:0 28px 70px rgba(61,79,107,0.22);overflow:hidden;
+  animation:lib-pop 0.3s cubic-bezier(0.34,1.36,0.64,1);
+}
+.shop-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 26px;border-bottom:1px solid var(--border2);flex-shrink:0;
+  background:linear-gradient(135deg,rgba(255,193,7,0.08),rgba(255,152,0,0.05));
+}
+.shop-title{font-size:1.05rem;font-weight:800;color:var(--text);}
+.shop-balance{
+  background:rgba(255,193,7,0.12);border:1px solid rgba(255,193,7,0.3);
+  border-radius:50px;padding:5px 14px;font-size:0.82rem;font-weight:800;color:#9a6700;
+}
+.shop-body{overflow-y:auto;flex:1;padding:20px 26px;}
+.shop-body::-webkit-scrollbar{width:5px;}
+.shop-body::-webkit-scrollbar-thumb{background:rgba(100,120,160,0.15);border-radius:4px;}
+.shop-section-title{
+  font-size:0.7rem;font-weight:800;text-transform:uppercase;
+  letter-spacing:2px;color:var(--text2);margin:0 0 12px;
+  display:flex;align-items:center;gap:8px;
+}
+.shop-section-title::after{content:'';flex:1;height:1px;background:var(--border2);}
+.shop-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:28px;}
+.shop-item{
+  border:2px solid var(--border2);border-radius:18px;
+  padding:14px 10px 12px;text-align:center;cursor:pointer;
+  transition:all 0.22s;background:rgba(255,255,255,0.5);
+  position:relative;
+}
+.shop-item:hover:not(.owned):not(.cant-afford){transform:translateY(-3px);box-shadow:0 8px 24px rgba(121,134,203,0.18);border-color:var(--accent);}
+.shop-item.owned{border-color:var(--mint2);background:rgba(77,182,172,0.08);}
+.shop-item.active-item{border-color:var(--accent2);background:rgba(121,134,203,0.1);}
+.shop-item.cant-afford{opacity:0.5;cursor:not-allowed;}
+.shop-item-preview{font-size:28px;margin-bottom:6px;display:block;}
+.shop-item-name{font-size:0.78rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.shop-item-price{font-size:0.72rem;font-weight:700;color:#9a6700;}
+.shop-item-badge{
+  position:absolute;top:7px;right:7px;
+  font-size:0.58rem;font-weight:800;padding:2px 7px;border-radius:20px;
+  letter-spacing:0.5px;text-transform:uppercase;
+}
+.badge-owned{background:var(--mint2);color:white;}
+.badge-active{background:var(--accent2);color:white;}
+.shop-earn-tip{
+  background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.25);
+  border-radius:14px;padding:12px 16px;font-size:0.75rem;color:#9a6700;
+  line-height:1.6;margin-bottom:6px;
+}
+
 /* ── RESPONSIVE ── */
 @media(max-width:960px){.main{grid-template-columns:1fr;}.top-row{grid-template-columns:1fr;}.right{display:none;}}
 @media(max-width:480px){.clock{font-size:44px;}.card{padding:14px 16px;}}
 </style>
 </head>
 <body>
-
-<!-- Fondos animados (vídeo silencioso / gif) — ocultos hasta que se elige un tema de este tipo -->
-<video id="bg-video" muted loop playsinline style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;"></video>
-
 
 <!-- SETTINGS GEAR + LANG FLOAT -->
 <div id="settings-wrap">
@@ -478,43 +539,29 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
   <!-- Language float button -->
   <button class="lang-float-btn" id="lang-float-btn" onclick="toggleLangPanel()" title="Idioma">🌐</button>
 
-  <!-- ═══════════ DEBUG BUTTON — TEMPORAL, el usuario pedirá quitarlo más adelante ═══════════ -->
-  <button class="lang-float-btn" id="debug-streak-btn" onclick="toggleDebugStreak()" title="DEBUG: racha infinita (para probar temas)">🧪</button>
-  <!-- ═══════════ FIN DEBUG BUTTON ═══════════ -->
-
   <!-- Settings panel (Background + Feedback only) -->
   <div class="settings-panel" id="settings-panel">
-    <div class="settings-title" id="txt-settings-title">⚙️ Ajustes</div>
+    <div class="settings-title">⚙️ Ajustes</div>
 
     <!-- BG THEMES with unlock -->
     <div class="settings-section">
-      <div class="settings-lbl" id="txt-bgtheme-lbl">🖼 Tema de fondo</div>
+      <div class="settings-lbl">🖼 Tema de fondo</div>
       <div id="bg-unlock-tip" class="bg-unlock-tip" style="display:none;"></div>
       <div class="bg-presets" id="bg-presets-grid">
         <!-- Built by JS from THEMES data -->
       </div>
-      <div id="bg-upload-wrap">
-        <label class="bg-upload-btn" id="bg-upload-label">
-          <input type="file" id="bg-file-input" accept="image/*" onchange="uploadBg(this)" style="display:none">
-          <span id="bg-upload-text">📁 Subir imagen propia</span>
-        </label>
-        <div id="bg-upload-tip" class="bg-unlock-tip" style="display:none;"></div>
-      </div>
-      <div id="bg-video-upload-wrap" style="margin-top:6px;">
-        <label class="bg-upload-btn" id="bg-video-upload-label">
-          <input type="file" id="bg-video-file-input" accept="video/*" onchange="uploadBgVideo(this)" style="display:none">
-          <span id="bg-video-upload-text">🎬 Subir vídeo propio</span>
-        </label>
-        <div id="bg-video-upload-tip" class="bg-unlock-tip" style="display:none;"></div>
-      </div>
-      <button class="bg-reset-btn" id="txt-bg-reset" onclick="setBg('lofi',document.querySelector('[data-bg=lofi]'))">↺ Restablecer</button>
+      <label class="bg-upload-btn">
+        <input type="file" id="bg-file-input" accept="image/*" onchange="uploadBg(this)" style="display:none">
+        📁 Subir imagen propia
+      </label>
+      <button class="bg-reset-btn" onclick="setBg('lofi',document.querySelector('[data-bg=lofi]'))">↺ Restablecer</button>
     </div>
 
     <!-- FEEDBACK -->
     <div class="settings-section">
-      <div class="settings-lbl" id="txt-feedback-lbl">💬 Feedback</div>
-      <p class="settings-desc" id="txt-feedback-desc">Ayúdanos a mejorar Focus-Tap con tu opinión anónima. Solo tarda 2 minutos.</p>
-      <a class="feedback-btn" id="txt-feedback-btn" href="https://docs.google.com/forms/d/e/XXXXXXXXXXXXXXXX/viewform" target="_blank" rel="noopener">
+      <div class="settings-lbl">💬 Feedback</div>
+      <p class="settings-desc">Ayúdanos a mejorar Focus-Tap con tu opinión anónima. Solo tarda 2 minutos.</p>
+      <a class="feedback-btn" href="https://docs.google.com/forms/d/e/XXXXXXXXXXXXXXXX/viewform" target="_blank" rel="noopener">
         📝 Abrir formulario
       </a>
     </div>
@@ -522,27 +569,27 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
   <!-- Account panel (login / register / logout) -->
   <div class="lang-float-panel" id="account-panel" style="width:250px;">
-    <div class="lang-float-title" id="txt-account-title">👤 Cuenta · Sincronización</div>
+    <div class="lang-float-title">👤 Cuenta · Sincronización</div>
     <div style="padding:14px;">
-      <p class="settings-desc" id="txt-account-desc" style="margin-bottom:10px;">Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.</p>
+      <p class="settings-desc" style="margin-bottom:10px;">Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.</p>
       <div id="account-logged-out">
         <input type="email" id="acc-email" placeholder="Email" style="width:100%;margin-bottom:6px;padding:8px 10px;border-radius:9px;border:1px solid var(--border2);font-family:'Nunito',sans-serif;font-size:0.78rem;outline:none;">
         <input type="password" id="acc-pass" placeholder="Contraseña (mín. 6)" style="width:100%;margin-bottom:9px;padding:8px 10px;border-radius:9px;border:1px solid var(--border2);font-family:'Nunito',sans-serif;font-size:0.78rem;outline:none;">
-        <button class="btn-tiny" id="txt-register-btn" onclick="doRegister()" style="width:100%;margin-bottom:5px;">✨ Crear cuenta</button>
-        <button class="btn-tiny" id="txt-login-btn" onclick="doLogin()" style="width:100%;">🔑 Iniciar sesión</button>
+        <button class="btn-tiny" onclick="doRegister()" style="width:100%;margin-bottom:5px;">✨ Crear cuenta</button>
+        <button class="btn-tiny" onclick="doLogin()" style="width:100%;">🔑 Iniciar sesión</button>
         <div id="acc-msg" style="font-size:0.68rem;margin-top:7px;color:var(--text2);"></div>
       </div>
       <div id="account-logged-in" style="display:none;">
-        <div style="font-size:0.78rem;font-weight:700;margin-bottom:3px;" id="txt-logged-as">✅ Conectado como:</div>
+        <div style="font-size:0.78rem;font-weight:700;margin-bottom:3px;">✅ Conectado como:</div>
         <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;word-break:break-all;" id="acc-email-display"></div>
-        <button class="btn-tiny" id="txt-logout-btn" onclick="doLogout()" style="width:100%;">🚪 Cerrar sesión</button>
+        <button class="btn-tiny" onclick="doLogout()" style="width:100%;">🚪 Cerrar sesión</button>
       </div>
     </div>
   </div>
 
   <!-- Language float panel -->
   <div class="lang-float-panel" id="lang-float-panel">
-    <div class="lang-float-title" id="txt-lang-title">🌐 Idioma</div>
+    <div class="lang-float-title">🌐 Idioma</div>
     <div class="lang-float-grid">
       <button class="lang-btn active" id="lang-es" onclick="setLang('es',this);closeLangPanel()">🇪🇸 Español</button>
       <button class="lang-btn"        id="lang-en" onclick="setLang('en',this);closeLangPanel()">🇬🇧 English</button>
@@ -557,6 +604,10 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <header>
   <div class="panda-logo">🐼</div>
   <h1 class="logo-text">Focus·Tap</h1>
+  <!-- Monedas + botón tienda -->
+  <button class="coin-display" onclick="openShop()" title="Tienda de personalización">
+    🪙 <span id="coin-count">0</span>
+  </button>
 </header>
 
 <div class="main">
@@ -583,7 +634,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
           </svg>
           <div class="clock-over">
             <div class="clock" id="clock">25:00</div>
-            <div id="txt-remaining" style="font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-top:3px;font-weight:600;">restante</div>
+            <div style="font-size:0.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-top:3px;font-weight:600;">restante</div>
           </div>
         </div>
         <div class="timer-actions">
@@ -640,9 +691,9 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
     <!-- AD BANNER -->
     <div class="ad-banner">
-      <span class="ad-label" id="txt-ad-label-1">Anuncio</span>
-      <div class="ad-slot" id="txt-ad-slot">728×90 · Leaderboard Banner</div>
-      <span class="ad-label" id="txt-ad-label-2">Anuncio</span>
+      <span class="ad-label">Anuncio</span>
+      <div class="ad-slot">728×90 · Leaderboard Banner</div>
+      <span class="ad-label">Anuncio</span>
     </div>
 
     <!-- TASKS -->
@@ -655,9 +706,9 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
       <div class="task-input-row">
         <input type="text" id="task-in" class="task-input" placeholder="+ Nueva tarea... pulsa Enter">
         <select class="priority-sel" id="task-priority">
-          <option value="high" id="opt-high">🔴 Alta</option>
-          <option value="med" id="opt-med" selected>🟡 Media</option>
-          <option value="low" id="opt-low">🟢 Baja</option>
+          <option value="high">🔴 Alta</option>
+          <option value="med" selected>🟡 Media</option>
+          <option value="low">🟢 Baja</option>
         </select>
       </div>
       <div id="task-list"></div>
@@ -703,14 +754,14 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
         </svg>
         <div class="score-val"><div id="score-num">0</div><div class="score-lbl">/ 100</div></div>
       </div>
-      <div id="txt-score-desc" style="font-size:0.72rem;color:var(--text2);text-align:center;line-height:1.5;">Completa sesiones y tareas<br>para subir tu puntuación</div>
+      <div style="font-size:0.72rem;color:var(--text2);text-align:center;line-height:1.5;">Completa sesiones y tareas<br>para subir tu puntuación</div>
     </div>
 
     <!-- STREAK -->
     <div class="sidebar-card">
       <div class="section-title" style="color:var(--mint2);"><span class="dot mint"></span> Racha Semanal</div>
       <div class="streak-row" id="streak-row"></div>
-      <div id="txt-streak-cta" style="margin-top:10px;font-size:0.72rem;color:var(--text2);">¡Estudia hoy para mantener tu racha! 🔥</div>
+      <div style="margin-top:10px;font-size:0.72rem;color:var(--text2);">¡Estudia hoy para mantener tu racha! 🔥</div>
     </div>
 
     <!-- BREAK TIMER -->
@@ -728,11 +779,11 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
         <button class="btn-tiny" onclick="resetBreak()">↺ Reset</button>
       </div>
       <div style="border-top:1px solid rgba(230,81,0,0.12);margin-bottom:12px;"></div>
-      <div id="txt-notif-lbl" style="font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bf360c;margin-bottom:9px;text-align:center;">Notificación al terminar</div>
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#bf360c;margin-bottom:9px;text-align:center;">Notificación al terminar</div>
       <div style="text-align:center;margin-bottom:12px;">
         <button class="btn-tiny" id="perm-btn" onclick="requestNotifPermission()">🔔 Activar avisos</button>
       </div>
-      <div id="txt-alarmsound-lbl" style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#bf360c;margin-bottom:7px;">Sonido de alarma</div>
+      <div style="font-size:0.65rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#bf360c;margin-bottom:7px;">Sonido de alarma</div>
       <!-- Current alarm chip -->
       <div class="alarm-current-chip">
         <span class="alarm-chip-icon" id="alarm-chip-icon">📳</span>
@@ -743,15 +794,15 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
         <span>🔔</span> Cambiar sonido <span class="lib-arrow">›</span>
       </button>
       <div id="alarm-banner" style="display:none;margin-top:11px;background:rgba(244,67,54,0.12);border:1px solid rgba(244,67,54,0.3);border-radius:12px;padding:9px 12px;text-align:center;">
-        <div id="txt-break-finished" style="font-size:0.78rem;font-weight:700;color:#c62828;margin-bottom:5px;">🔔 ¡Descanso terminado!</div>
-        <button class="btn-tiny" id="txt-stop-alarm" onclick="stopAlarm()" style="background:#c62828;color:white;border:none;">⏹ Parar alarma</button>
+        <div style="font-size:0.78rem;font-weight:700;color:#c62828;margin-bottom:5px;">🔔 ¡Descanso terminado!</div>
+        <button class="btn-tiny" onclick="stopAlarm()" style="background:#c62828;color:white;border:none;">⏹ Parar alarma</button>
       </div>
     </div>
 
     <!-- SIDEBAR AD -->
     <div class="sidebar-card" style="padding:0;overflow:hidden;">
       <div class="ad-sidebar">
-        <span class="ad-label" id="txt-ad-sidebar" style="opacity:0.4;letter-spacing:1px;">Espacio publicitario</span>
+        <span class="ad-label" style="opacity:0.4;letter-spacing:1px;">Espacio publicitario</span>
         <div style="margin-top:5px;opacity:0.3;font-size:1.4rem;">📢</div>
         <div style="font-size:0.63rem;opacity:0.3;margin-top:3px;">300 × 250</div>
       </div>
@@ -763,14 +814,14 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <div id="library-modal" class="lib-modal" onclick="if(event.target===this)closeLibrary()">
   <div class="lib-panel" style="width:min(680px,94vw);">
     <div class="lib-header">
-      <div class="lib-title" id="txt-libmodal-title">🎵 Biblioteca de Música</div>
+      <div class="lib-title">🎵 Biblioteca de Música</div>
       <button class="lib-close" onclick="closeLibrary()">✕</button>
     </div>
     <div class="lib-body">
       <div class="lib-genres" id="lib-genres"></div>
       <div class="lib-tracks-panel">
         <div class="lib-genre-title" id="lib-genre-title">Elige una categoría</div>
-        <div class="lib-tracks-list" id="lib-tracks-list"><div class="lib-empty" id="txt-lib-empty">← Selecciona una categoría</div></div>
+        <div class="lib-tracks-list" id="lib-tracks-list"><div class="lib-empty">← Selecciona una categoría</div></div>
       </div>
     </div>
   </div>
@@ -780,7 +831,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <div id="alarm-modal" class="lib-modal" onclick="if(event.target===this)closeAlarmModal()">
   <div class="lib-panel" style="width:min(420px,94vw);">
     <div class="lib-header">
-      <div class="lib-title" id="txt-alarmmodal-title">🔔 Sonido de Alarma</div>
+      <div class="lib-title">🔔 Sonido de Alarma</div>
       <button class="lib-close" onclick="closeAlarmModal()">✕</button>
     </div>
     <div class="alarm-modal-list-wrap">
@@ -790,16 +841,41 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 </div>
 
 <!-- CELEBRATION -->
+<!-- ══ TIENDA DE PERSONALIZACIÓN ══ -->
+<div id="shop-modal" onclick="if(event.target===this)closeShop()">
+  <div class="shop-panel">
+    <div class="shop-header">
+      <div class="shop-title">🏪 Tienda Focus-Tap</div>
+      <div class="shop-balance">🪙 <span id="shop-coin-count">0</span> monedas</div>
+      <button class="lib-close" onclick="closeShop()">✕</button>
+    </div>
+    <div class="shop-body">
+      <div class="shop-earn-tip">
+        🪙 Ganas <strong>1 moneda</strong> cada día que alcances el <strong>100% de puntuación</strong> diaria (90 min de estudio). Las monedas se guardan en tu cuenta.
+      </div>
+      <!-- Paletas de color -->
+      <div class="shop-section-title">🎨 Paletas de color</div>
+      <div class="shop-grid" id="shop-palettes"></div>
+      <!-- Efectos de tarjeta -->
+      <div class="shop-section-title">✨ Efectos de tarjeta</div>
+      <div class="shop-grid" id="shop-effects"></div>
+      <!-- Sonidos premium -->
+      <div class="shop-section-title">🔔 Sonidos premium</div>
+      <div class="shop-grid" id="shop-sounds"></div>
+    </div>
+  </div>
+</div>
+
 <div id="celebration">
   <div class="celeb-card">
     <span class="celeb-emoji">🎉</span>
     <div class="celeb-title" id="celeb-title">¡Sesión Completada!</div>
     <div class="celeb-sub" id="celeb-sub">Has terminado tu sesión de estudio.<br>¡Eres increíble, sigue así! 🐼✨</div>
-    <button class="celeb-dismiss" id="txt-celeb-dismiss" onclick="closeCelebration()">¡A por el descanso! ☕</button>
+    <button class="celeb-dismiss" onclick="closeCelebration()">¡A por el descanso! ☕</button>
   </div>
 </div>
 <div id="toast"></div>
-<audio id="player"></audio>
+<audio id="player" loop></audio>
 
 <!-- ══════ FIREBASE SDK (compat) ══════ -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -944,16 +1020,8 @@ const PLAYLISTS = {
     label:'Café', emoji:'☕',
     bg:'linear-gradient(135deg,#ffe0b2,#ffcc80)',
     tracks:[
-      {name:'Cafe Free Music', artist:'LiteSaturation', url:'litesaturation-cafe-free-music-469564.mp3', dur:197},
-      {name:'Jazz Cafe',       artist:'Waveloom',       url:'cafe2.mp3', dur:196},
-      {name:'Jazz Cafe Morning Music', artist:'alex-morgan', url:'cafe3.mp3', dur:134},
-      {name:'Jazz Sunny Cafe Music',   artist:'alex-morgan', url:'cafe4.mp3', dur:155},
-      {name:'cafe5',   artist:'cafe5', url:'cafe5.mp3', dur:168},
-      {name:'cafe6',   artist:'cafe6', url:'cafe6.mp3', dur:329},
-      {name:'cafe7',   artist:'cafe7', url:'cafe7.mp3', dur:138},
-      {name:'cafe8',   artist:'cafe8', url:'cafe8.mp3', dur:177},
-      {name:'cafe9',   artist:'cafe9', url:'cafe9.mp3', dur:115},
-      {name:'cafe10',   artist:'cafe10', url:'cafe10.mp3', dur:198},
+      {name:'Pastel Café',     artist:'Coffee Sounds', url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3',  dur:221},
+      {name:'Morning Brew',    artist:'Urban Café',    url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-9.mp3',  dur:189},
     ]
   },
   classical:{
@@ -985,19 +1053,6 @@ const ALARMS = [
   {id:'urgent', icon:'🚨', name:'Urgente',           desc:'Señal de alerta rápida'},
 ];
 
-const ALARMS_I18N = {
-  es:{beep:{name:'Beep clásico',desc:'Dos pitidos cortos + tono largo'},bell:{name:'Campana suave',desc:'Dos tonos calmados y suaves'},pulse:{name:'Pulso digital',desc:'Cuatro pulsos rápidos ascendentes'},chime:{name:'Carillón',desc:'Melodía suave de cuatro notas'},urgent:{name:'Urgente',desc:'Señal de alerta rápida'}},
-  en:{beep:{name:'Classic beep',desc:'Two short beeps + long tone'},bell:{name:'Soft bell',desc:'Two calm, gentle tones'},pulse:{name:'Digital pulse',desc:'Four quick rising pulses'},chime:{name:'Chime',desc:'Soft four-note melody'},urgent:{name:'Urgent',desc:'Fast alert signal'}},
-  fr:{beep:{name:'Bip classique',desc:'Deux bips courts + tonalité longue'},bell:{name:'Cloche douce',desc:'Deux tonalités calmes et douces'},pulse:{name:'Pulsation digitale',desc:'Quatre pulsations rapides ascendantes'},chime:{name:'Carillon',desc:'Douce mélodie de quatre notes'},urgent:{name:'Urgent',desc:'Signal d\'alerte rapide'}},
-  de:{beep:{name:'Klassischer Piepton',desc:'Zwei kurze Pieptöne + langer Ton'},bell:{name:'Sanfte Glocke',desc:'Zwei ruhige, sanfte Töne'},pulse:{name:'Digitaler Impuls',desc:'Vier schnelle aufsteigende Impulse'},chime:{name:'Glockenspiel',desc:'Sanfte Melodie aus vier Noten'},urgent:{name:'Dringend',desc:'Schnelles Warnsignal'}},
-  pt:{beep:{name:'Beep clássico',desc:'Dois bipes curtos + tom longo'},bell:{name:'Sino suave',desc:'Dois tons calmos e suaves'},pulse:{name:'Pulso digital',desc:'Quatro pulsos rápidos ascendentes'},chime:{name:'Carrilhão',desc:'Melodia suave de quatro notas'},urgent:{name:'Urgente',desc:'Sinal de alerta rápido'}},
-  it:{beep:{name:'Beep classico',desc:'Due bip brevi + tono lungo'},bell:{name:'Campana dolce',desc:'Due toni calmi e delicati'},pulse:{name:'Impulso digitale',desc:'Quattro impulsi rapidi ascendenti'},chime:{name:'Carillon',desc:'Dolce melodia di quattro note'},urgent:{name:'Urgente',desc:'Segnale di allerta rapido'}},
-};
-function alarmMeta(id){
-  const table=ALARMS_I18N[currentLang]||ALARMS_I18N.es;
-  return table[id]||ALARMS_I18N.es[id]||{name:id,desc:''};
-}
-
 // ══════════════════════════════════════
 //  STATE
 // ══════════════════════════════════════
@@ -1007,39 +1062,11 @@ if(localStorage.getItem('ft-date') !== TODAY){
   localStorage.setItem('ft-sessions','0');
   localStorage.setItem('ft-totalmin','0');
 }
-function getWeekId(){
-  const d=new Date();
-  const onejan=new Date(d.getFullYear(),0,1);
-  const week=Math.ceil((((d-onejan)/86400000)+onejan.getDay()+1)/7);
-  return `${d.getFullYear()}-${week}`;
-}
-const CUR_WEEK_ID=getWeekId();
-if(localStorage.getItem('ft-week-id')!==CUR_WEEK_ID){
-  localStorage.setItem('ft-week-id',CUR_WEEK_ID);
-  localStorage.setItem('ft-streak','[]');
-}
-function daysBetween(a,b){
-  const d1=new Date(a+'T00:00:00'), d2=new Date(b+'T00:00:00');
-  return Math.round((d2-d1)/86400000);
-}
 
 let currentMode=null, leaveTime=null;
 let timerInterval=null, timerLeft=25*60, timerRunning=false;
 let sessionsDone=parseInt(localStorage.getItem('ft-sessions')||'0');
 let streakDays=JSON.parse(localStorage.getItem('ft-streak')||'[]');
-// Real running streak: consecutive calendar days with at least one completed session
-let consecutiveStreak=parseInt(localStorage.getItem('ft-consecutive')||'0');
-let lastStudyDate=localStorage.getItem('ft-laststudy')||'';
-
-// ── Desbloqueos PERMANENTES: una vez alcanzado el hito, se queda desbloqueado
-// aunque la racha se rompa después. Se guardan aparte de la racha en sí. ──
-let unlockedThemes=JSON.parse(localStorage.getItem('ft-unlocked-themes')||'[]');
-let customImgUnlocked=localStorage.getItem('ft-custom-img-unlocked')==='1';
-let customVideoUnlocked=localStorage.getItem('ft-custom-video-unlocked')==='1';
-
-// ═══ DEBUG: bandera de "racha infinita" para probar temas (TEMPORAL — quitar cuando lo pida el usuario) ═══
-let debugInfiniteStreak=false;
-// ═══ FIN DEBUG flag ═══
 let breakLeft=5*60, breakDuration=5*60, breakRunning=false, breakInterval=null;
 let quoteIdx=0, quoteAutoTimer=null;
 let currentGenre=null, trackIdx=0;
@@ -1069,20 +1096,20 @@ function toggleMode(mode){
   if(currentMode===mode){
     currentMode=null; bd.className='btn-mode'; bp.className='btn-mode';
     if(document.fullscreenElement) document.exitFullscreen();
-    showToast(tr('modeOff'));
+    showToast('Modo desactivado');
   } else {
     currentMode=mode;
     bd.className=mode==='deep'?'btn-mode active-deep':'btn-mode';
     bp.className=mode==='prod'?'btn-mode active-prod':'btn-mode';
-    if(mode==='deep'){ document.documentElement.requestFullscreen().catch(()=>{}); showToast(tr('modeDeepOn')); }
-    else showToast(tr('modeProdOn'));
+    if(mode==='deep'){ document.documentElement.requestFullscreen().catch(()=>{}); showToast('🎯 Modo Enfoque — ¡Sin distracciones!'); }
+    else showToast('⚡ Modo Productividad activado');
   }
 }
 
 startBtn.onclick=()=>{
   if(timerRunning){
     clearInterval(timerInterval); timerRunning=false;
-    startBtn.innerHTML='▶ Reanudar'; showToast(tr('pausedBreath'));
+    startBtn.innerHTML='▶ Reanudar'; showToast('Pausado — Respira profundo');
   } else {
     timerRunning=true; startBtn.innerHTML='⏸ Pausar';
     timerInterval=setInterval(()=>{
@@ -1095,7 +1122,9 @@ startBtn.onclick=()=>{
         const prev=parseInt(localStorage.getItem('ft-totalmin')||'0');
         const mins=parseInt(document.getElementById('m-in').value)||25;
         localStorage.setItem('ft-totalmin',prev+mins);
-        updateStats(); updateScore(); markStreak(); launchCelebration(mins);
+        updateStats(); updateScore(); markStreak();
+        tryEarnCoin(); // comprueba si el usuario gana moneda hoy
+        launchCelebration(mins);
         playAlarmOnce(selectedAlarm); // alarm at session end
         saveCloudData();
         timerLeft=(parseInt(document.getElementById('m-in').value)||25)*60; updateClock();
@@ -1122,11 +1151,11 @@ document.getElementById('m-in').onchange=e=>{
 document.addEventListener('visibilitychange',()=>{
   if(document.hidden&&currentMode&&timerRunning){
     leaveTime=Date.now(); clearInterval(timerInterval); timerRunning=false;
-    startBtn.innerHTML='▶ Reanudar'; showToast(tr('autoPauseWarn'));
+    startBtn.innerHTML='▶ Reanudar'; showToast('⚠️ ¡Pausa automática! Vuelve al estudio');
   } else if(!document.hidden&&leaveTime&&currentMode==='deep'){
     const away=Math.floor((Date.now()-leaveTime)/1000);
     timerLeft=Math.min(timerLeft+away,(parseInt(document.getElementById('m-in').value)||25)*60);
-    updateClock(); showToast(tr('penaltyPrefix').replace('{s}',away));
+    updateClock(); showToast(`⏱ Penalización: +${away}s`);
     document.body.classList.add('penalized');
     setTimeout(()=>document.body.classList.remove('penalized'),900);
     leaveTime=null;
@@ -1136,15 +1165,17 @@ document.addEventListener('visibilitychange',()=>{
 function updateStats(){
   document.getElementById('sessions-done').innerText=parseInt(localStorage.getItem('ft-sessions')||'0');
   document.getElementById('total-min').innerText=parseInt(localStorage.getItem('ft-totalmin')||'0');
-  document.getElementById('streak-count').innerText=consecutiveStreak;
+  document.getElementById('streak-count').innerText=streakDays.filter(Boolean).length;
 }
 
 // ══════════════════════════════════════
 //  SCORE
 // ══════════════════════════════════════
 function updateScore(){
-  const totalMin=parseInt(localStorage.getItem('ft-totalmin')||'0');
-  const raw=Math.min(100,Math.round(totalMin/90*100));
+  const s=parseInt(localStorage.getItem('ft-sessions')||'0');
+  const t=document.querySelectorAll('.task-item').length;
+  const d=document.querySelectorAll('.task-item.done').length;
+  const raw=Math.min(100,s*10+(t>0?Math.round(d/t*50):0));
   document.getElementById('score-num').innerText=raw;
   document.getElementById('score-arc').style.strokeDashoffset=251.3*(1-raw/100);
 }
@@ -1152,19 +1183,11 @@ function updateScore(){
 // ══════════════════════════════════════
 //  STREAK
 // ══════════════════════════════════════
-const DAYS_I18N={
-  es:['L','M','X','J','V','S','D'],
-  en:['M','T','W','T','F','S','S'],
-  fr:['L','M','M','J','V','S','D'],
-  de:['M','D','M','D','F','S','S'],
-  pt:['S','T','Q','Q','S','S','D'],
-  it:['L','M','M','G','V','S','D'],
-};
+const DAYS=['L','M','X','J','V','S','D'];
 function buildStreak(){
   const row=document.getElementById('streak-row'); row.innerHTML='';
-  const days=DAYS_I18N[currentLang]||DAYS_I18N.es;
   const today=(new Date().getDay()+6)%7;
-  days.forEach((d,i)=>{
+  DAYS.forEach((d,i)=>{
     const el=document.createElement('div');
     el.className='streak-day'+(i===today?' today':streakDays.includes(i)?' done':'');
     el.innerText=d; row.appendChild(el);
@@ -1174,17 +1197,7 @@ function markStreak(){
   const today=(new Date().getDay()+6)%7;
   if(!streakDays.includes(today)) streakDays.push(today);
   localStorage.setItem('ft-streak',JSON.stringify(streakDays));
-
-  if(lastStudyDate!==TODAY){
-    const diff=lastStudyDate?daysBetween(lastStudyDate,TODAY):null;
-    consecutiveStreak = (diff===1) ? consecutiveStreak+1 : 1;
-    lastStudyDate=TODAY;
-    localStorage.setItem('ft-consecutive',consecutiveStreak);
-    localStorage.setItem('ft-laststudy',lastStudyDate);
-  }
-
   buildStreak(); updateStats();
-  checkPermanentUnlocks(); // registra desbloqueos alcanzados hoy, para siempre
   buildThemeSwatches(); // re-check unlocks when streak changes
 }
 
@@ -1195,26 +1208,12 @@ const player=document.getElementById('player');
 const playBtn=document.getElementById('play-btn');
 const eq=document.getElementById('eq');
 
-// Category names only — track titles, artists and durations are intentionally NEVER translated
-const GENRE_LABELS_I18N = {
-  es:{lofi:'Lofi', nature:'Lluvia', cafe:'Café',  classical:'Clásica',  jazz:'Jazz'},
-  en:{lofi:'Lofi', nature:'Rain',   cafe:'Café',  classical:'Classical',jazz:'Jazz'},
-  fr:{lofi:'Lofi', nature:'Pluie',  cafe:'Café',  classical:'Classique',jazz:'Jazz'},
-  de:{lofi:'Lofi', nature:'Regen',  cafe:'Café',  classical:'Klassik',  jazz:'Jazz'},
-  pt:{lofi:'Lofi', nature:'Chuva',  cafe:'Café',  classical:'Clássica', jazz:'Jazz'},
-  it:{lofi:'Lofi', nature:'Pioggia',cafe:'Caffè', classical:'Classica', jazz:'Jazz'},
-};
-function genreLabel(key){
-  const g=GENRE_LABELS_I18N[currentLang]||GENRE_LABELS_I18N.es;
-  return (g&&g[key])||PLAYLISTS[key].label;
-}
-
 function buildAccordion(){
   const sidebar=document.getElementById('lib-genres'); sidebar.innerHTML='';
   Object.entries(PLAYLISTS).forEach(([key,pl])=>{
     const btn=document.createElement('button');
     btn.className='lib-genre-btn'; btn.id=`lgb-${key}`;
-    btn.innerHTML=`<span>${pl.emoji} ${genreLabel(key)}</span><span class="lib-genre-count">${pl.tracks.length}</span>`;
+    btn.innerHTML=`<span>${pl.emoji} ${pl.label}</span><span class="lib-genre-count">${pl.tracks.length}</span>`;
     btn.onclick=()=>showLibGenre(key);
     sidebar.appendChild(btn);
   });
@@ -1226,7 +1225,7 @@ function showLibGenre(genre){
   const activeBtn=document.getElementById(`lgb-${genre}`);
   if(activeBtn) activeBtn.classList.add('active');
   const pl=PLAYLISTS[genre];
-  document.getElementById('lib-genre-title').innerText=`${pl.emoji} ${genreLabel(genre)} — ${pl.tracks.length} ${tr('libTracksWord')}`;
+  document.getElementById('lib-genre-title').innerText=`${pl.emoji} ${pl.label} — ${pl.tracks.length} pistas`;
   const list=document.getElementById('lib-tracks-list'); list.innerHTML='';
   pl.tracks.forEach((t,i)=>{
     const isPlaying=currentGenre===genre&&trackIdx===i;
@@ -1287,7 +1286,7 @@ function updateProg(){
 }
 
 function musicToggle(){
-  if(!currentGenre){ showToast(tr('chooseATrack')); return; }
+  if(!currentGenre){ showToast('Elige una canción 🎵'); return; }
   if(player.paused){ player.play().catch(()=>{}); setPlaying(true); }
   else{ player.pause(); setPlaying(false); }
 }
@@ -1334,7 +1333,7 @@ function updateTaskProgress(){
   const total=tasks.length, done=tasks.filter(t=>t.done).length;
   const pct=total>0?Math.round(done/total*100):0;
   document.getElementById('task-prog-fill').style.width=pct+'%';
-  document.getElementById('task-prog-txt').innerText=`${done} / ${total} ${tr('completedWord')}`;
+  document.getElementById('task-prog-txt').innerText=`${done} / ${total} completadas`;
 }
 
 function toggleTask(i){ tasks[i].done=!tasks[i].done; saveTasks(); renderTasks(); }
@@ -1353,24 +1352,21 @@ document.getElementById('task-in').addEventListener('keypress',e=>{
 const notes=document.getElementById('notes');
 notes.value=localStorage.getItem('ft-notes')||'';
 let saveTimeout=null;
-function updateNotesMeta(){
-  const words=notes.value.trim()===''?0:notes.value.trim().split(/\s+/).length;
-  document.getElementById('notes-meta').innerText=`${words} ${words!==1?tr('wordPlural'):tr('wordSingular')} · ${tr('autosaved')}`;
-}
 notes.addEventListener('input',()=>{
-  updateNotesMeta();
-  document.getElementById('save-indicator').innerText=tr('notesSaving');
+  const words=notes.value.trim()===''?0:notes.value.trim().split(/\s+/).length;
+  document.getElementById('notes-meta').innerText=`${words} palabra${words!==1?'s':''} · guardado automático`;
+  document.getElementById('save-indicator').innerText='...';
   clearTimeout(saveTimeout);
-  saveTimeout=setTimeout(()=>{ localStorage.setItem('ft-notes',notes.value); document.getElementById('save-indicator').innerText=tr('notesSaved'); saveCloudData(); },1200);
+  saveTimeout=setTimeout(()=>{ localStorage.setItem('ft-notes',notes.value); document.getElementById('save-indicator').innerText='✓ Guardado'; saveCloudData(); },1200);
 });
 
-function copyNotes(){ if(!notes.value.trim()) return showToast(tr('notesEmpty')); navigator.clipboard.writeText(notes.value).then(()=>showToast(tr('notesCopied'))); }
+function copyNotes(){ if(!notes.value.trim()) return showToast('Las notas están vacías'); navigator.clipboard.writeText(notes.value).then(()=>showToast('📋 Notas copiadas')); }
 function downloadNotes(){
-  if(!notes.value.trim()) return showToast(tr('notesEmpty'));
+  if(!notes.value.trim()) return showToast('Las notas están vacías');
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([notes.value],{type:'text/plain'}));
-  a.download=`notas-${TODAY}.txt`; a.click(); showToast(tr('notesDownloading'));
+  a.download=`notas-${TODAY}.txt`; a.click(); showToast('⬇ Descargando notas...');
 }
-function clearNotes(){ if(confirm(tr('confirmClearNotes'))){ notes.value=''; localStorage.removeItem('ft-notes'); updateNotesMeta(); showToast(tr('notesDeleted')); saveCloudData(); } }
+function clearNotes(){ if(confirm('¿Limpiar todas las notas?')){ notes.value=''; localStorage.removeItem('ft-notes'); document.getElementById('notes-meta').innerText='0 palabras · guardado automático'; showToast('🗑 Notas eliminadas'); saveCloudData(); } }
 
 // ══════════════════════════════════════
 //  QUOTES
@@ -1413,8 +1409,8 @@ function resetBreak(){ clearInterval(breakInterval); breakRunning=false; breakLe
 // ══════════════════════════════════════
 function requestNotifPermission(){
   Notification.requestPermission().then(p=>{
-    if(p==='granted'){ document.getElementById('perm-btn').innerText='✅ Avisos activos'; document.getElementById('perm-btn').disabled=true; showToast(tr('notifEnabled')); }
-    else showToast(tr('notifDenied'));
+    if(p==='granted'){ document.getElementById('perm-btn').innerText='✅ Avisos activos'; document.getElementById('perm-btn').disabled=true; showToast('🔔 Notificaciones activadas'); }
+    else showToast('⚠️ Permisos denegados — sonará solo la alarma');
   });
 }
 if(Notification.permission==='granted'){ document.getElementById('perm-btn').innerText='✅ Avisos activos'; document.getElementById('perm-btn').disabled=true; }
@@ -1423,14 +1419,13 @@ if(Notification.permission==='granted'){ document.getElementById('perm-btn').inn
 function buildAlarmModal(){
   const list=document.getElementById('alarm-modal-list'); list.innerHTML='';
   ALARMS.forEach(a=>{
-    const meta=alarmMeta(a.id);
     const isSel=a.id===selectedAlarm;
     const row=document.createElement('div');
     row.className='alarm-row'+(isSel?' selected':'');
     row.id='amr-'+a.id;
     row.innerHTML=`
       <span class="alarm-row-icon">${a.icon}</span>
-      <div class="alarm-row-info"><div class="alarm-row-name">${meta.name}</div><div class="alarm-row-desc">${meta.desc}</div></div>
+      <div class="alarm-row-info"><div class="alarm-row-name">${a.name}</div><div class="alarm-row-desc">${a.desc}</div></div>
       <button class="alarm-preview-btn" onclick="previewAlarm('${a.id}',event)">▶</button>
       <span class="alarm-row-check">${isSel?'✓':''}</span>`;
     row.onclick=e=>{ if(!e.target.classList.contains('alarm-preview-btn')) selectAlarm(a.id); };
@@ -1445,13 +1440,12 @@ function selectAlarm(id){
   selectedAlarm=id;
   const a=ALARMS.find(x=>x.id===id);
   if(a){
-    const meta=alarmMeta(id);
     // Update break card chip
     document.getElementById('alarm-chip-icon').innerText=a.icon;
-    document.getElementById('alarm-chip-name').innerText=meta.name;
+    document.getElementById('alarm-chip-name').innerText=a.name;
     // Update timer card chip
     const ti=document.getElementById('timer-alarm-icon'),tn=document.getElementById('timer-alarm-name');
-    if(ti) ti.innerText=a.icon; if(tn) tn.innerText=meta.name;
+    if(ti) ti.innerText=a.icon; if(tn) tn.innerText=a.name;
   }
   // update modal rows
   document.querySelectorAll('.alarm-row').forEach(r=>{
@@ -1508,6 +1502,247 @@ function fireBreakNotification(){
   if(Notification.permission==='granted') new Notification('🐼 ¡Descanso terminado! — Focus-Tap',{body:'Es hora de volver al estudio. ¡Tú puedes!',icon:'panda png.png'});
   document.getElementById('alarm-banner').style.display='block';
   playAlarm();
+}
+
+// ══════════════════════════════════════
+//  MONEDAS + TIENDA
+// ══════════════════════════════════════
+
+// ── Catálogo de la tienda ──
+// Para añadir un item: agrega una entrada en la sección correspondiente
+const SHOP_CATALOGUE = {
+  palettes:[
+    { id:'pal-default', name:'Lofi Blue',   price:0,  preview:'🔵', vars:{'--accent2':'#7986cb','--mint2':'#4db6ac','--rose':'#f48fb1'} },
+    { id:'pal-rose',    name:'Cherry Blossom', price:3, preview:'🌸', vars:{'--accent2':'#e91e8c','--mint2':'#f06292','--rose':'#f48fb1'} },
+    { id:'pal-forest',  name:'Forest Green', price:3,  preview:'🌲', vars:{'--accent2':'#388e3c','--mint2':'#66bb6a','--rose':'#a5d6a7'} },
+    { id:'pal-sunset',  name:'Sunset',       price:4,  preview:'🌅', vars:{'--accent2':'#f57c00','--mint2':'#ffa726','--rose':'#ff8a65'} },
+    { id:'pal-ocean',   name:'Deep Ocean',   price:4,  preview:'🌊', vars:{'--accent2':'#0288d1','--mint2':'#00acc1','--rose':'#80deea'} },
+    { id:'pal-grape',   name:'Grape',        price:5,  preview:'🍇', vars:{'--accent2':'#7b1fa2','--mint2':'#ab47bc','--rose':'#ce93d8'} },
+    { id:'pal-gold',    name:'Gold & Noir',  price:7,  preview:'⭐', vars:{'--accent2':'#f9a825','--mint2':'#ffb300','--rose':'#ffe082'} },
+    { id:'pal-mono',    name:'Monochrome',   price:7,  preview:'🖤', vars:{'--accent2':'#455a64','--mint2':'#607d8b','--rose':'#90a4ae'} },
+  ],
+  effects:[
+    { id:'fx-none',      name:'Estándar',     price:0,  preview:'🪟', css:'' },
+    { id:'fx-frosted',   name:'Muy Esmerilado', price:4, preview:'❄️', css:'--glass:rgba(255,255,255,0.85);--card-radius:32px;' },
+    { id:'fx-sharp',     name:'Sharp Glass',  price:4,  preview:'💎', css:'--glass:rgba(255,255,255,0.45);--card-radius:12px;' },
+    { id:'fx-warm',      name:'Warm Paper',   price:5,  preview:'📄', css:'--glass:rgba(255,248,230,0.75);--card-radius:20px;' },
+    { id:'fx-dark',      name:'Dark Cards',   price:6,  preview:'🌑', css:'--glass:rgba(20,28,45,0.65);--border:rgba(255,255,255,0.12);' },
+    { id:'fx-neon',      name:'Neon Glow',    price:8,  preview:'🌈', css:'--glass:rgba(10,10,30,0.6);--border:rgba(0,255,200,0.25);--card-radius:20px;' },
+  ],
+  sounds:[
+    { id:'snd-beep',    name:'Beep clásico', price:0,  preview:'📳', alarmId:'beep' },
+    { id:'snd-bell',    name:'Campana',       price:0,  preview:'🔔', alarmId:'bell' },
+    { id:'snd-pulse',   name:'Pulso digital', price:0,  preview:'📡', alarmId:'pulse' },
+    { id:'snd-chime',   name:'Carillón',      price:0,  preview:'🎵', alarmId:'chime' },
+    { id:'snd-urgent',  name:'Urgente',       price:0,  preview:'🚨', alarmId:'urgent' },
+    { id:'snd-crystal', name:'Cristal',       price:4,  preview:'💎', alarmId:'crystal' },
+    { id:'snd-gentle',  name:'Gentle Wake',   price:4,  preview:'🌅', alarmId:'gentle' },
+    { id:'snd-melody',  name:'Melodía',       price:6,  preview:'🎶', alarmId:'melody' },
+  ],
+};
+
+// Ampliar el catálogo de alarmas con los sonidos premium
+const PREMIUM_ALARM_PATTERNS = {
+  crystal:(ctx,t)=>{
+    const freqs=[1047,1319,1568,2093];
+    freqs.forEach((f,i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='sine';o.frequency.value=f;
+      g.gain.setValueAtTime(0,t+i*0.1);
+      g.gain.linearRampToValueAtTime(0.22,t+i*0.1+0.01);
+      g.gain.exponentialRampToValueAtTime(0.001,t+i*0.1+0.55);
+      o.start(t+i*0.1);o.stop(t+i*0.1+0.6);
+    });
+  },
+  gentle:(ctx,t)=>{
+    [[440,0],[523,0.4],[659,0.8],[784,1.2]].forEach(([f,s])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='sine';o.frequency.value=f;
+      g.gain.setValueAtTime(0,t+s);
+      g.gain.linearRampToValueAtTime(0.18,t+s+0.08);
+      g.gain.linearRampToValueAtTime(0,t+s+0.5);
+      o.start(t+s);o.stop(t+s+0.55);
+    });
+  },
+  melody:(ctx,t)=>{
+    const notes=[523,587,659,698,784,880,988,1047];
+    notes.forEach((f,i)=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='triangle';o.frequency.value=f;
+      g.gain.setValueAtTime(0,t+i*0.12);
+      g.gain.linearRampToValueAtTime(0.2,t+i*0.12+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001,t+i*0.12+0.35);
+      o.start(t+i*0.12);o.stop(t+i*0.12+0.4);
+    });
+  },
+};
+
+// ── Estado de monedas y compras ──
+let coins = parseInt(localStorage.getItem('ft-coins')||'0');
+let ownedItems = JSON.parse(localStorage.getItem('ft-owned-items')||'["pal-default","fx-none","snd-beep","snd-bell","snd-pulse","snd-chime","snd-urgent"]');
+let activeItems = JSON.parse(localStorage.getItem('ft-active-items')||'{"palette":"pal-default","effect":"fx-none"}');
+let coinEarnedToday = localStorage.getItem('ft-coin-day')===TODAY;
+
+function updateCoinDisplay(){
+  document.getElementById('coin-count').innerText=coins;
+  const sc=document.getElementById('shop-coin-count');
+  if(sc) sc.innerText=coins;
+}
+
+// Llamar cuando el score llega a 100 (al completar sesión)
+function tryEarnCoin(){
+  if(coinEarnedToday) return;
+  const totalMin=parseInt(localStorage.getItem('ft-totalmin')||'0');
+  if(totalMin>=90){
+    coins++;
+    coinEarnedToday=true;
+    localStorage.setItem('ft-coins',coins);
+    localStorage.setItem('ft-coin-day',TODAY);
+    updateCoinDisplay();
+    showToast('🪙 +1 moneda — ¡Objetivo diario completado!');
+    saveCloudData();
+  }
+}
+
+// ── Aplicar ítems activos al cargar ──
+function applyActiveItems(){
+  applyPalette(activeItems.palette||'pal-default');
+  applyEffect(activeItems.effect||'fx-none');
+}
+
+function applyPalette(id){
+  const item=SHOP_CATALOGUE.palettes.find(p=>p.id===id);
+  if(!item) return;
+  const root=document.documentElement;
+  Object.entries(item.vars).forEach(([k,v])=>root.style.setProperty(k,v));
+  activeItems.palette=id;
+  localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
+}
+
+function applyEffect(id){
+  const item=SHOP_CATALOGUE.effects.find(e=>e.id===id);
+  if(!item) return;
+  const root=document.documentElement;
+  // Reset a defaults primero
+  root.style.removeProperty('--glass');
+  root.style.removeProperty('--card-radius');
+  root.style.removeProperty('--border');
+  if(item.css){
+    item.css.split(';').filter(Boolean).forEach(rule=>{
+      const[k,v]=rule.split(':').map(s=>s.trim());
+      if(k&&v) root.style.setProperty(k,v);
+    });
+  }
+  activeItems.effect=id;
+  localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
+}
+
+// ── Abrir / cerrar tienda ──
+function openShop(){
+  buildShop();
+  updateCoinDisplay();
+  document.getElementById('shop-modal').classList.add('open');
+}
+function closeShop(){
+  document.getElementById('shop-modal').classList.remove('open');
+}
+
+function buildShop(){
+  buildShopSection('shop-palettes','palettes',(item)=>{
+    applyPalette(item.id);
+    activeItems.palette=item.id;
+    localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
+    saveCloudData();
+    buildShop();
+  });
+  buildShopSection('shop-effects','effects',(item)=>{
+    applyEffect(item.id);
+    activeItems.effect=item.id;
+    localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
+    saveCloudData();
+    buildShop();
+  });
+  buildShopSection('shop-sounds','sounds',(item)=>{
+    // Seleccionar alarma (y previsualizar si ya es propia)
+    selectAlarm(item.alarmId);
+    buildShop();
+  });
+}
+
+function buildShopSection(gridId, section, onActivate){
+  const grid=document.getElementById(gridId); if(!grid) return;
+  grid.innerHTML='';
+  const isActive=(item)=>{
+    if(section==='palettes') return activeItems.palette===item.id;
+    if(section==='effects') return activeItems.effect===item.id;
+    if(section==='sounds') return selectedAlarm===item.alarmId;
+    return false;
+  };
+  SHOP_CATALOGUE[section].forEach(item=>{
+    const owned=ownedItems.includes(item.id);
+    const active=isActive(item);
+    const canAfford=coins>=item.price;
+    const div=document.createElement('div');
+    div.className='shop-item'+(active?' active-item':owned?' owned':!canAfford?' cant-afford':'');
+
+    let badge='';
+    if(active) badge=`<span class="shop-item-badge badge-active">Activo</span>`;
+    else if(owned) badge=`<span class="shop-item-badge badge-owned">Tuyo</span>`;
+
+    let priceHtml=item.price===0?'<span class="shop-item-price" style="color:var(--mint2);">Gratis</span>'
+      :`<span class="shop-item-price">🪙 ${item.price}</span>`;
+    if(owned||active) priceHtml='';
+
+    // Preview sound button
+    let previewBtn='';
+    if(section==='sounds'){
+      previewBtn=`<br><button onclick="previewShopSound('${item.alarmId}',event)" style="margin-top:6px;background:rgba(121,134,203,0.12);border:1px solid rgba(121,134,203,0.25);border-radius:8px;padding:3px 10px;font-size:0.68rem;font-weight:700;color:var(--accent2);cursor:pointer;">▶ Escuchar</button>`;
+    }
+
+    div.innerHTML=`${badge}<span class="shop-item-preview">${item.preview}</span><div class="shop-item-name">${item.name}</div>${priceHtml}${previewBtn}`;
+
+    div.onclick=(e)=>{
+      if(e.target.tagName==='BUTTON') return; // preview btn handled separately
+      if(active) return;
+      if(owned){ onActivate(item); return; }
+      if(!canAfford){ showToast(`🪙 Necesitas ${item.price} monedas (tienes ${coins})`); return; }
+      // Comprar
+      coins-=item.price;
+      localStorage.setItem('ft-coins',coins);
+      ownedItems.push(item.id);
+      localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
+      updateCoinDisplay();
+      saveCloudData();
+      onActivate(item);
+      showToast(`✅ ¡${item.name} desbloqueado!`);
+    };
+
+    grid.appendChild(div);
+  });
+}
+
+function previewShopSound(alarmId, evt){
+  evt.stopPropagation();
+  if(PREMIUM_ALARM_PATTERNS[alarmId]){
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    PREMIUM_ALARM_PATTERNS[alarmId](ctx,ctx.currentTime);
+    setTimeout(()=>ctx.close(),2000);
+  } else {
+    playAlarmOnce(alarmId);
+  }
+}
+
+// Extender buildPattern para soportar sonidos premium
+const _origBuildPattern=buildPattern;
+function buildPattern(ctx,type,startAt){
+  if(PREMIUM_ALARM_PATTERNS[type]){
+    PREMIUM_ALARM_PATTERNS[type](ctx,startAt);
+    return [{end:startAt+1.5}];
+  }
+  return _origBuildPattern(ctx,type,startAt);
 }
 
 // ══════════════════════════════════════
@@ -1634,186 +1869,40 @@ const THEMES = {
         linear-gradient(155deg,#080818 0%,#100020 50%,#040c18 100%)`,
     night:true
   },
-  desert:{
-    label:'Desert Dune', emoji:'🏜', unlock:10,
-    swatch:'linear-gradient(135deg,#e0a458 0%,#c97b3c 50%,#8a5a3b 100%)',
-    bg:`radial-gradient(ellipse at 10% 10%,rgba(224,164,88,0.35) 0%,transparent 55%),
-        radial-gradient(ellipse at 85% 15%,rgba(201,123,60,0.25) 0%,transparent 50%),
-        radial-gradient(ellipse at 50% 95%,rgba(138,90,59,0.18) 0%,transparent 50%),
-        linear-gradient(155deg,#fdf1e0 0%,#f7e2c0 50%,#fbeadb 100%)`,
-    night:false
-  },
-  aurora:{
-    label:'Aurora', emoji:'🌌', unlock:15,
-    swatch:'linear-gradient(135deg,#0f2027 0%,#2c5364 45%,#4ade80 100%)',
-    bg:`radial-gradient(ellipse at 15% 5%,rgba(74,222,128,0.2) 0%,transparent 55%),
-        radial-gradient(ellipse at 85% 10%,rgba(56,189,248,0.22) 0%,transparent 50%),
-        radial-gradient(ellipse at 50% 95%,rgba(129,140,248,0.18) 0%,transparent 50%),
-        linear-gradient(155deg,#0a1420 0%,#132436 50%,#0d1c2b 100%)`,
-    night:true
-  },
-  volcano:{
-    label:'Volcano', emoji:'🌋', unlock:21,
-    swatch:'linear-gradient(135deg,#1a1a1a 0%,#7f1d1d 50%,#f97316 100%)',
-    bg:`radial-gradient(ellipse at 15% 10%,rgba(249,115,22,0.3) 0%,transparent 55%),
-        radial-gradient(ellipse at 85% 20%,rgba(127,29,29,0.35) 0%,transparent 50%),
-        radial-gradient(ellipse at 50% 95%,rgba(26,26,26,0.3) 0%,transparent 50%),
-        linear-gradient(155deg,#160808 0%,#210c0c 50%,#160a08 100%)`,
-    night:true
-  },
-  glacier:{
-    label:'Glacier', emoji:'🧊', unlock:30,
-    swatch:'linear-gradient(135deg,#e0f7fa 0%,#80deea 50%,#4fc3f7 100%)',
-    bg:`radial-gradient(ellipse at 10% 5%,rgba(128,222,234,0.4) 0%,transparent 55%),
-        radial-gradient(ellipse at 90% 15%,rgba(79,195,247,0.3) 0%,transparent 50%),
-        radial-gradient(ellipse at 50% 95%,rgba(224,247,250,0.3) 0%,transparent 50%),
-        linear-gradient(155deg,#f0fbff 0%,#e0f7fa 50%,#eafdff 100%)`,
-    night:false
-  },
-  lavender:{
-    label:'Lavender Fields', emoji:'💜', unlock:10,
-    swatch:'linear-gradient(135deg,#e9d5ff 0%,#c084fc 50%,#a855f7 100%)',
-    bg:`radial-gradient(ellipse at 10% 5%,rgba(192,132,252,0.4) 0%,transparent 55%),
-        radial-gradient(ellipse at 85% 15%,rgba(168,85,247,0.25) 0%,transparent 50%),
-        radial-gradient(ellipse at 50% 90%,rgba(139,92,246,0.15) 0%,transparent 50%),
-        linear-gradient(155deg,#f5f3ff 0%,#ede9fe 50%,#faf5ff 100%)`,
-    night:false
-  },
-  vintage:{
-    label:'Vintage Paper', emoji:'📜', unlock:30,
-    swatch:'linear-gradient(135deg,#92400e 0%,#b45309 50%,#d97706 100%)',
-    bg:`radial-gradient(ellipse at 10% 5%,rgba(180,83,9,0.2) 0%,transparent 55%),
-        radial-gradient(ellipse at 85% 15%,rgba(217,119,6,0.15) 0%,transparent 50%),
-        radial-gradient(ellipse at 50% 90%,rgba(146,64,14,0.1) 0%,transparent 50%),
-        linear-gradient(155deg,#fdf8f0 0%,#f5ebe0 50%,#fef9f3 100%)`,
-    night:false
-  },
-  cyberpunk:{
-    label:'Cyberpunk', emoji:'🤖', unlock:45,
-    swatch:'linear-gradient(135deg,#0a0a0a 0%,#ff0080 50%,#00ffff 100%)',
-    bg:`radial-gradient(ellipse at 10% 20%,rgba(255,0,128,0.25) 0%,transparent 50%),
-        radial-gradient(ellipse at 90% 10%,rgba(0,255,255,0.2) 0%,transparent 50%),
-        radial-gradient(ellipse at 50% 85%,rgba(255,0,255,0.15) 0%,transparent 50%),
-        linear-gradient(155deg,#050505 0%,#0a0012 50%,#000a0a 100%)`,
-    night:true
-  },
-  legend:{
-    label:'Leyenda Dorada', emoji:'👑', unlock:50, custom:true,
-    swatch:'linear-gradient(135deg,#fff8dc 0%,#ffd700 45%,#b8860b 100%)',
-    bg:`radial-gradient(ellipse at 15% 5%,rgba(255,215,0,0.35) 0%,transparent 55%),
-        radial-gradient(ellipse at 85% 10%,rgba(184,134,11,0.25) 0%,transparent 50%),
-        radial-gradient(ellipse at 50% 95%,rgba(255,248,220,0.3) 0%,transparent 50%),
-        linear-gradient(155deg,#fffbe6 0%,#fff3c4 50%,#fffdf0 100%)`,
-    night:false
-  },
 };
-const CUSTOM_IMG_UNLOCK=50; // días de racha real consecutivos necesarios para poder subir una imagen propia
 
-function getStreakCount(){
-  if(debugInfiniteStreak) return 9999; // ═══ DEBUG override — quitar junto con el resto del bloque debug ═══
-  return consecutiveStreak;
-}
-
-// Comprueba si con la racha actual se ha alcanzado algún hito nuevo, y si es así,
-// lo marca como desbloqueado PARA SIEMPRE (persistido), sin importar que la racha luego se rompa.
-function checkPermanentUnlocks(){
-  const streak=getStreakCount();
-  let changed=false;
-  Object.entries(THEMES).forEach(([key,th])=>{
-    if(th.unlock<=streak && !unlockedThemes.includes(key)){
-      unlockedThemes.push(key); changed=true;
-    }
-  });
-  if(streak>=CUSTOM_IMG_UNLOCK && !customImgUnlocked){
-    customImgUnlocked=true; changed=true;
-    localStorage.setItem('ft-custom-img-unlocked','1');
-  }
-  if(streak>=CUSTOM_VIDEO_UNLOCK && !customVideoUnlocked){
-    customVideoUnlocked=true; changed=true;
-    localStorage.setItem('ft-custom-video-unlocked','1');
-  }
-  if(changed){
-    localStorage.setItem('ft-unlocked-themes',JSON.stringify(unlockedThemes));
-    saveCloudData();
-  }
-}
+function getStreakCount(){ return streakDays.filter(Boolean).length; }
 
 function buildThemeSwatches(){
   const grid=document.getElementById('bg-presets-grid'); if(!grid) return;
   grid.innerHTML='';
   const streak=getStreakCount();
   Object.entries(THEMES).forEach(([key,th])=>{
-    const locked=th.unlock>0 && streak<th.unlock && !unlockedThemes.includes(key);
+    const locked=th.unlock>0 && streak<th.unlock;
     const div=document.createElement('div');
     div.className='bg-swatch'+(locked?' locked':'');
     div.dataset.bg=key;
-    div.title=locked?tr('themeLockTitle').replace('{n}',th.unlock):th.label;
+    div.title=locked?`🔒 Desbloquea con ${th.unlock} días de racha`:th.label;
     div.style.background=th.swatch;
     div.innerHTML=`<div class="bg-swatch-label">${th.emoji}</div>`;
     if(locked) div.innerHTML+=`<div class="bg-swatch-lock">🔒</div>`;
     if(!locked) div.onclick=()=>setBg(key,div);
-    else div.onclick=()=>{ document.getElementById('bg-unlock-tip').style.display='block'; document.getElementById('bg-unlock-tip').innerText=tr('themeLockTip').replace('{label}',th.label).replace('{n}',th.unlock).replace('{have}',streak); };
+    else div.onclick=()=>{ document.getElementById('bg-unlock-tip').style.display='block'; document.getElementById('bg-unlock-tip').innerText=`🔒 "${th.label}" se desbloquea con ${th.unlock} días de racha (tienes ${streak}).`; };
     grid.appendChild(div);
   });
   // Mark active
   const savedKey=localStorage.getItem('ft-bg-key')||'lofi';
   const activeSw=grid.querySelector(`[data-bg="${savedKey}"]`);
   if(activeSw) activeSw.classList.add('active');
-  updateCustomBgLockUI();
-  updateCustomVideoLockUI();
 }
-
-function updateCustomBgLockUI(){
-  const streak=getStreakCount();
-  const unlocked=customImgUnlocked||streak>=CUSTOM_IMG_UNLOCK;
-  const label=document.getElementById('bg-upload-label'), input=document.getElementById('bg-file-input'), txt=document.getElementById('bg-upload-text');
-  const tipEl=document.getElementById('bg-upload-tip');
-  if(!label||!input||!txt) return;
-  input.disabled=!unlocked;
-  label.classList.toggle('locked-upload',!unlocked);
-  txt.innerText=unlocked?`📁 ${tr('bgUpload')}`:`🔒 ${tr('bgUploadLocked')}`;
-  if(tipEl){
-    tipEl.style.display=unlocked?'none':'block';
-    tipEl.innerText=tr('bgUploadLockTip').replace('{n}',CUSTOM_IMG_UNLOCK).replace('{have}',streak);
-  }
-}
-
-// ═══════════ DEBUG: BOTÓN DE RACHA INFINITA (TEMPORAL — quitar cuando lo pida el usuario) ═══════════
-// Para quitarlo: borrar este bloque completo, la variable debugInfiniteStreak (arriba, en STATE),
-// el "if(debugInfiniteStreak) return 9999;" dentro de getStreakCount(), el botón #debug-streak-btn
-// del HTML, y su bloque de comentarios "DEBUG BUTTON" que lo envuelve.
-function toggleDebugStreak(){
-  debugInfiniteStreak=!debugInfiniteStreak;
-  const btn=document.getElementById('debug-streak-btn');
-  if(btn){
-    btn.classList.toggle('active',debugInfiniteStreak);
-    btn.style.background=debugInfiniteStreak?'var(--accent2)':'';
-    btn.style.color=debugInfiniteStreak?'white':'';
-  }
-  // OJO: no llamamos a checkPermanentUnlocks() aquí a propósito — es solo una VISTA PREVIA.
-  // Con debugInfiniteStreak activo, getStreakCount() ya devuelve 9999 y los temas se ven
-  // desbloqueados en el momento, sin marcarlos como conseguidos de verdad para siempre.
-  buildThemeSwatches();
-  buildStreak();
-  updateStats();
-  showToast(debugInfiniteStreak?'🧪 Racha infinita ACTIVADA (debug)':'🧪 Racha infinita DESACTIVADA (debug)');
-}
-// ═══════════ FIN DEBUG ═══════════
 
 function setBg(key,swatchEl){
   const th=THEMES[key]; if(!th) return;
   const streak=getStreakCount();
-  if(th.unlock>0&&streak<th.unlock&&!unlockedThemes.includes(key)){ showToast(tr('themeLockToast').replace('{n}',th.unlock)); return; }
-
-  // Apagar cualquier vídeo personalizado que estuviera activo
-  const videoEl=document.getElementById('bg-video');
-  videoEl.pause(); videoEl.style.display='none'; videoEl.removeAttribute('src');
-  localStorage.removeItem('ft-bg-video');
-
+  if(th.unlock>0&&streak<th.unlock){ showToast(`🔒 Desbloquea con ${th.unlock} días de racha`); return; }
   document.body.style.backgroundImage=''; document.body.classList.remove('bg-night');
   document.body.style.background=th.bg; document.body.style.backgroundAttachment='fixed';
   if(th.night) document.body.classList.add('bg-night');
-
   document.querySelectorAll('.bg-swatch').forEach(s=>s.classList.remove('active'));
   if(swatchEl) swatchEl.classList.add('active');
   localStorage.setItem('ft-bg-key',key); localStorage.removeItem('ft-bg-img');
@@ -1823,80 +1912,26 @@ function setBg(key,swatchEl){
 
 function uploadBg(input){
   const file=input.files[0]; if(!file) return;
-  if(!customImgUnlocked&&getStreakCount()<CUSTOM_IMG_UNLOCK){
-    showToast(tr('bgUploadLockToast').replace('{n}',CUSTOM_IMG_UNLOCK));
-    input.value='';
-    return;
-  }
   const reader=new FileReader();
   reader.onload=e=>{
     applyCustomBg(e.target.result);
-    try{ localStorage.setItem('ft-bg-img',e.target.result); } catch(ex){ showToast(tr('imgTooBig')); }
-    localStorage.removeItem('ft-bg-key'); localStorage.removeItem('ft-bg-video');
+    try{ localStorage.setItem('ft-bg-img',e.target.result); } catch(ex){ showToast('⚠️ Imagen demasiado grande'); }
+    localStorage.removeItem('ft-bg-key');
     document.querySelectorAll('.bg-swatch').forEach(s=>s.classList.remove('active'));
-    showToast(tr('customBgApplied'));
+    showToast('🖼 Fondo personalizado aplicado');
   };
   reader.readAsDataURL(file);
 }
 
 function applyCustomBg(dataUrl){
-  const videoEl=document.getElementById('bg-video');
-  videoEl.pause(); videoEl.style.display='none'; videoEl.removeAttribute('src');
   document.body.style.background='none'; document.body.style.backgroundImage=`url(${dataUrl})`;
   document.body.style.backgroundSize='cover'; document.body.style.backgroundPosition='center'; document.body.style.backgroundAttachment='fixed';
-}
-
-// ══════════════════════════════════════
-//  VÍDEO PERSONALIZADO — mismo patrón que la imagen, pero se desbloquea a los 100 días
-//  y el vídeo se reproduce en bucle y SIEMPRE silenciado (atributo "muted" en el <video>).
-// ══════════════════════════════════════
-const CUSTOM_VIDEO_UNLOCK=100;
-
-function updateCustomVideoLockUI(){
-  const streak=getStreakCount();
-  const unlocked=customVideoUnlocked||streak>=CUSTOM_VIDEO_UNLOCK;
-  const label=document.getElementById('bg-video-upload-label'), input=document.getElementById('bg-video-file-input'), txt=document.getElementById('bg-video-upload-text');
-  const tipEl=document.getElementById('bg-video-upload-tip');
-  if(!label||!input||!txt) return;
-  input.disabled=!unlocked;
-  label.classList.toggle('locked-upload',!unlocked);
-  txt.innerText=unlocked?`🎬 ${tr('bgVideoUpload')}`:`🔒 ${tr('bgVideoUploadLocked')}`;
-  if(tipEl){
-    tipEl.style.display=unlocked?'none':'block';
-    tipEl.innerText=tr('bgVideoUploadLockTip').replace('{n}',CUSTOM_VIDEO_UNLOCK).replace('{have}',streak);
-  }
-}
-
-function uploadBgVideo(input){
-  const file=input.files[0]; if(!file) return;
-  if(!customVideoUnlocked&&getStreakCount()<CUSTOM_VIDEO_UNLOCK){
-    showToast(tr('bgVideoUploadLockToast').replace('{n}',CUSTOM_VIDEO_UNLOCK));
-    input.value='';
-    return;
-  }
-  const reader=new FileReader();
-  reader.onload=e=>{
-    applyCustomVideoBg(e.target.result);
-    try{ localStorage.setItem('ft-bg-video',e.target.result); } catch(ex){ showToast(tr('videoTooBig')); }
-    localStorage.removeItem('ft-bg-key'); localStorage.removeItem('ft-bg-img');
-    document.querySelectorAll('.bg-swatch').forEach(s=>s.classList.remove('active'));
-    showToast(tr('customVideoApplied'));
-  };
-  reader.readAsDataURL(file);
-}
-
-function applyCustomVideoBg(dataUrl){
-  const videoEl=document.getElementById('bg-video');
-  document.body.style.background='#000'; document.body.style.backgroundImage='';
-  videoEl.src=dataUrl;
-  videoEl.style.display='block';
-  videoEl.play().catch(()=>{}); // algunos navegadores bloquean el autoplay hasta la primera interacción
 }
 
 // Language translations (key UI strings)
 const T={
   es:{start:'▶ Empezar',pause:'⏸ Pausar',resume:'▶ Reanudar',reset:'↺ Reset',deep:'🎯 Modo Enfoque',prod:'⚡ Productividad',
-      s1:'Sesiones hoy',s2:'Min enfocado',s3:'Racha días',lib:'Explorar Biblioteca',
+      s1:'Sesiones hoy',s2:'Min enfocado',s3:'Racha días',lib:'🎵 Explorar Biblioteca',
       tasks:'Metas de Estudio',taskph:'+ Nueva tarea... pulsa Enter',notes:'Notas Rápidas',notesph:'Vuelca aquí tus pensamientos para volver al enfoque...',
       score:'Puntuación Hoy',scoredesc:'Completa sesiones y tareas<br>para subir tu puntuación',
       streak:'Racha Semanal',streakcta:'¡Estudia hoy para mantener tu racha! 🔥',
@@ -1904,35 +1939,9 @@ const T={
       notif:'Notificación al terminar',perm:'🔔 Activar avisos',permok:'✅ Avisos activos',
       alarm:'Sonido de alarma',alarmbrowse:'Cambiar sonido',
       copy:'📋 Copiar',save:'⬇ Guardar .txt',clear:'🗑 Limpiar',
-      smin:'min',seslbl:'Sesión de',remaining:'restante',
-      adLabel:'Anuncio',adSidebar:'Espacio publicitario',trackDefault:'Selecciona una pista',
-      completedWord:'completadas',wordSingular:'palabra',wordPlural:'palabras',autosaved:'guardado automático',
-      notesSaved:'✓ Guardado',notesSaving:'...',confirmClearNotes:'¿Limpiar todas las notas?',
-      settingsTitle:'⚙️ Ajustes',bgThemeLbl:'🖼 Tema de fondo',bgUpload:'Subir imagen propia',bgUploadLocked:'Se desbloquea a los 50 días',bgReset:'↺ Restablecer',
-      bgVideoUpload:'Subir vídeo propio',bgVideoUploadLocked:'Se desbloquea a los 100 días',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Ayúdanos a mejorar Focus-Tap con tu opinión anónima. Solo tarda 2 minutos.',feedbackBtn:'📝 Abrir formulario',
-      accountTitle:'👤 Cuenta · Sincronización',accountDesc:'Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.',
-      accEmailPh:'Email',accPassPh:'Contraseña (mín. 6)',accRegister:'✨ Crear cuenta',accLogin:'🔑 Iniciar sesión',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Cerrar sesión',
-      langTitle:'🌐 Idioma',breakFinished:'🔔 ¡Descanso terminado!',stopAlarmBtn:'⏹ Parar alarma',
-      libModalTitle:'🎵 Biblioteca de Música',libEmpty:'← Selecciona una categoría',libChooseCat:'Elige una categoría',libTracksWord:'pistas',
-      alarmModalTitle:'🔔 Sonido de Alarma',alarmForTimerTitle:'Alarma al terminar la sesión',celebDismiss:'¡A por el descanso! ☕',
-      celebCompleted:'Has completado {mins} minutos de estudio.',
-      themeLockTitle:'🔒 Desbloquea con {n} días de racha',themeLockTip:'🔒 "{label}" se desbloquea con {n} días de racha (tienes {have}).',themeLockToast:'🔒 Desbloquea con {n} días de racha',
-      bgUploadLockTip:'🔒 Podrás subir una imagen propia al llegar a {n} días de racha consecutivos (llevas {have}).',bgUploadLockToast:'🔒 Necesitas {n} días de racha consecutivos para subir una imagen propia',
-      bgVideoUploadLockTip:'🔒 Podrás subir un vídeo propio al llegar a {n} días de racha consecutivos (llevas {have}).',bgVideoUploadLockToast:'🔒 Necesitas {n} días de racha consecutivos para subir un vídeo propio',
-      imgTooBig:'⚠️ Imagen demasiado grande',customBgApplied:'🖼 Fondo personalizado aplicado',
-      videoTooBig:'⚠️ Vídeo demasiado grande para guardarlo',customVideoApplied:'🎬 Vídeo de fondo aplicado (en bucle y sin sonido)',
-      modeOff:'Modo desactivado',modeDeepOn:'🎯 Modo Enfoque — ¡Sin distracciones!',modeProdOn:'⚡ Modo Productividad activado',
-      pausedBreath:'Pausado — Respira profundo',autoPauseWarn:'⚠️ ¡Pausa automática! Vuelve al estudio',penaltyPrefix:'⏱ Penalización: +{s}s',
-      chooseATrack:'Elige una canción 🎵',notesEmpty:'Las notas están vacías',notesCopied:'📋 Notas copiadas',notesDownloading:'⬇ Descargando notas...',notesDeleted:'🗑 Notas eliminadas',
-      notifEnabled:'🔔 Notificaciones activadas',notifDenied:'⚠️ Permisos denegados — sonará solo la alarma',
-      accNeedFirebase:'⚠️ Configura Firebase primero (ver instrucciones)',accValidation:'Email válido y contraseña de 6+ caracteres.',
-      accCreated:'✅ Cuenta creada y sesión iniciada',accLoggedInToast:'✅ Sesión iniciada',accLoggedOutToast:'👋 Sesión cerrada',
-      errEmailInUse:'Ese email ya tiene una cuenta. Prueba a iniciar sesión.',errInvalidEmail:'Email no válido.',errWeakPass:'La contraseña debe tener 6+ caracteres.',errBadCreds:'Email o contraseña incorrectos.',errGeneric:'Error: ',
-      cloudSynced:'☁️ Datos sincronizados desde la nube',cloudNewAccount:'☁️ Cuenta nueva — empezando desde cero',cloudSyncErr:'⚠️ Error al sincronizar con la nube',
-      prioHigh:'🔴 Alta',prioMed:'🟡 Media',prioLow:'🟢 Baja'},
+      smin:'min',seslbl:'Sesión de'},
   en:{start:'▶ Start',pause:'⏸ Pause',resume:'▶ Resume',reset:'↺ Reset',deep:'🎯 Focus Mode',prod:'⚡ Productivity',
-      s1:'Sessions today',s2:'Min focused',s3:'Day streak',lib:'Browse Library',
+      s1:'Sessions today',s2:'Min focused',s3:'Day streak',lib:'🎵 Browse Library',
       tasks:'Study Goals',taskph:'+ New task... press Enter',notes:'Quick Notes',notesph:'Dump your thoughts here...',
       score:'Today\'s Score',scoredesc:'Complete sessions and tasks<br>to raise your score',
       streak:'Weekly Streak',streakcta:'Study today to keep your streak! 🔥',
@@ -1940,35 +1949,9 @@ const T={
       notif:'Notify when done',perm:'🔔 Enable alerts',permok:'✅ Alerts active',
       alarm:'Alarm sound',alarmbrowse:'Change sound',
       copy:'📋 Copy',save:'⬇ Save .txt',clear:'🗑 Clear',
-      smin:'min',seslbl:'Session of',remaining:'remaining',
-      adLabel:'Ad',adSidebar:'Ad space',trackDefault:'Select a track',
-      completedWord:'completed',wordSingular:'word',wordPlural:'words',autosaved:'autosaved',
-      notesSaved:'✓ Saved',notesSaving:'...',confirmClearNotes:'Clear all notes?',
-      settingsTitle:'⚙️ Settings',bgThemeLbl:'🖼 Background theme',bgUpload:'Upload your own image',bgUploadLocked:'Unlocks at 50 days',bgReset:'↺ Reset',
-      bgVideoUpload:'Upload your own video',bgVideoUploadLocked:'Unlocks at 100 days',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Help us improve Focus-Tap with your anonymous feedback. Takes only 2 minutes.',feedbackBtn:'📝 Open form',
-      accountTitle:'👤 Account · Sync',accountDesc:'Create a free account to store your streak and score in the cloud and see them from any device.',
-      accEmailPh:'Email',accPassPh:'Password (6+ chars)',accRegister:'✨ Create account',accLogin:'🔑 Log in',accLoggedAs:'✅ Logged in as:',accLogout:'🚪 Log out',
-      langTitle:'🌐 Language',breakFinished:'🔔 Break finished!',stopAlarmBtn:'⏹ Stop alarm',
-      libModalTitle:'🎵 Music Library',libEmpty:'← Select a category',libChooseCat:'Choose a category',libTracksWord:'tracks',
-      alarmModalTitle:'🔔 Alarm Sound',alarmForTimerTitle:'Alarm when the session ends',celebDismiss:'Off to break! ☕',
-      celebCompleted:'You completed {mins} minutes of study.',
-      themeLockTitle:'🔒 Unlocks with {n} days of streak',themeLockTip:'🔒 "{label}" unlocks at {n} days of streak (you have {have}).',themeLockToast:'🔒 Unlocks with {n} days of streak',
-      bgUploadLockTip:'🔒 You can upload your own image once you reach {n} consecutive days of streak (you have {have}).',bgUploadLockToast:'🔒 You need {n} consecutive days of streak to upload your own image',
-      bgVideoUploadLockTip:'🔒 You can upload your own video once you reach {n} consecutive days of streak (you have {have}).',bgVideoUploadLockToast:'🔒 You need {n} consecutive days of streak to upload your own video',
-      imgTooBig:'⚠️ Image too large',customBgApplied:'🖼 Custom background applied',
-      videoTooBig:'⚠️ Video too large to save',customVideoApplied:'🎬 Background video applied (looping, no sound)',
-      modeOff:'Mode off',modeDeepOn:'🎯 Focus Mode — No distractions!',modeProdOn:'⚡ Productivity Mode on',
-      pausedBreath:'Paused — Take a deep breath',autoPauseWarn:'⚠️ Auto-pause! Get back to studying',penaltyPrefix:'⏱ Penalty: +{s}s',
-      chooseATrack:'Choose a song 🎵',notesEmpty:'Your notes are empty',notesCopied:'📋 Notes copied',notesDownloading:'⬇ Downloading notes...',notesDeleted:'🗑 Notes deleted',
-      notifEnabled:'🔔 Notifications enabled',notifDenied:'⚠️ Permission denied — only the alarm will sound',
-      accNeedFirebase:'⚠️ Set up Firebase first (see instructions)',accValidation:'Valid email and 6+ character password.',
-      accCreated:'✅ Account created and logged in',accLoggedInToast:'✅ Logged in',accLoggedOutToast:'👋 Logged out',
-      errEmailInUse:'That email already has an account. Try logging in.',errInvalidEmail:'Invalid email.',errWeakPass:'Password must be 6+ characters.',errBadCreds:'Incorrect email or password.',errGeneric:'Error: ',
-      cloudSynced:'☁️ Data synced from the cloud',cloudNewAccount:'☁️ New account — starting fresh',cloudSyncErr:'⚠️ Error syncing with the cloud',
-      prioHigh:'🔴 High',prioMed:'🟡 Medium',prioLow:'🟢 Low'},
+      smin:'min',seslbl:'Session of'},
   fr:{start:'▶ Démarrer',pause:'⏸ Pause',resume:'▶ Reprendre',reset:'↺ Réinitialiser',deep:'🎯 Mode Focus',prod:'⚡ Productivité',
-      s1:'Sessions auj.',s2:'Min concentré',s3:'Jours streak',lib:'Bibliothèque',
+      s1:'Sessions auj.',s2:'Min concentré',s3:'Jours streak',lib:'🎵 Bibliothèque',
       tasks:'Objectifs d\'étude',taskph:'+ Nouvelle tâche... Entrée',notes:'Notes rapides',notesph:'Videz vos pensées ici...',
       score:'Score du jour',scoredesc:'Complétez sessions et tâches<br>pour augmenter votre score',
       streak:'Série hebdomadaire',streakcta:'Étudiez aujourd\'hui pour garder la série ! 🔥',
@@ -1976,35 +1959,9 @@ const T={
       notif:'Notifier à la fin',perm:'🔔 Activer alertes',permok:'✅ Alertes actives',
       alarm:'Son d\'alarme',alarmbrowse:'Changer le son',
       copy:'📋 Copier',save:'⬇ Sauvegarder .txt',clear:'🗑 Effacer',
-      smin:'min',seslbl:'Session de',remaining:'restant',
-      adLabel:'Publicité',adSidebar:'Espace publicitaire',trackDefault:'Sélectionne un morceau',
-      completedWord:'terminées',wordSingular:'mot',wordPlural:'mots',autosaved:'enregistrement automatique',
-      notesSaved:'✓ Enregistré',notesSaving:'...',confirmClearNotes:'Effacer toutes les notes ?',
-      settingsTitle:'⚙️ Paramètres',bgThemeLbl:'🖼 Thème de fond',bgUpload:'Importer ta propre image',bgUploadLocked:'Se débloque à 50 jours',bgReset:'↺ Réinitialiser',
-      bgVideoUpload:'Importer ta propre vidéo',bgVideoUploadLocked:'Se débloque à 100 jours',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Aide-nous à améliorer Focus-Tap avec ton avis anonyme. Ça ne prend que 2 minutes.',feedbackBtn:'📝 Ouvrir le formulaire',
-      accountTitle:'👤 Compte · Synchronisation',accountDesc:'Crée un compte gratuit pour sauvegarder ta série et ton score dans le cloud et les voir depuis n\'importe quel appareil.',
-      accEmailPh:'Email',accPassPh:'Mot de passe (6+ car.)',accRegister:'✨ Créer un compte',accLogin:'🔑 Se connecter',accLoggedAs:'✅ Connecté en tant que :',accLogout:'🚪 Se déconnecter',
-      langTitle:'🌐 Langue',breakFinished:'🔔 Pause terminée !',stopAlarmBtn:'⏹ Arrêter l\'alarme',
-      libModalTitle:'🎵 Bibliothèque musicale',libEmpty:'← Sélectionne une catégorie',libChooseCat:'Choisis une catégorie',libTracksWord:'pistes',
-      alarmModalTitle:'🔔 Son d\'alarme',alarmForTimerTitle:'Alarme à la fin de la session',celebDismiss:'À la pause ! ☕',
-      celebCompleted:'Tu as terminé {mins} minutes d\'étude.',
-      themeLockTitle:'🔒 Se débloque avec {n} jours de série',themeLockTip:'🔒 « {label} » se débloque à {n} jours de série (tu en as {have}).',themeLockToast:'🔒 Se débloque avec {n} jours de série',
-      bgUploadLockTip:'🔒 Tu pourras importer ta propre image en atteignant {n} jours de série consécutifs (tu en as {have}).',bgUploadLockToast:'🔒 Il te faut {n} jours de série consécutifs pour importer ta propre image',
-      bgVideoUploadLockTip:'🔒 Tu pourras importer ta propre vidéo en atteignant {n} jours de série consécutifs (tu en as {have}).',bgVideoUploadLockToast:'🔒 Il te faut {n} jours de série consécutifs pour importer ta propre vidéo',
-      imgTooBig:'⚠️ Image trop volumineuse',customBgApplied:'🖼 Fond personnalisé appliqué',
-      videoTooBig:'⚠️ Vidéo trop volumineuse pour être enregistrée',customVideoApplied:'🎬 Vidéo de fond appliquée (en boucle et sans son)',
-      modeOff:'Mode désactivé',modeDeepOn:'🎯 Mode Focus — Sans distractions !',modeProdOn:'⚡ Mode Productivité activé',
-      pausedBreath:'En pause — Respire profondément',autoPauseWarn:'⚠️ Pause automatique ! Reviens étudier',penaltyPrefix:'⏱ Pénalité : +{s}s',
-      chooseATrack:'Choisis une chanson 🎵',notesEmpty:'Les notes sont vides',notesCopied:'📋 Notes copiées',notesDownloading:'⬇ Téléchargement des notes...',notesDeleted:'🗑 Notes supprimées',
-      notifEnabled:'🔔 Notifications activées',notifDenied:'⚠️ Permission refusée — seule l\'alarme sonnera',
-      accNeedFirebase:'⚠️ Configure d\'abord Firebase (voir instructions)',accValidation:'Email valide et mot de passe de 6+ caractères.',
-      accCreated:'✅ Compte créé et connecté',accLoggedInToast:'✅ Connecté',accLoggedOutToast:'👋 Déconnecté',
-      errEmailInUse:'Cet email a déjà un compte. Essaie de te connecter.',errInvalidEmail:'Email invalide.',errWeakPass:'Le mot de passe doit avoir 6+ caractères.',errBadCreds:'Email ou mot de passe incorrect.',errGeneric:'Erreur : ',
-      cloudSynced:'☁️ Données synchronisées depuis le cloud',cloudNewAccount:'☁️ Nouveau compte — on repart de zéro',cloudSyncErr:'⚠️ Erreur de synchronisation avec le cloud',
-      prioHigh:'🔴 Élevée',prioMed:'🟡 Moyenne',prioLow:'🟢 Basse'},
+      smin:'min',seslbl:'Session de'},
   de:{start:'▶ Starten',pause:'⏸ Pause',resume:'▶ Fortsetzen',reset:'↺ Zurücksetzen',deep:'🎯 Fokusmodus',prod:'⚡ Produktivität',
-      s1:'Sitzungen heute',s2:'Min fokussiert',s3:'Tage-Streak',lib:'Bibliothek',
+      s1:'Sitzungen heute',s2:'Min fokussiert',s3:'Tage-Streak',lib:'🎵 Bibliothek',
       tasks:'Lernziele',taskph:'+ Neue Aufgabe... Enter',notes:'Schnellnotizen',notesph:'Schreibe deine Gedanken hier...',
       score:'Heutige Punkte',scoredesc:'Schließe Sitzungen und Aufgaben ab<br>um deinen Score zu steigern',
       streak:'Wöchentlicher Streak',streakcta:'Lerne heute, um deinen Streak zu halten! 🔥',
@@ -2012,35 +1969,9 @@ const T={
       notif:'Benachrichtigung am Ende',perm:'🔔 Benachr. aktivieren',permok:'✅ Benachr. aktiv',
       alarm:'Alarmton',alarmbrowse:'Ton ändern',
       copy:'📋 Kopieren',save:'⬇ Speichern .txt',clear:'🗑 Löschen',
-      smin:'Min',seslbl:'Sitzung von',remaining:'verbleibend',
-      adLabel:'Werbung',adSidebar:'Werbefläche',trackDefault:'Wähle einen Titel',
-      completedWord:'erledigt',wordSingular:'Wort',wordPlural:'Wörter',autosaved:'automatisch gespeichert',
-      notesSaved:'✓ Gespeichert',notesSaving:'...',confirmClearNotes:'Alle Notizen löschen?',
-      settingsTitle:'⚙️ Einstellungen',bgThemeLbl:'🖼 Hintergrundthema',bgUpload:'Eigenes Bild hochladen',bgUploadLocked:'Wird nach 50 Tagen freigeschaltet',bgReset:'↺ Zurücksetzen',
-      bgVideoUpload:'Eigenes Video hochladen',bgVideoUploadLocked:'Wird nach 100 Tagen freigeschaltet',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Hilf uns, Focus-Tap mit deinem anonymen Feedback zu verbessern. Dauert nur 2 Minuten.',feedbackBtn:'📝 Formular öffnen',
-      accountTitle:'👤 Konto · Synchronisierung',accountDesc:'Erstelle ein kostenloses Konto, um deinen Streak und Score in der Cloud zu speichern und von jedem Gerät zu sehen.',
-      accEmailPh:'E-Mail',accPassPh:'Passwort (mind. 6 Zeichen)',accRegister:'✨ Konto erstellen',accLogin:'🔑 Anmelden',accLoggedAs:'✅ Angemeldet als:',accLogout:'🚪 Abmelden',
-      langTitle:'🌐 Sprache',breakFinished:'🔔 Pause beendet!',stopAlarmBtn:'⏹ Alarm stoppen',
-      libModalTitle:'🎵 Musikbibliothek',libEmpty:'← Wähle eine Kategorie',libChooseCat:'Wähle eine Kategorie',libTracksWord:'Titel',
-      alarmModalTitle:'🔔 Alarmton',alarmForTimerTitle:'Alarm, wenn die Sitzung endet',celebDismiss:'Ab in die Pause! ☕',
-      celebCompleted:'Du hast {mins} Minuten gelernt.',
-      themeLockTitle:'🔒 Freischaltung bei {n} Tagen Streak',themeLockTip:'🔒 „{label}" wird bei {n} Tagen Streak freigeschaltet (du hast {have}).',themeLockToast:'🔒 Freischaltung bei {n} Tagen Streak',
-      bgUploadLockTip:'🔒 Du kannst ein eigenes Bild hochladen, sobald du {n} Tage in Folge erreichst (du hast {have}).',bgUploadLockToast:'🔒 Du brauchst {n} Tage Streak in Folge, um ein eigenes Bild hochzuladen',
-      bgVideoUploadLockTip:'🔒 Du kannst ein eigenes Video hochladen, sobald du {n} Tage in Folge erreichst (du hast {have}).',bgVideoUploadLockToast:'🔒 Du brauchst {n} Tage Streak in Folge, um ein eigenes Video hochzuladen',
-      imgTooBig:'⚠️ Bild zu groß',customBgApplied:'🖼 Eigener Hintergrund angewendet',
-      videoTooBig:'⚠️ Video zu groß zum Speichern',customVideoApplied:'🎬 Hintergrundvideo angewendet (in Schleife, ohne Ton)',
-      modeOff:'Modus deaktiviert',modeDeepOn:'🎯 Fokusmodus — Keine Ablenkungen!',modeProdOn:'⚡ Produktivitätsmodus aktiviert',
-      pausedBreath:'Pausiert — Tief durchatmen',autoPauseWarn:'⚠️ Auto-Pause! Zurück zum Lernen',penaltyPrefix:'⏱ Strafe: +{s}s',
-      chooseATrack:'Wähle einen Song 🎵',notesEmpty:'Die Notizen sind leer',notesCopied:'📋 Notizen kopiert',notesDownloading:'⬇ Notizen werden heruntergeladen...',notesDeleted:'🗑 Notizen gelöscht',
-      notifEnabled:'🔔 Benachrichtigungen aktiviert',notifDenied:'⚠️ Berechtigung verweigert — nur der Alarm ertönt',
-      accNeedFirebase:'⚠️ Firebase zuerst einrichten (siehe Anleitung)',accValidation:'Gültige E-Mail und Passwort mit 6+ Zeichen.',
-      accCreated:'✅ Konto erstellt und angemeldet',accLoggedInToast:'✅ Angemeldet',accLoggedOutToast:'👋 Abgemeldet',
-      errEmailInUse:'Diese E-Mail hat bereits ein Konto. Versuche dich anzumelden.',errInvalidEmail:'Ungültige E-Mail.',errWeakPass:'Das Passwort muss 6+ Zeichen haben.',errBadCreds:'E-Mail oder Passwort falsch.',errGeneric:'Fehler: ',
-      cloudSynced:'☁️ Daten aus der Cloud synchronisiert',cloudNewAccount:'☁️ Neues Konto — wir starten bei null',cloudSyncErr:'⚠️ Fehler bei der Cloud-Synchronisierung',
-      prioHigh:'🔴 Hoch',prioMed:'🟡 Mittel',prioLow:'🟢 Niedrig'},
+      smin:'Min',seslbl:'Sitzung von'},
   pt:{start:'▶ Começar',pause:'⏸ Pausar',resume:'▶ Retomar',reset:'↺ Reiniciar',deep:'🎯 Modo Foco',prod:'⚡ Produtividade',
-      s1:'Sessões hoje',s2:'Min focado',s3:'Dias seguidos',lib:'Biblioteca',
+      s1:'Sessões hoje',s2:'Min focado',s3:'Dias seguidos',lib:'🎵 Biblioteca',
       tasks:'Metas de Estudo',taskph:'+ Nova tarefa... Enter',notes:'Notas Rápidas',notesph:'Escreva seus pensamentos aqui...',
       score:'Pontuação Hoje',scoredesc:'Complete sessões e tarefas<br>para aumentar sua pontuação',
       streak:'Sequência Semanal',streakcta:'Estude hoje para manter sua sequência! 🔥',
@@ -2048,35 +1979,9 @@ const T={
       notif:'Notificar ao terminar',perm:'🔔 Ativar avisos',permok:'✅ Avisos ativos',
       alarm:'Som do alarme',alarmbrowse:'Mudar som',
       copy:'📋 Copiar',save:'⬇ Salvar .txt',clear:'🗑 Limpar',
-      smin:'min',seslbl:'Sessão de',remaining:'restante',
-      adLabel:'Anúncio',adSidebar:'Espaço publicitário',trackDefault:'Selecione uma faixa',
-      completedWord:'concluídas',wordSingular:'palavra',wordPlural:'palavras',autosaved:'salvo automaticamente',
-      notesSaved:'✓ Salvo',notesSaving:'...',confirmClearNotes:'Limpar todas as notas?',
-      settingsTitle:'⚙️ Configurações',bgThemeLbl:'🖼 Tema de fundo',bgUpload:'Enviar imagem própria',bgUploadLocked:'Desbloqueia aos 50 dias',bgReset:'↺ Restaurar',
-      bgVideoUpload:'Enviar vídeo próprio',bgVideoUploadLocked:'Desbloqueia aos 100 dias',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Ajude-nos a melhorar o Focus-Tap com sua opinião anônima. Leva só 2 minutos.',feedbackBtn:'📝 Abrir formulário',
-      accountTitle:'👤 Conta · Sincronização',accountDesc:'Crie uma conta gratuita para guardar sua sequência e pontuação na nuvem e vê-las em qualquer dispositivo.',
-      accEmailPh:'Email',accPassPh:'Senha (mín. 6)',accRegister:'✨ Criar conta',accLogin:'🔑 Entrar',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Sair',
-      langTitle:'🌐 Idioma',breakFinished:'🔔 Pausa terminada!',stopAlarmBtn:'⏹ Parar alarme',
-      libModalTitle:'🎵 Biblioteca de Música',libEmpty:'← Selecione uma categoria',libChooseCat:'Escolha uma categoria',libTracksWord:'faixas',
-      alarmModalTitle:'🔔 Som do Alarme',alarmForTimerTitle:'Alarme ao terminar a sessão',celebDismiss:'Vamos à pausa! ☕',
-      celebCompleted:'Você completou {mins} minutos de estudo.',
-      themeLockTitle:'🔒 Desbloqueia com {n} dias de sequência',themeLockTip:'🔒 "{label}" desbloqueia com {n} dias de sequência (você tem {have}).',themeLockToast:'🔒 Desbloqueia com {n} dias de sequência',
-      bgUploadLockTip:'🔒 Você poderá enviar uma imagem própria ao atingir {n} dias seguidos de sequência (você tem {have}).',bgUploadLockToast:'🔒 Você precisa de {n} dias seguidos de sequência para enviar uma imagem própria',
-      bgVideoUploadLockTip:'🔒 Você poderá enviar um vídeo próprio ao atingir {n} dias seguidos de sequência (você tem {have}).',bgVideoUploadLockToast:'🔒 Você precisa de {n} dias seguidos de sequência para enviar um vídeo próprio',
-      imgTooBig:'⚠️ Imagem muito grande',customBgApplied:'🖼 Fundo personalizado aplicado',
-      videoTooBig:'⚠️ Vídeo muito grande para salvar',customVideoApplied:'🎬 Vídeo de fundo aplicado (em loop e sem som)',
-      modeOff:'Modo desativado',modeDeepOn:'🎯 Modo Foco — Sem distrações!',modeProdOn:'⚡ Modo Produtividade ativado',
-      pausedBreath:'Pausado — Respire fundo',autoPauseWarn:'⚠️ Pausa automática! Volte a estudar',penaltyPrefix:'⏱ Penalidade: +{s}s',
-      chooseATrack:'Escolha uma música 🎵',notesEmpty:'As notas estão vazias',notesCopied:'📋 Notas copiadas',notesDownloading:'⬇ Baixando notas...',notesDeleted:'🗑 Notas excluídas',
-      notifEnabled:'🔔 Notificações ativadas',notifDenied:'⚠️ Permissão negada — apenas o alarme tocará',
-      accNeedFirebase:'⚠️ Configure o Firebase primeiro (veja instruções)',accValidation:'Email válido e senha de 6+ caracteres.',
-      accCreated:'✅ Conta criada e sessão iniciada',accLoggedInToast:'✅ Sessão iniciada',accLoggedOutToast:'👋 Sessão encerrada',
-      errEmailInUse:'Esse email já tem uma conta. Tente entrar.',errInvalidEmail:'Email inválido.',errWeakPass:'A senha deve ter 6+ caracteres.',errBadCreds:'Email ou senha incorretos.',errGeneric:'Erro: ',
-      cloudSynced:'☁️ Dados sincronizados da nuvem',cloudNewAccount:'☁️ Conta nova — começando do zero',cloudSyncErr:'⚠️ Erro ao sincronizar com a nuvem',
-      prioHigh:'🔴 Alta',prioMed:'🟡 Média',prioLow:'🟢 Baixa'},
+      smin:'min',seslbl:'Sessão de'},
   it:{start:'▶ Inizia',pause:'⏸ Pausa',resume:'▶ Riprendi',reset:'↺ Reimposta',deep:'🎯 Modalità Focus',prod:'⚡ Produttività',
-      s1:'Sessioni oggi',s2:'Min concentrato',s3:'Giorni streak',lib:'Libreria',
+      s1:'Sessioni oggi',s2:'Min concentrato',s3:'Giorni streak',lib:'🎵 Libreria',
       tasks:'Obiettivi di Studio',taskph:'+ Nuova attività... Invio',notes:'Note Veloci',notesph:'Scrivi i tuoi pensieri qui...',
       score:'Punteggio Oggi',scoredesc:'Completa sessioni e attività<br>per aumentare il tuo punteggio',
       streak:'Serie Settimanale',streakcta:'Studia oggi per mantenere la serie! 🔥',
@@ -2084,39 +1989,8 @@ const T={
       notif:'Notifica alla fine',perm:'🔔 Attiva avvisi',permok:'✅ Avvisi attivi',
       alarm:'Suono sveglia',alarmbrowse:'Cambia suono',
       copy:'📋 Copia',save:'⬇ Salva .txt',clear:'🗑 Cancella',
-      smin:'min',seslbl:'Sessione di',remaining:'rimanente',
-      adLabel:'Pubblicità',adSidebar:'Spazio pubblicitario',trackDefault:'Seleziona un brano',
-      completedWord:'completate',wordSingular:'parola',wordPlural:'parole',autosaved:'salvataggio automatico',
-      notesSaved:'✓ Salvato',notesSaving:'...',confirmClearNotes:'Cancellare tutte le note?',
-      settingsTitle:'⚙️ Impostazioni',bgThemeLbl:'🖼 Tema di sfondo',bgUpload:'Carica una tua immagine',bgUploadLocked:'Si sblocca a 50 giorni',bgReset:'↺ Ripristina',
-      bgVideoUpload:'Carica un tuo video',bgVideoUploadLocked:'Si sblocca a 100 giorni',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Aiutaci a migliorare Focus-Tap con il tuo feedback anonimo. Richiede solo 2 minuti.',feedbackBtn:'📝 Apri modulo',
-      accountTitle:'👤 Account · Sincronizzazione',accountDesc:'Crea un account gratuito per salvare la tua serie e il punteggio nel cloud e vederli da qualsiasi dispositivo.',
-      accEmailPh:'Email',accPassPh:'Password (min. 6)',accRegister:'✨ Crea account',accLogin:'🔑 Accedi',accLoggedAs:'✅ Connesso come:',accLogout:'🚪 Esci',
-      langTitle:'🌐 Lingua',breakFinished:'🔔 Pausa terminata!',stopAlarmBtn:'⏹ Ferma allarme',
-      libModalTitle:'🎵 Libreria Musicale',libEmpty:'← Seleziona una categoria',libChooseCat:'Scegli una categoria',libTracksWord:'brani',
-      alarmModalTitle:'🔔 Suono Sveglia',alarmForTimerTitle:'Allarme al termine della sessione',celebDismiss:'Via alla pausa! ☕',
-      celebCompleted:'Hai completato {mins} minuti di studio.',
-      themeLockTitle:'🔒 Si sblocca con {n} giorni di serie',themeLockTip:'🔒 "{label}" si sblocca a {n} giorni di serie (ne hai {have}).',themeLockToast:'🔒 Si sblocca con {n} giorni di serie',
-      bgUploadLockTip:'🔒 Potrai caricare una tua immagine raggiungendo {n} giorni consecutivi di serie (ne hai {have}).',bgUploadLockToast:'🔒 Ti servono {n} giorni consecutivi di serie per caricare una tua immagine',
-      bgVideoUploadLockTip:'🔒 Potrai caricare un tuo video raggiungendo {n} giorni consecutivi di serie (ne hai {have}).',bgVideoUploadLockToast:'🔒 Ti servono {n} giorni consecutivi di serie per caricare un tuo video',
-      imgTooBig:'⚠️ Immagine troppo grande',customBgApplied:'🖼 Sfondo personalizzato applicato',
-      videoTooBig:'⚠️ Video troppo grande da salvare',customVideoApplied:'🎬 Video di sfondo applicato (in loop e senza audio)',
-      modeOff:'Modalità disattivata',modeDeepOn:'🎯 Modalità Focus — Niente distrazioni!',modeProdOn:'⚡ Modalità Produttività attivata',
-      pausedBreath:'In pausa — Fai un respiro profondo',autoPauseWarn:'⚠️ Pausa automatica! Torna a studiare',penaltyPrefix:'⏱ Penalità: +{s}s',
-      chooseATrack:'Scegli una canzone 🎵',notesEmpty:'Le note sono vuote',notesCopied:'📋 Note copiate',notesDownloading:'⬇ Scaricamento note...',notesDeleted:'🗑 Note eliminate',
-      notifEnabled:'🔔 Notifiche attivate',notifDenied:'⚠️ Permesso negato — suonerà solo la sveglia',
-      accNeedFirebase:'⚠️ Configura prima Firebase (vedi istruzioni)',accValidation:'Email valida e password di 6+ caratteri.',
-      accCreated:'✅ Account creato e connesso',accLoggedInToast:'✅ Connesso',accLoggedOutToast:'👋 Disconnesso',
-      errEmailInUse:'Questa email ha già un account. Prova ad accedere.',errInvalidEmail:'Email non valida.',errWeakPass:'La password deve avere 6+ caratteri.',errBadCreds:'Email o password errati.',errGeneric:'Errore: ',
-      cloudSynced:'☁️ Dati sincronizzati dal cloud',cloudNewAccount:'☁️ Nuovo account — si parte da zero',cloudSyncErr:'⚠️ Errore di sincronizzazione con il cloud',
-      prioHigh:'🔴 Alta',prioMed:'🟡 Media',prioLow:'🟢 Bassa'},
+      smin:'min',seslbl:'Sessione di'},
 };
-
-function tr(key){
-  const t=T[currentLang]||T.es;
-  return (t&&t[key]!==undefined)?t[key]:(T.es[key]!==undefined?T.es[key]:'');
-}
 
 let currentLang='es';
 function setLang(lang,btn){
@@ -2138,7 +2012,6 @@ function setLang(lang,btn){
   document.querySelectorAll('.stat-lbl')[1].innerText=t.s2;
   document.querySelectorAll('.stat-lbl')[2].innerText=t.s3;
   document.querySelector('.btn-library').innerHTML=`<span>🎵</span> ${t.lib} <span class="lib-arrow">›</span>`;
-  document.getElementById('txt-remaining').innerText=t.remaining;
   // Tasks
   document.querySelectorAll('.section-title').forEach(el=>{
     const txt=el.textContent;
@@ -2147,13 +2020,10 @@ function setLang(lang,btn){
     if(txt.match(/Puntuac|Score|Punkte|Punteggi/i)) el.innerHTML=`<span class="dot"></span> ${t.score}`;
     if(txt.match(/Racha|Streak|Série|Serie/i)) el.innerHTML=`<span class="dot mint"></span> ${t.streak}`;
   });
-  document.getElementById('opt-high').innerText=t.prioHigh;
-  document.getElementById('opt-med').innerText=t.prioMed;
-  document.getElementById('opt-low').innerText=t.prioLow;
   document.getElementById('task-in').placeholder=t.taskph;
   document.getElementById('notes').placeholder=t.notesph;
-  document.getElementById('txt-score-desc').innerHTML=t.scoredesc;
-  document.getElementById('txt-streak-cta').innerText=t.streakcta;
+  document.querySelector('.sidebar-card:nth-child(1) div[style*="font-size"]').innerHTML=t.scoredesc;
+  document.getElementById('streak-row').nextElementSibling.innerText=t.streakcta;
   // Break
   document.querySelector('.break-card .section-title').innerHTML=t.brk;
   document.querySelector('.break-label').innerText=t.brklbl;
@@ -2162,62 +2032,11 @@ function setLang(lang,btn){
   document.querySelector('[onclick="resetBreak()"]').innerText=t.brkreset;
   const pb=document.getElementById('perm-btn');
   if(!pb.disabled) pb.innerText=t.perm; else pb.innerText=t.permok;
-  document.getElementById('txt-notif-lbl').innerText=t.notif;
-  document.getElementById('txt-alarmsound-lbl').innerText=t.alarm;
   document.querySelector('.btn-alarm-browse').innerHTML=`<span>🔔</span> ${t.alarmbrowse} <span class="lib-arrow">›</span>`;
-  document.getElementById('timer-alarm-btn').title=t.alarmForTimerTitle;
-  document.getElementById('txt-break-finished').innerText=t.breakFinished;
-  document.getElementById('txt-stop-alarm').innerText=t.stopAlarmBtn;
   // Notes buttons
   document.querySelectorAll('[onclick="copyNotes()"]').forEach(b=>b.innerText=t.copy);
   document.querySelectorAll('[onclick="downloadNotes()"]').forEach(b=>b.innerText=t.save);
   document.querySelectorAll('[onclick="clearNotes()"]').forEach(b=>b.innerText=t.clear);
-  document.getElementById('save-indicator').innerText=t.notesSaved;
-  // Ads
-  document.getElementById('txt-ad-label-1').innerText=t.adLabel;
-  document.getElementById('txt-ad-label-2').innerText=t.adLabel;
-  document.getElementById('txt-ad-sidebar').innerText=t.adSidebar;
-  // Music default track name (only if nothing is playing yet)
-  if(!currentGenre) document.getElementById('track-name').innerText=t.trackDefault;
-  // Settings panel
-  document.getElementById('txt-settings-title').innerText=t.settingsTitle;
-  document.getElementById('txt-bgtheme-lbl').innerText=t.bgThemeLbl;
-  document.getElementById('txt-bg-reset').innerText=t.bgReset;
-  document.getElementById('txt-feedback-lbl').innerText=t.feedbackLbl;
-  document.getElementById('txt-feedback-desc').innerText=t.feedbackDesc;
-  document.getElementById('txt-feedback-btn').innerText=t.feedbackBtn;
-  // Account panel
-  document.getElementById('txt-account-title').innerText=t.accountTitle;
-  document.getElementById('txt-account-desc').innerText=t.accountDesc;
-  document.getElementById('acc-email').placeholder=t.accEmailPh;
-  document.getElementById('acc-pass').placeholder=t.accPassPh;
-  document.getElementById('txt-register-btn').innerText=t.accRegister;
-  document.getElementById('txt-login-btn').innerText=t.accLogin;
-  document.getElementById('txt-logged-as').innerText=t.accLoggedAs;
-  document.getElementById('txt-logout-btn').innerText=t.accLogout;
-  // Language panel title
-  document.getElementById('txt-lang-title').innerText=t.langTitle;
-  // Rebuild dynamic pieces that depend on the language
-  buildStreak();
-  buildAccordion();
-  updateTaskProgress();
-  updateNotesMeta();
-  updateCustomBgLockUI();
-  buildThemeSwatches();
-  const savedA=selectedAlarm; selectAlarm(savedA);
-  if(document.getElementById('library-modal').classList.contains('open')){
-    document.getElementById('txt-libmodal-title').innerText=t.libModalTitle;
-    if(libActiveGenre) showLibGenre(libActiveGenre); else document.getElementById('txt-lib-empty').innerText=t.libEmpty;
-  } else {
-    document.getElementById('txt-libmodal-title').innerText=t.libModalTitle;
-  }
-  if(document.getElementById('alarm-modal').classList.contains('open')){
-    document.getElementById('txt-alarmmodal-title').innerText=t.alarmModalTitle;
-    buildAlarmModal();
-  } else {
-    document.getElementById('txt-alarmmodal-title').innerText=t.alarmModalTitle;
-  }
-  document.getElementById('txt-celeb-dismiss').innerText=t.celebDismiss;
   localStorage.setItem('ft-lang',lang);
   // Refresh the rotating quote in the new language, right away, without waiting for the rotation timer
   quoteIdx=quoteIdx%getQuotes().length;
@@ -2235,37 +2054,16 @@ function reattachMinInput(){
 //  CELEBRATION
 // ══════════════════════════════════════
 const CONFETTI_COLORS=['#7986cb','#4db6ac','#f48fb1','#ffcc80','#a5d6a7','#ce93d8','#80deea'];
-const CELEB_MSGS_I18N={
-  es:[['¡Sesión Completada! 🎉','Has terminado tu sesión. ¡Sigue así, campeón! 🐼✨'],
-      ['¡Increíble! 🚀','Otro bloque en el bolsillo. ¡Estás imparable!'],
-      ['¡Lo has conseguido! 🏆','Cada sesión te acerca más a tu objetivo. ¡Orgulloso!'],
-      ['¡Panda Feliz! 🐼','El esfuerzo constante siempre da frutos. ¡Descansa!']],
-  en:[['Session Complete! 🎉','You finished your session. Keep it up, champion! 🐼✨'],
-      ['Amazing! 🚀','Another block in the bag. You\'re unstoppable!'],
-      ['You did it! 🏆','Every session brings you closer to your goal. Proud of you!'],
-      ['Happy Panda! 🐼','Steady effort always pays off. Enjoy your break!']],
-  fr:[['Session terminée ! 🎉','Tu as fini ta session. Continue comme ça, champion ! 🐼✨'],
-      ['Incroyable ! 🚀','Un autre bloc dans la poche. Tu es imparable !'],
-      ['Tu l\'as fait ! 🏆','Chaque session te rapproche de ton objectif. Fier de toi !'],
-      ['Panda heureux ! 🐼','L\'effort constant paie toujours. Profite de ta pause !']],
-  de:[['Sitzung abgeschlossen! 🎉','Du hast deine Sitzung beendet. Weiter so, Champion! 🐼✨'],
-      ['Unglaublich! 🚀','Noch ein Block geschafft. Du bist nicht zu stoppen!'],
-      ['Du hast es geschafft! 🏆','Jede Sitzung bringt dich deinem Ziel näher. Stolz auf dich!'],
-      ['Glücklicher Panda! 🐼','Beständiger Einsatz zahlt sich immer aus. Genieße deine Pause!']],
-  pt:[['Sessão concluída! 🎉','Você terminou sua sessão. Continue assim, campeão! 🐼✨'],
-      ['Incrível! 🚀','Mais um bloco no bolso. Você é imparável!'],
-      ['Você conseguiu! 🏆','Cada sessão te aproxima do seu objetivo. Orgulho de você!'],
-      ['Panda feliz! 🐼','O esforço constante sempre dá frutos. Aproveite a pausa!']],
-  it:[['Sessione completata! 🎉','Hai finito la tua sessione. Continua così, campione! 🐼✨'],
-      ['Incredibile! 🚀','Un altro blocco in tasca. Sei inarrestabile!'],
-      ['Ce l\'hai fatta! 🏆','Ogni sessione ti avvicina al tuo obiettivo. Sono fiero di te!'],
-      ['Panda felice! 🐼','Lo sforzo costante paga sempre. Goditi la pausa!']],
-};
+const CELEB_MSGS=[
+  ['¡Sesión Completada! 🎉','Has terminado tu sesión. ¡Sigue así, campeón! 🐼✨'],
+  ['¡Increíble! 🚀','Otro bloque en el bolsillo. ¡Estás imparable!'],
+  ['¡Lo has conseguido! 🏆','Cada sesión te acerca más a tu objetivo. ¡Orgulloso!'],
+  ['¡Panda Feliz! 🐼','El esfuerzo constante siempre da frutos. ¡Descansa!'],
+];
 function launchCelebration(mins){
-  const list=CELEB_MSGS_I18N[currentLang]||CELEB_MSGS_I18N.es;
-  const[title,sub]=list[Math.floor(Math.random()*list.length)];
+  const[title,sub]=CELEB_MSGS[Math.floor(Math.random()*CELEB_MSGS.length)];
   document.getElementById('celeb-title').innerText=title;
-  document.getElementById('celeb-sub').innerText=`${tr('celebCompleted').replace('{mins}',mins)}\n${sub}`;
+  document.getElementById('celeb-sub').innerText=`Has completado ${mins} minutos de estudio.\n${sub}`;
   document.getElementById('celebration').classList.add('show');
   spawnConfetti();
 }
@@ -2293,48 +2091,18 @@ const firebaseConfig = {
   measurementId: "G-SEMGRT1WLG"
 };
 
-let firebaseReady=false, currentUser=null, cloudSyncEnabled=false, syncTimeout=null, guestSnapshot=null;
+let firebaseReady=false, currentUser=null, cloudSyncEnabled=false, syncTimeout=null;
 try{
   if(firebaseConfig.apiKey!=="TU_API_KEY"){
     firebase.initializeApp(firebaseConfig);
     firebaseReady=true;
     firebase.auth().onAuthStateChanged(async (user)=>{
-      if(user){
-        if(!guestSnapshot) guestSnapshot=captureGuestSnapshot(); // remember local/guest progress so we can restore it on logout
-        currentUser=user; cloudSyncEnabled=true; updateAccountUI();
-        await loadCloudData(user.uid);
-      } else {
-        currentUser=null; cloudSyncEnabled=false; updateAccountUI();
-        if(guestSnapshot){ restoreGuestSnapshot(guestSnapshot); guestSnapshot=null; }
-      }
+      currentUser=user; updateAccountUI();
+      if(user){ cloudSyncEnabled=true; await loadCloudData(user.uid); }
+      else cloudSyncEnabled=false;
     });
   }
 }catch(e){ console.warn('Firebase no configurado todavía:',e); }
-
-// Snapshot of whatever streak/score/tasks/notes existed before switching into an account,
-// so each account keeps its OWN racha/puntuación, isolated from other accounts and from guest mode.
-function captureGuestSnapshot(){
-  return {
-    sessions: parseInt(localStorage.getItem('ft-sessions')||'0'),
-    totalMin: parseInt(localStorage.getItem('ft-totalmin')||'0'),
-    streakDays: JSON.parse(localStorage.getItem('ft-streak')||'[]'),
-    tasks: JSON.parse(localStorage.getItem('ft-tasks')||'[]'),
-    notesVal: localStorage.getItem('ft-notes')||''
-  };
-}
-function applyAccountState(sessions,totalMin,streak){
-  sessionsDone=sessions;
-  localStorage.setItem('ft-sessions',sessionsDone);
-  localStorage.setItem('ft-totalmin',totalMin);
-  streakDays=streak||[];
-  localStorage.setItem('ft-streak',JSON.stringify(streakDays));
-  updateStats(); buildStreak(); updateScore(); buildThemeSwatches();
-}
-function restoreGuestSnapshot(snap){
-  applyAccountState(snap.sessions,snap.totalMin,snap.streakDays);
-  tasks=snap.tasks; localStorage.setItem('ft-tasks',JSON.stringify(tasks)); renderTasks();
-  notes.value=snap.notesVal; localStorage.setItem('ft-notes',notes.value);
-}
 
 function updateAccountUI(){
   const out=document.getElementById('account-logged-out'), inEl=document.getElementById('account-logged-in');
@@ -2347,32 +2115,32 @@ function updateAccountUI(){
 }
 
 function doRegister(){
-  if(!firebaseReady) return showToast(tr('accNeedFirebase'));
+  if(!firebaseReady) return showToast('⚠️ Configura Firebase primero (ver instrucciones)');
   const email=document.getElementById('acc-email').value.trim();
   const pass=document.getElementById('acc-pass').value;
-  if(!email||pass.length<6) return document.getElementById('acc-msg').innerText=tr('accValidation');
+  if(!email||pass.length<6) return document.getElementById('acc-msg').innerText='Email válido y contraseña de 6+ caracteres.';
   firebase.auth().createUserWithEmailAndPassword(email,pass)
-    .then(()=>{ showToast(tr('accCreated')); toggleAccountPanel(); })
+    .then(()=>{ showToast('✅ Cuenta creada y sesión iniciada'); toggleAccountPanel(); })
     .catch(err=>document.getElementById('acc-msg').innerText=translateFirebaseError(err));
 }
 function doLogin(){
-  if(!firebaseReady) return showToast(tr('accNeedFirebase'));
+  if(!firebaseReady) return showToast('⚠️ Configura Firebase primero (ver instrucciones)');
   const email=document.getElementById('acc-email').value.trim();
   const pass=document.getElementById('acc-pass').value;
   firebase.auth().signInWithEmailAndPassword(email,pass)
-    .then(()=>{ showToast(tr('accLoggedInToast')); toggleAccountPanel(); })
+    .then(()=>{ showToast('✅ Sesión iniciada'); toggleAccountPanel(); })
     .catch(err=>document.getElementById('acc-msg').innerText=translateFirebaseError(err));
 }
 function doLogout(){
-  firebase.auth().signOut().then(()=>showToast(tr('accLoggedOutToast')));
+  firebase.auth().signOut().then(()=>showToast('👋 Sesión cerrada'));
 }
 function translateFirebaseError(err){
   const code=err.code||'';
-  if(code.includes('email-already-in-use')) return tr('errEmailInUse');
-  if(code.includes('invalid-email')) return tr('errInvalidEmail');
-  if(code.includes('weak-password')) return tr('errWeakPass');
-  if(code.includes('user-not-found')||code.includes('wrong-password')||code.includes('invalid-credential')) return tr('errBadCreds');
-  return tr('errGeneric')+err.message;
+  if(code.includes('email-already-in-use')) return 'Ese email ya tiene una cuenta. Prueba a iniciar sesión.';
+  if(code.includes('invalid-email')) return 'Email no válido.';
+  if(code.includes('weak-password')) return 'La contraseña debe tener 6+ caracteres.';
+  if(code.includes('user-not-found')||code.includes('wrong-password')||code.includes('invalid-credential')) return 'Email o contraseña incorrectos.';
+  return 'Error: '+err.message;
 }
 
 async function loadCloudData(uid){
@@ -2380,34 +2148,36 @@ async function loadCloudData(uid){
     const doc=await firebase.firestore().collection('users').doc(uid).get();
     if(doc.exists){
       const d=doc.data();
-      const sessions=(d.date===TODAY)?(d.sessions||0):0;
-      const totalMin=(d.date===TODAY)?(d.totalMin||0):0;
-      applyAccountState(sessions,totalMin,d.streakDays||[]);
-      if(typeof d.consecutiveStreak==='number'){ consecutiveStreak=d.consecutiveStreak; localStorage.setItem('ft-consecutive',consecutiveStreak); }
-      if(typeof d.lastStudyDate==='string'){ lastStudyDate=d.lastStudyDate; localStorage.setItem('ft-laststudy',lastStudyDate); }
-      if(Array.isArray(d.unlockedThemes)){ unlockedThemes=d.unlockedThemes; localStorage.setItem('ft-unlocked-themes',JSON.stringify(unlockedThemes)); }
-      if(d.customImgUnlocked){ customImgUnlocked=true; localStorage.setItem('ft-custom-img-unlocked','1'); }
-      checkPermanentUnlocks();
-      buildStreak(); buildThemeSwatches();
-      if(Array.isArray(d.tasks)){ tasks=d.tasks; localStorage.setItem('ft-tasks',JSON.stringify(tasks)); renderTasks(); }
-      if(typeof d.notes==='string'){ notes.value=d.notes; localStorage.setItem('ft-notes',notes.value); }
+      if(d.date===TODAY){
+        sessionsDone=d.sessions||0;
+        localStorage.setItem('ft-sessions',sessionsDone);
+        localStorage.setItem('ft-totalmin',d.totalMin||0);
+      }
+      streakDays=d.streakDays||streakDays;
+      if(Array.isArray(d.tasks)) tasks=d.tasks;
+      if(typeof d.notes==='string') notes.value=d.notes;
+      localStorage.setItem('ft-tasks',JSON.stringify(tasks));
+      localStorage.setItem('ft-streak',JSON.stringify(streakDays));
       if(d.alarm) selectAlarm(d.alarm);
       if(d.bgKey){ const sw=document.querySelector(`[data-bg="${d.bgKey}"]`); setBg(d.bgKey,sw); }
       if(d.lang){ const btn=document.getElementById(`lang-${d.lang}`); setLang(d.lang,btn); }
-      showToast(tr('cloudSynced'));
+      // Restaurar tienda
+      if(typeof d.coins==='number') coins=d.coins;
+      if(d.coinDay) localStorage.setItem('ft-coin-day',d.coinDay);
+      coinEarnedToday=d.coinDay===TODAY;
+      if(Array.isArray(d.ownedItems)) ownedItems=d.ownedItems;
+      if(d.activeItems) activeItems={...activeItems,...d.activeItems};
+      localStorage.setItem('ft-coins',coins);
+      localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
+      localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
+      updateCoinDisplay();
+      applyActiveItems();
+      updateStats(); buildStreak(); renderTasks(); updateScore(); buildThemeSwatches();
+      showToast('☁️ Datos sincronizados desde la nube');
     } else {
-      // Brand-new account: start this account from a clean zero, never from guest/leftover progress
-      applyAccountState(0,0,[]);
-      consecutiveStreak=0; lastStudyDate=''; unlockedThemes=[]; customImgUnlocked=false;
-      localStorage.setItem('ft-consecutive','0'); localStorage.setItem('ft-laststudy','');
-      localStorage.setItem('ft-unlocked-themes','[]'); localStorage.removeItem('ft-custom-img-unlocked');
-      buildStreak(); buildThemeSwatches();
-      tasks=[]; localStorage.setItem('ft-tasks','[]'); renderTasks();
-      notes.value=''; localStorage.setItem('ft-notes','');
       await saveCloudDataNow();
-      showToast(tr('cloudNewAccount'));
     }
-  }catch(e){ console.error(e); showToast(tr('cloudSyncErr')); }
+  }catch(e){ console.error(e); showToast('⚠️ Error al sincronizar con la nube'); }
 }
 
 async function saveCloudDataNow(){
@@ -2418,15 +2188,16 @@ async function saveCloudDataNow(){
       sessions:sessionsDone,
       totalMin:parseInt(localStorage.getItem('ft-totalmin')||'0'),
       streakDays,
-      consecutiveStreak,
-      lastStudyDate,
-      unlockedThemes,
-      customImgUnlocked,
       tasks,
       notes:notes.value,
       alarm:selectedAlarm,
       bgKey:localStorage.getItem('ft-bg-key')||'lofi',
       lang:currentLang,
+      // Tienda
+      coins,
+      coinDay:localStorage.getItem('ft-coin-day')||'',
+      ownedItems,
+      activeItems,
       updatedAt: firebase.firestore.FieldValue.serverTimestamp()
     },{merge:true});
   }catch(e){ console.error(e); }
@@ -2441,7 +2212,6 @@ function saveCloudData(){
 //  INIT
 // ══════════════════════════════════════
 updateClock(); updateStats(); buildStreak(); renderTasks(); updateScore(); buildAccordion();
-checkPermanentUnlocks(); // por si ya se cumplía el hito antes de esta actualización
 buildThemeSwatches(); // build theme grid with unlock state
 
 // Restore alarm selection
@@ -2450,8 +2220,6 @@ if(savedAlarm&&ALARMS.find(a=>a.id===savedAlarm)) selectAlarm(savedAlarm);
 
 // Restore background
 (()=>{
-  const vid=localStorage.getItem('ft-bg-video');
-  if(vid){ applyCustomVideoBg(vid); return; }
   const img=localStorage.getItem('ft-bg-img');
   if(img){ applyCustomBg(img); return; }
   const key=localStorage.getItem('ft-bg-key')||'lofi';
