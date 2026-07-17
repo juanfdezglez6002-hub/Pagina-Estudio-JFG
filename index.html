@@ -594,7 +594,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
   <div class="panda-logo">🐼</div>
   <h1 class="logo-text">Focus·Tap</h1>
   <button class="coin-display" onclick="openShop()" title="Tienda de personalización">
-    🪙 <span id="coin-count">0</span>
+    <span style="font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;">🪙</span> <span id="coin-count">0</span>
   </button>
 </header>
 
@@ -834,7 +834,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
   <div class="shop-panel">
     <div class="shop-header">
       <div class="shop-title">🏪 Tienda Focus-Tap</div>
-      <div class="shop-balance">🪙 <span id="shop-coin-count">0</span> monedas</div>
+      <div class="shop-balance"><span style="font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',sans-serif;">🪙</span> <span id="shop-coin-count">0</span> monedas</div>
       <button class="lib-close" onclick="closeShop()">✕</button>
     </div>
     <div class="shop-body">
@@ -1492,15 +1492,30 @@ function buildAlarmModal(){
   ALARMS.forEach(a=>{
     const meta=alarmMeta(a.id);
     const isSel=a.id===selectedAlarm;
+    const isPremium=!!a.shopId;
+    const isOwned=!isPremium||ownedItems.includes(a.shopId);
     const row=document.createElement('div');
     row.className='alarm-row'+(isSel?' selected':'');
     row.id='amr-'+a.id;
-    row.innerHTML=`
-      <span class="alarm-row-icon">${a.icon}</span>
-      <div class="alarm-row-info"><div class="alarm-row-name">${meta.name}</div><div class="alarm-row-desc">${meta.desc}</div></div>
-      <button class="alarm-preview-btn" onclick="previewAlarm('${a.id}',event)">▶</button>
-      <span class="alarm-row-check">${isSel?'✓':''}</span>`;
-    row.onclick=e=>{ if(!e.target.classList.contains('alarm-preview-btn')) selectAlarm(a.id); };
+    if(!isOwned){
+      // Sonido premium no comprado: mostrar bloqueado con redirección a tienda
+      row.style.opacity='0.5';
+      row.innerHTML=`
+        <span class="alarm-row-icon">${a.icon}</span>
+        <div class="alarm-row-info">
+          <div class="alarm-row-name">${meta.name} <span style="font-size:0.62rem;font-weight:800;padding:2px 7px;background:rgba(121,134,203,0.15);border-radius:8px;color:var(--accent2);">🔒 Tienda</span></div>
+          <div class="alarm-row-desc">${meta.desc}</div>
+        </div>
+        <span class="alarm-row-check"></span>`;
+      row.onclick=()=>{ closeAlarmModal(); openShop(); };
+    } else {
+      row.innerHTML=`
+        <span class="alarm-row-icon">${a.icon}</span>
+        <div class="alarm-row-info"><div class="alarm-row-name">${meta.name}</div><div class="alarm-row-desc">${meta.desc}</div></div>
+        <button class="alarm-preview-btn" onclick="previewAlarm('${a.id}',event)">▶</button>
+        <span class="alarm-row-check">${isSel?'✓':''}</span>`;
+      row.onclick=e=>{ if(!e.target.classList.contains('alarm-preview-btn')) selectAlarm(a.id); };
+    }
     list.appendChild(row);
   });
 }
@@ -1671,6 +1686,13 @@ function tryEarnCoin(){
 function applyPalette(id){
   const item=SHOP_CATALOGUE.palettes.find(p=>p.id===id); if(!item) return;
   Object.entries(item.vars).forEach(([k,v])=>document.documentElement.style.setProperty(k,v));
+  // Actualizar también el gradiente SVG del anillo del timer (sus colores son hardcoded)
+  const stops=document.querySelectorAll('#ringGrad stop');
+  if(stops[0]) stops[0].setAttribute('stop-color', item.vars['--accent2']||'#7986cb');
+  if(stops[1]) stops[1].setAttribute('stop-color', item.vars['--mint2'] ||'#4db6ac');
+  if(stops[2]) stops[2].setAttribute('stop-color', item.vars['--rose']  ||'#f48fb1');
+  // Sincronizar --accent con --accent2 para elementos que usen la variable ligera
+  document.documentElement.style.setProperty('--accent', item.vars['--accent2']||'#9fa8da');
   activeItems.palette=id;
   localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
 }
