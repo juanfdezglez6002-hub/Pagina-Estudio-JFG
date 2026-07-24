@@ -1719,14 +1719,40 @@ function applyEffect(id){
   const root=document.documentElement;
   ['--glass','--card-radius','--border','--shadow'].forEach(k=>root.style.removeProperty(k));
   if(item.vars) Object.entries(item.vars).forEach(([k,v])=>root.style.setProperty(k,v));
-  // Neon Glow: inyectar box-shadow real que CSS vars no pueden hacer solos
-  let glowTag=document.getElementById('fx-neon-style');
-  if(item.glow){
-    if(!glowTag){glowTag=document.createElement('style');glowTag.id='fx-neon-style';document.head.appendChild(glowTag);}
-    glowTag.textContent='.card,.sidebar-card{box-shadow:0 0 18px rgba(0,255,200,0.3),0 0 45px rgba(0,180,255,0.12)!important;}';
-  } else if(glowTag){
-    glowTag.textContent='';
+
+  // Limpiar estilos inyectados de efectos anteriores
+  ['fx-neon-style','fx-frosted-style'].forEach(sid=>{
+    const el=document.getElementById(sid); if(el) el.textContent='';
+  });
+
+  if(id==='fx-frosted'){
+    // Bordes con gradiente de los colores actuales de la paleta — muy vibrantes
+    let tag=document.getElementById('fx-frosted-style');
+    if(!tag){tag=document.createElement('style');tag.id='fx-frosted-style';document.head.appendChild(tag);}
+    tag.textContent=`
+      .card,.sidebar-card{
+        border:2.5px solid transparent!important;
+        background:
+          linear-gradient(rgba(255,255,255,0.95),rgba(255,255,255,0.95)) padding-box,
+          linear-gradient(135deg,var(--accent2),var(--mint2),var(--rose),var(--accent2)) border-box!important;
+      }`;
   }
+
+  if(id==='fx-neon'){
+    // Borde neón real con glow interior y exterior
+    let tag=document.getElementById('fx-neon-style');
+    if(!tag){tag=document.createElement('style');tag.id='fx-neon-style';document.head.appendChild(tag);}
+    tag.textContent=`
+      .card,.sidebar-card{
+        border:1.5px solid rgba(0,255,200,0.9)!important;
+        box-shadow:
+          0 0 6px rgba(0,255,200,0.9),
+          0 0 18px rgba(0,255,200,0.5),
+          0 0 40px rgba(0,200,255,0.25),
+          inset 0 0 12px rgba(0,255,200,0.08)!important;
+      }`;
+  }
+
   activeItems.effect=id;
   localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
 }
