@@ -296,6 +296,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:15px;widt
 .ad-label{font-size:0.58rem;text-transform:uppercase;letter-spacing:2px;color:var(--text2);opacity:0.5;white-space:nowrap;}
 .ad-slot{flex:1;text-align:center;color:var(--text2);font-size:0.72rem;opacity:0.4;letter-spacing:1px;}
 
+/* ── AD: celebration slot ── */
+.ad-celeb{margin:18px 0;border:1px dashed rgba(120,140,180,0.35);background:rgba(120,140,180,0.06);border-radius:12px;padding:12px;text-align:center;color:var(--text2);opacity:0.55;font-size:0.66rem;letter-spacing:1.5px;text-transform:uppercase;}
+
+/* ── AD: corner notification ── */
+.ad-corner{position:fixed;bottom:18px;right:18px;width:230px;z-index:9080;background:rgba(248,251,255,0.97);backdrop-filter:blur(16px);border:1px dashed var(--border2);border-radius:14px;box-shadow:0 12px 32px rgba(61,79,107,0.2);padding:12px 14px;opacity:0;pointer-events:none;transform:translateY(16px);transition:opacity 0.35s,transform 0.35s;}
+.ad-corner.show{opacity:1;pointer-events:all;transform:translateY(0);}
+.ad-corner-close{position:absolute;top:6px;right:8px;background:none;border:none;color:var(--text2);opacity:0.5;cursor:pointer;font-size:0.85rem;}
+.ad-corner-close:hover{opacity:1;}
+.ad-corner-body{color:var(--text2);opacity:0.55;font-size:0.66rem;letter-spacing:1.5px;text-transform:uppercase;text-align:center;padding-top:6px;}
+
 /* ── TASKS ── */
 .section-title{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:13px;display:flex;align-items:center;gap:9px;}
 .section-title .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);display:inline-block;}
@@ -453,7 +463,35 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:rgba(100,120,160,0.15);border-radius:10px;}
 
 /* ── RESPONSIVE ── */
-@media(max-width:960px){.main{grid-template-columns:1fr;}.top-row{grid-template-columns:1fr;}.right{display:none;}}
+@media(max-width:960px){
+  .main{grid-template-columns:1fr;}
+  .top-row{grid-template-columns:1fr;}
+  .right{grid-row:auto;}
+}
+@media(max-width:600px){
+  header{margin-bottom:20px;flex-wrap:wrap;gap:10px;}
+  .logo-text{font-size:1.05rem;letter-spacing:4px;}
+  #settings-wrap{top:12px;right:12px;gap:6px;}
+  .gear-btn,.lang-float-btn{width:36px;height:36px;}
+  .settings-panel{width:min(290px,88vw);right:-4px;}
+  .lang-float-panel{width:min(200px,80vw);right:-4px;}
+  .card{padding:16px 18px;}
+  .card-sm{padding:14px;}
+  .ring-container{width:150px;height:150px;}
+  .progress-ring{width:150px;height:150px;}
+  .timer-actions{flex-wrap:wrap;}
+  .modes{flex-wrap:wrap;}
+  .btn-mode{min-width:45%;}
+  .stats-row{flex-wrap:wrap;}
+  .stat-chip{min-width:28%;}
+  .task-input-row{flex-wrap:wrap;}
+  .priority-sel{width:100%;}
+  .ad-banner{flex-wrap:wrap;text-align:center;justify-content:center;}
+  .ad-corner{right:10px;bottom:10px;width:min(220px,72vw);}
+  .lib-panel,.shop-panel{width:94vw;max-height:85vh;}
+  .lib-body{flex-direction:column;}
+  .lib-genres{width:100%;border-right:none;border-bottom:1px solid var(--border2);max-height:140px;}
+}
 @media(max-width:480px){.clock{font-size:44px;}.card{padding:14px 16px;}}
 /* ── TIENDA ── */
 .coin-display{
@@ -522,10 +560,6 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
   <!-- Language float button -->
   <button class="lang-float-btn" id="lang-float-btn" onclick="toggleLangPanel()" title="Idioma">🌐</button>
-
-  <!-- ═══════════ DEBUG BUTTON — TEMPORAL, el usuario pedirá quitarlo más adelante ═══════════ -->
-  <button class="lang-float-btn" id="debug-streak-btn" onclick="toggleDebugStreak()" title="DEBUG: racha infinita (para probar temas)">🧪</button>
-  <!-- ═══════════ FIN DEBUG BUTTON ═══════════ -->
 
   <!-- Settings panel (Background + Feedback only) -->
   <div class="settings-panel" id="settings-panel">
@@ -848,7 +882,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
     </div>
     <div class="shop-body">
       <div class="shop-earn-tip">
-        <span class="coin-badge" style="vertical-align:middle;margin-right:4px;">C</span> Ganas <strong>1 moneda</strong> cada día que alcances el <strong>100% de puntuación</strong> (90 min de estudio). Las monedas se guardan en tu cuenta y nunca caducan.
+        <span class="coin-badge" style="vertical-align:middle;margin-right:4px;">C</span> Ganas monedas por tramos de estudio cada día: <strong>1ª moneda a los 30 min</strong>, <strong>2ª a los 90 min</strong> y <strong>3ª a los 150 min</strong>. Hasta 3 monedas al día. Las monedas se guardan en tu cuenta y nunca caducan.
       </div>
       <div class="shop-section-title">🎨 Paletas de color</div>
       <div class="shop-grid" id="shop-palettes"></div>
@@ -865,10 +899,15 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
     <span class="celeb-emoji">🎉</span>
     <div class="celeb-title" id="celeb-title">¡Sesión Completada!</div>
     <div class="celeb-sub" id="celeb-sub">Has terminado tu sesión de estudio.<br>¡Eres increíble, sigue así! 🐼✨</div>
+    <div class="ad-celeb" id="txt-ad-celeb">Anuncio</div>
     <button class="celeb-dismiss" id="txt-celeb-dismiss" onclick="closeCelebration()">¡A por el descanso! ☕</button>
   </div>
 </div>
 <div id="toast"></div>
+<div class="ad-corner" id="ad-corner">
+  <button class="ad-corner-close" id="ad-corner-close" title="Cerrar">✕</button>
+  <div class="ad-corner-body" id="txt-ad-corner">Anuncio</div>
+</div>
 <audio id="player"></audio>
 
 <!-- ══════ FIREBASE SDK (compat) ══════ -->
@@ -1080,6 +1119,7 @@ if(localStorage.getItem('ft-date') !== TODAY){
   localStorage.setItem('ft-date', TODAY);
   localStorage.setItem('ft-sessions','0');
   localStorage.setItem('ft-totalmin','0');
+  localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:[]}));
 }
 function getWeekId(){
   const d=new Date();
@@ -1111,9 +1151,6 @@ let unlockedThemes=JSON.parse(localStorage.getItem('ft-unlocked-themes')||'[]');
 let customImgUnlocked=localStorage.getItem('ft-custom-img-unlocked')==='1';
 let customVideoUnlocked=localStorage.getItem('ft-custom-video-unlocked')==='1';
 
-// ═══ DEBUG: bandera de "racha infinita" para probar temas (TEMPORAL — quitar cuando lo pida el usuario) ═══
-let debugInfiniteStreak=false;
-// ═══ FIN DEBUG flag ═══
 let breakLeft=5*60, breakDuration=5*60, breakRunning=false, breakInterval=null;
 let quoteIdx=0, quoteAutoTimer=null;
 let currentGenre=null, trackIdx=0;
@@ -1125,6 +1162,8 @@ let coins=parseInt(localStorage.getItem('ft-coins')||'0');
 let ownedItems=JSON.parse(localStorage.getItem('ft-owned-items')||'["pal-default","fx-none","snd-beep","snd-bell","snd-pulse","snd-chime","snd-urgent"]');
 let activeItems=JSON.parse(localStorage.getItem('ft-active-items')||'{"palette":"pal-default","effect":"fx-none"}');
 let coinEarnedToday=localStorage.getItem('ft-coin-day')===TODAY;
+// Tramos de moneda diaria ya cobrados hoy (índices de COIN_TIERS), persistidos como {date,tiers}
+let coinTiersEarnedToday=(()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.tiers:[]; }catch(e){ return []; } })();
 let alarmCtx=null, alarmNodes=[], alarmLoop=null;
 
 // ══════════════════════════════════════
@@ -1557,7 +1596,7 @@ function selectAlarm(id){
 function previewAlarm(type,evt){ if(evt) evt.stopPropagation(); playAlarmOnce(type); }
 function previewAlarmCurrent(evt){ if(evt) evt.stopPropagation(); playAlarmOnce(selectedAlarm); }
 
-function buildPattern(ctx,type,startAt){
+function buildPatternBase(ctx,type,startAt){
   const nodes=[];
   function tone(freq,start,dur,wave='sine',vol=0.35){
     const osc=ctx.createOscillator(),gain=ctx.createGain();
@@ -1605,21 +1644,21 @@ function fireBreakNotification(){
 const SHOP_CATALOGUE = {
   palettes:[
     { id:'pal-default', name:'Lofi Blue',      price:0, preview:'🔵', vars:{'--accent2':'#7986cb','--mint2':'#4db6ac','--rose':'#f48fb1'} },
-    { id:'pal-rose',    name:'Cherry Blossom', price:3, preview:'🌸', vars:{'--accent2':'#e91e8c','--mint2':'#f06292','--rose':'#f48fb1'} },
-    { id:'pal-forest',  name:'Forest Green',   price:3, preview:'🌲', vars:{'--accent2':'#388e3c','--mint2':'#66bb6a','--rose':'#a5d6a7'} },
-    { id:'pal-sunset',  name:'Sunset',          price:4, preview:'🌅', vars:{'--accent2':'#f57c00','--mint2':'#ffa726','--rose':'#ff8a65'} },
-    { id:'pal-ocean',   name:'Deep Ocean',      price:4, preview:'🌊', vars:{'--accent2':'#0288d1','--mint2':'#00acc1','--rose':'#80deea'} },
-    { id:'pal-grape',   name:'Grape',            price:5, preview:'🍇', vars:{'--accent2':'#7b1fa2','--mint2':'#ab47bc','--rose':'#ce93d8'} },
-    { id:'pal-gold',    name:'Gold & Noir',      price:7, preview:'⭐', vars:{'--accent2':'#f9a825','--mint2':'#ffb300','--rose':'#ffe082'} },
-    { id:'pal-mono',    name:'Monochrome',       price:7, preview:'🖤', vars:{'--accent2':'#455a64','--mint2':'#607d8b','--rose':'#90a4ae'} },
+    { id:'pal-rose',    name:'Cherry Blossom', price:7, preview:'🌸', vars:{'--accent2':'#e91e8c','--mint2':'#f06292','--rose':'#f48fb1'} },
+    { id:'pal-forest',  name:'Forest Green',   price:7, preview:'🌲', vars:{'--accent2':'#388e3c','--mint2':'#66bb6a','--rose':'#a5d6a7'} },
+    { id:'pal-sunset',  name:'Sunset',          price:9, preview:'🌅', vars:{'--accent2':'#f57c00','--mint2':'#ffa726','--rose':'#ff8a65'} },
+    { id:'pal-ocean',   name:'Deep Ocean',      price:9, preview:'🌊', vars:{'--accent2':'#0288d1','--mint2':'#00acc1','--rose':'#80deea'} },
+    { id:'pal-grape',   name:'Grape',            price:11, preview:'🍇', vars:{'--accent2':'#7b1fa2','--mint2':'#ab47bc','--rose':'#ce93d8'} },
+    { id:'pal-gold',    name:'Gold & Noir',      price:16, preview:'⭐', vars:{'--accent2':'#f9a825','--mint2':'#ffb300','--rose':'#ffe082'} },
+    { id:'pal-mono',    name:'Monochrome',       price:16, preview:'🖤', vars:{'--accent2':'#455a64','--mint2':'#607d8b','--rose':'#90a4ae'} },
   ],
   effects:[
     { id:'fx-none',    name:'Estándar',       price:0, preview:'🪟', vars:{'--glass':'rgba(255,255,255,0.6)','--card-radius':'24px','--border':'rgba(255,255,255,0.85)','--shadow':'rgba(120,140,180,0.12)'} },
-    { id:'fx-frosted', name:'Muy Esmerilado', price:4, preview:'❄️', vars:{'--glass':'rgba(255,255,255,0.96)','--card-radius':'30px','--border':'rgba(255,255,255,1)','--shadow':'rgba(120,140,180,0.05)'} },
-    { id:'fx-sharp',   name:'Sharp Glass',    price:4, preview:'💎', vars:{'--glass':'rgba(255,255,255,0.18)','--card-radius':'4px','--border':'rgba(255,255,255,0.4)','--shadow':'rgba(0,0,0,0.28)'} },
-    { id:'fx-warm',    name:'Warm Paper',     price:5, preview:'📄', vars:{'--glass':'rgba(255,243,210,0.93)','--card-radius':'16px','--border':'rgba(210,170,100,0.5)','--shadow':'rgba(140,90,30,0.14)'} },
-    { id:'fx-dark',    name:'Dark Cards',     price:6, preview:'🌑', vars:{'--glass':'rgba(20,28,45,0.75)','--card-radius':'24px','--border':'rgba(255,255,255,0.1)','--shadow':'rgba(0,0,0,0.35)'} },
-    { id:'fx-neon',    name:'Neon Glow',      price:8, preview:'🌈', vars:{'--glass':'rgba(5,5,20,0.80)','--card-radius':'20px','--border':'rgba(0,255,200,0.45)','--shadow':'rgba(0,255,200,0.12)'}, glow:true },
+    { id:'fx-frosted', name:'Muy Esmerilado', price:9, preview:'❄️', vars:{'--glass':'rgba(255,255,255,0.96)','--card-radius':'30px','--border':'rgba(255,255,255,1)','--shadow':'rgba(120,140,180,0.05)'} },
+    { id:'fx-sharp',   name:'Sharp Glass',    price:9, preview:'💎', vars:{'--glass':'rgba(255,255,255,0.18)','--card-radius':'4px','--border':'rgba(255,255,255,0.4)','--shadow':'rgba(0,0,0,0.28)'} },
+    { id:'fx-warm',    name:'Warm Paper',     price:11, preview:'📄', vars:{'--glass':'rgba(255,243,210,0.93)','--card-radius':'16px','--border':'rgba(210,170,100,0.5)','--shadow':'rgba(140,90,30,0.14)'} },
+    { id:'fx-dark',    name:'Dark Cards',     price:13, preview:'🌑', vars:{'--glass':'rgba(20,28,45,0.75)','--card-radius':'24px','--border':'rgba(255,255,255,0.1)','--shadow':'rgba(0,0,0,0.35)'} },
+    { id:'fx-neon',    name:'Neon Glow',      price:17, preview:'🌈', vars:{'--glass':'rgba(5,5,20,0.80)','--card-radius':'20px','--border':'rgba(0,255,200,0.45)','--shadow':'rgba(0,255,200,0.12)'}, glow:true },
   ],
   sounds:[
     { id:'snd-beep',    name:'Beep clásico',  price:0, preview:'📳', alarmId:'beep' },
@@ -1627,9 +1666,9 @@ const SHOP_CATALOGUE = {
     { id:'snd-pulse',   name:'Pulso digital',  price:0, preview:'📡', alarmId:'pulse' },
     { id:'snd-chime',   name:'Carillón',        price:0, preview:'🎵', alarmId:'chime' },
     { id:'snd-urgent',  name:'Urgente',          price:0, preview:'🚨', alarmId:'urgent' },
-    { id:'snd-crystal', name:'Cristal',          price:4, preview:'💎', alarmId:'crystal' },
-    { id:'snd-gentle',  name:'Gentle Wake',     price:4, preview:'🌅', alarmId:'gentle' },
-    { id:'snd-melody',  name:'Melodía',          price:6, preview:'🎶', alarmId:'melody' },
+    { id:'snd-crystal', name:'Cristal',          price:9, preview:'💎', alarmId:'crystal' },
+    { id:'snd-gentle',  name:'Gentle Wake',     price:9, preview:'🌅', alarmId:'gentle' },
+    { id:'snd-melody',  name:'Melodía',          price:13, preview:'🎶', alarmId:'melody' },
   ],
 };
 
@@ -1660,14 +1699,13 @@ const PREMIUM_ALARM_PATTERNS = {
   },
 };
 
-// Extender buildPattern para soportar sonidos premium
-const _origBuildPattern=buildPattern;
+// buildPattern: sonidos gratuitos (buildPatternBase) + sonidos premium (PREMIUM_ALARM_PATTERNS)
 function buildPattern(ctx,type,startAt){
   if(PREMIUM_ALARM_PATTERNS[type]){
     PREMIUM_ALARM_PATTERNS[type](ctx,startAt);
     return [{end:startAt+1.5}];
   }
-  return _origBuildPattern(ctx,type,startAt);
+  return buildPatternBase(ctx,type,startAt);
 }
 
 function updateCoinDisplay(){
@@ -1677,16 +1715,31 @@ function updateCoinDisplay(){
   if(sc) sc.innerText=coins;
 }
 
+// Tramos de recompensa diaria: cada tramo otorga +1 moneda al alcanzarlo por primera vez hoy.
+// 30 min → 1ª moneda · 90 min → 2ª moneda · 150 min → 3ª moneda.
+const COIN_TIERS=[
+  {min:30},
+  {min:90},
+  {min:150},
+];
+
 function tryEarnCoin(){
-  if(coinEarnedToday) return;
   const totalMin=parseInt(localStorage.getItem('ft-totalmin')||'0');
-  if(totalMin>=90){
-    coins++;
-    coinEarnedToday=true;
+  let earned=0;
+  COIN_TIERS.forEach((tier,idx)=>{
+    if(totalMin>=tier.min && !coinTiersEarnedToday.includes(idx)){
+      coinTiersEarnedToday.push(idx);
+      earned++;
+    }
+  });
+  if(earned>0){
+    coins+=earned;
     localStorage.setItem('ft-coins',coins);
+    localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:coinTiersEarnedToday}));
     localStorage.setItem('ft-coin-day',TODAY);
+    coinEarnedToday=true;
     updateCoinDisplay();
-    showToast('★ +1 moneda — ¡Objetivo diario completado!');
+    showToast(earned>1?`★ +${earned} monedas — ¡Nuevo tramo diario alcanzado!`:'★ +1 moneda — ¡Nuevo tramo diario alcanzado!');
     saveCloudData();
   }
 }
@@ -1820,6 +1873,17 @@ function previewShopSound(alarmId,evt){
 // ══════════════════════════════════════
 let toastTimeout=null;
 function showToast(msg){ const t=document.getElementById('toast'); t.innerText=msg; t.style.opacity=1; clearTimeout(toastTimeout); toastTimeout=setTimeout(()=>t.style.opacity=0,3200); }
+
+// ══════════════════════════════════════
+//  AD: corner notification (placeholder)
+// ══════════════════════════════════════
+(function initCornerAd(){
+  const cornerAd=document.getElementById('ad-corner');
+  const closeBtn=document.getElementById('ad-corner-close');
+  if(!cornerAd||!closeBtn) return;
+  setTimeout(()=>cornerAd.classList.add('show'),6000);
+  closeBtn.addEventListener('click',()=>cornerAd.classList.remove('show'));
+})();
 
 // ══════════════════════════════════════
 //  SETTINGS — Gear / Background / Language
@@ -2015,7 +2079,6 @@ const THEMES = {
 const CUSTOM_IMG_UNLOCK=50; // días de racha real consecutivos necesarios para poder subir una imagen propia
 
 function getStreakCount(){
-  if(debugInfiniteStreak) return 9999; // ═══ DEBUG override — quitar junto con el resto del bloque debug ═══
   return consecutiveStreak;
 }
 
@@ -2082,34 +2145,6 @@ function updateCustomBgLockUI(){
     tipEl.innerText=tr('bgUploadLockTip').replace('{n}',CUSTOM_IMG_UNLOCK).replace('{have}',streak);
   }
 }
-
-// ═══════════ DEBUG: BOTÓN DE RACHA INFINITA (TEMPORAL — quitar cuando lo pida el usuario) ═══════════
-// Para quitarlo: borrar este bloque completo, la variable debugInfiniteStreak (arriba, en STATE),
-// el "if(debugInfiniteStreak) return 9999;" dentro de getStreakCount(), el botón #debug-streak-btn
-// del HTML, y su bloque de comentarios "DEBUG BUTTON" que lo envuelve.
-function toggleDebugStreak(){
-  debugInfiniteStreak=!debugInfiniteStreak;
-  const btn=document.getElementById('debug-streak-btn');
-  if(btn){
-    btn.classList.toggle('active',debugInfiniteStreak);
-    btn.style.background=debugInfiniteStreak?'var(--accent2)':'';
-    btn.style.color=debugInfiniteStreak?'white':'';
-  }
-  // Monedas infinitas en modo debug
-  if(debugInfiniteStreak){
-    coins=9999; localStorage.setItem('ft-coins',coins); updateCoinDisplay();
-  } else {
-    coins=parseInt(localStorage.getItem('ft-coins-real')||'0');
-    localStorage.setItem('ft-coins',coins); updateCoinDisplay();
-  }
-  // Guardar monedas reales antes de sobreescribir
-  if(debugInfiniteStreak) localStorage.setItem('ft-coins-real',localStorage.getItem('ft-coins')||'0');
-  buildThemeSwatches();
-  buildStreak();
-  updateStats();
-  showToast(debugInfiniteStreak?'🧪 Debug ACTIVADO — racha y monedas infinitas':'🧪 Debug DESACTIVADO — monedas reales restauradas');
-}
-// ═══════════ FIN DEBUG ═══════════
 
 function setBg(key,swatchEl){
   const th=THEMES[key]; if(!th) return;
@@ -2488,6 +2523,8 @@ function setLang(lang,btn){
   document.getElementById('txt-ad-label-1').innerText=t.adLabel;
   document.getElementById('txt-ad-label-2').innerText=t.adLabel;
   document.getElementById('txt-ad-sidebar').innerText=t.adSidebar;
+  const adCeleb=document.getElementById('txt-ad-celeb'); if(adCeleb) adCeleb.innerText=t.adLabel;
+  const adCorner=document.getElementById('txt-ad-corner'); if(adCorner) adCorner.innerText=t.adLabel;
   // Music default track name (only if nothing is playing yet)
   if(!currentGenre) document.getElementById('track-name').innerText=t.trackDefault;
   // Settings panel
@@ -2702,7 +2739,7 @@ async function loadCloudData(uid){
       if(typeof d.coins==='number'){ coins=d.coins; localStorage.setItem('ft-coins',coins); }
       if(Array.isArray(d.ownedItems)){ ownedItems=d.ownedItems; localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems)); }
       if(d.activeItems&&typeof d.activeItems==='object'){ activeItems=d.activeItems; localStorage.setItem('ft-active-items',JSON.stringify(activeItems)); }
-      if(typeof d.coinEarnedDay==='string'){ coinEarnedToday=(d.coinEarnedDay===TODAY); localStorage.setItem('ft-coin-day',d.coinEarnedDay); }
+      if(d.coinTiersEarnedDay&&typeof d.coinTiersEarnedDay==='object'){ coinTiersEarnedToday=(d.coinTiersEarnedDay.date===TODAY)?(d.coinTiersEarnedDay.tiers||[]):[]; localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:coinTiersEarnedToday})); }
       updateCoinDisplay(); applyActiveItems();
       checkPermanentUnlocks();
       buildStreak(); buildThemeSwatches();
@@ -2717,12 +2754,13 @@ async function loadCloudData(uid){
       applyAccountState(0,0,[]);
       consecutiveStreak=0; lastStudyDate=''; unlockedThemes=[]; customImgUnlocked=false;
       coins=0; ownedItems=['pal-default','fx-none','snd-beep','snd-bell','snd-pulse','snd-chime','snd-urgent'];
-      activeItems={palette:'pal-default',effect:'fx-none'}; coinEarnedToday=false;
+      activeItems={palette:'pal-default',effect:'fx-none'}; coinTiersEarnedToday=[];
       localStorage.setItem('ft-consecutive','0'); localStorage.setItem('ft-laststudy','');
       localStorage.setItem('ft-unlocked-themes','[]'); localStorage.removeItem('ft-custom-img-unlocked');
       localStorage.setItem('ft-coins','0');
       localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
       localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
+      localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:[]}));
       updateCoinDisplay(); applyActiveItems();
       buildStreak(); buildThemeSwatches();
       tasks=[]; localStorage.setItem('ft-tasks','[]'); renderTasks();
@@ -2748,7 +2786,7 @@ async function saveCloudDataNow(){
       coins,
       ownedItems,
       activeItems,
-      coinEarnedDay: coinEarnedToday ? TODAY : (localStorage.getItem('ft-coin-day')||''),
+      coinTiersEarnedDay:{date:TODAY,tiers:coinTiersEarnedToday},
       tasks,
       notes:notes.value,
       alarm:selectedAlarm,
