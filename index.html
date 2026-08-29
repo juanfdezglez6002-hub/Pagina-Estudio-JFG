@@ -357,7 +357,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;height:15px;widt
 .streak-row{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap;}
 .streak-day{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.4);border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:0.62rem;font-weight:700;color:var(--text2);transition:all 0.3s;}
 .streak-day.done{background:var(--accent2);border-color:var(--accent2);color:white;}
-.streak-day.today{background:var(--mint2);border-color:var(--mint2);color:white;}
+.streak-day.today{box-shadow:0 0 0 2.5px var(--mint2);border-color:var(--mint2);}
+.streak-day.today.done{background:var(--mint2);color:white;box-shadow:0 0 0 2.5px var(--mint2),0 0 0 5px rgba(77,182,172,0.25);}
 .score-ring{display:flex;justify-content:center;align-items:center;margin:10px 0;position:relative;}
 .score-val{position:absolute;text-align:center;font-size:1.4rem;font-weight:800;color:var(--accent2);line-height:1;}
 .score-lbl{font-size:0.58rem;color:var(--text2);margin-top:2px;}
@@ -1122,10 +1123,13 @@ if(localStorage.getItem('ft-date') !== TODAY){
   localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:[]}));
 }
 function getWeekId(){
+  // Semana alineada a lunes (igual que la fila L M X J V S D que se muestra),
+  // identificada por la fecha de su lunes. Antes usaba un cálculo estilo
+  // domingo-primero que reiniciaba la racha semanal un día antes de tiempo.
   const d=new Date();
-  const onejan=new Date(d.getFullYear(),0,1);
-  const week=Math.ceil((((d-onejan)/86400000)+onejan.getDay()+1)/7);
-  return `${d.getFullYear()}-${week}`;
+  const mondayIdx=(d.getDay()+6)%7; // Lunes=0 ... Domingo=6
+  const monday=new Date(d.getFullYear(), d.getMonth(), d.getDate()-mondayIdx);
+  return `${monday.getFullYear()}-${monday.getMonth()+1}-${monday.getDate()}`;
 }
 const CUR_WEEK_ID=getWeekId();
 if(localStorage.getItem('ft-week-id')!==CUR_WEEK_ID){
@@ -1285,7 +1289,10 @@ function buildStreak(){
   const today=(new Date().getDay()+6)%7;
   days.forEach((d,i)=>{
     const el=document.createElement('div');
-    el.className='streak-day'+(i===today?' today':streakDays.includes(i)?' done':'');
+    let cls='streak-day';
+    if(streakDays.includes(i)) cls+=' done';
+    if(i===today) cls+=' today';
+    el.className=cls;
     el.innerText=d; row.appendChild(el);
   });
 }
@@ -1305,6 +1312,22 @@ function markStreak(){
   buildStreak(); updateStats();
   checkPermanentUnlocks(); // registra desbloqueos alcanzados hoy, para siempre
   buildThemeSwatches(); // re-check unlocks when streak changes
+}
+
+// Comprueba si la racha ya se rompió desde la última vez que se estudió,
+// SIN esperar a que se complete una nueva sesión. Se llama al cargar la
+// página (y tras sincronizar con la nube) para que el número mostrado
+// nunca "mienta" mostrando una racha que en realidad ya está rota.
+function reconcileStreak(){
+  if(lastStudyDate && lastStudyDate!==TODAY){
+    const diff=daysBetween(lastStudyDate,TODAY);
+    if(diff>1 && consecutiveStreak!==0){
+      consecutiveStreak=0;
+      localStorage.setItem('ft-consecutive','0');
+    }
+  }
+  updateStats();
+  buildThemeSwatches();
 }
 
 // ══════════════════════════════════════
@@ -1758,10 +1781,16 @@ function applyPalette(id){
   // 4. Actualizar el arco del score (atributo SVG, no responde a CSS vars en todos los navegadores)
   const arc=document.getElementById('score-arc');
   if(arc) arc.setAttribute('stroke', item.vars['--accent2']||'#7986cb');
-  // 5. Actualizar streak dots activos
-  document.querySelectorAll('.streak-day.done,.streak-day.today').forEach(el=>{
-    el.style.background= el.classList.contains('today')?(item.vars['--mint2']||'#4db6ac'):(item.vars['--accent2']||'#7986cb');
-    el.style.borderColor= el.classList.contains('today')?(item.vars['--mint2']||'#4db6ac'):(item.vars['--accent2']||'#7986cb');
+  // 5. Actualizar días de racha activos (relleno = completado, anillo = día actual)
+  document.querySelectorAll('.streak-day.done').forEach(el=>{
+    el.style.background=item.vars['--accent2']||'#7986cb';
+    el.style.borderColor=item.vars['--accent2']||'#7986cb';
+  });
+  document.querySelectorAll('.streak-day.today').forEach(el=>{
+    const mint=item.vars['--mint2']||'#4db6ac';
+    el.style.boxShadow=`0 0 0 2.5px ${mint}`;
+    el.style.borderColor=mint;
+    if(el.classList.contains('done')) el.style.background=mint;
   });
   activeItems.palette=id;
   localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
@@ -1950,7 +1979,7 @@ const THEMES = {
     night:false
   },
   sakura:{
-    label:'Sakura', emoji:'🌸', unlock:2,
+    label:'Sakura', emoji:'🌸', unlock:3,
     swatch:'linear-gradient(135deg,#fce4ec 0%,#f8bbd0 45%,#ffccbc 100%)',
     bg:`radial-gradient(ellipse at 15% 5%,rgba(248,187,208,0.55) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 15%,rgba(255,204,188,0.35) 0%,transparent 50%),
@@ -1959,7 +1988,7 @@ const THEMES = {
     night:false
   },
   midnight:{
-    label:'Midnight', emoji:'🌙', unlock:3,
+    label:'Midnight', emoji:'🌙', unlock:5,
     swatch:'linear-gradient(135deg,#1a1a3e 0%,#2d1b5e 50%,#0f2040 100%)',
     bg:`radial-gradient(ellipse at 20% 10%,rgba(120,80,200,0.3) 0%,transparent 55%),
         radial-gradient(ellipse at 80% 5%,rgba(40,80,160,0.25) 0%,transparent 50%),
@@ -1968,7 +1997,7 @@ const THEMES = {
     night:true
   },
   forest:{
-    label:'Deep Forest', emoji:'🌲', unlock:4,
+    label:'Deep Forest', emoji:'🌲', unlock:7,
     swatch:'linear-gradient(135deg,#1b4332 0%,#2d6a4f 50%,#40916c 100%)',
     bg:`radial-gradient(ellipse at 10% 0%,rgba(64,145,108,0.35) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 20%,rgba(45,106,79,0.25) 0%,transparent 50%),
@@ -1977,7 +2006,7 @@ const THEMES = {
     night:false
   },
   ocean:{
-    label:'Deep Ocean', emoji:'🌊', unlock:5,
+    label:'Deep Ocean', emoji:'🌊', unlock:10,
     swatch:'linear-gradient(135deg,#0077b6 0%,#00b4d8 50%,#90e0ef 100%)',
     bg:`radial-gradient(ellipse at 15% 5%,rgba(0,180,216,0.35) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 15%,rgba(144,224,239,0.3) 0%,transparent 50%),
@@ -1986,7 +2015,7 @@ const THEMES = {
     night:false
   },
   golden:{
-    label:'Golden Hour', emoji:'🌅', unlock:6,
+    label:'Golden Hour', emoji:'🌅', unlock:14,
     swatch:'linear-gradient(135deg,#ff9f43 0%,#ffd32a 50%,#ff6b6b 100%)',
     bg:`radial-gradient(ellipse at 10% 5%,rgba(255,159,67,0.4) 0%,transparent 55%),
         radial-gradient(ellipse at 90% 10%,rgba(255,211,42,0.3) 0%,transparent 50%),
@@ -1995,7 +2024,7 @@ const THEMES = {
     night:false
   },
   neon:{
-    label:'Neon Night', emoji:'⚡', unlock:7,
+    label:'Neon Night', emoji:'⚡', unlock:18,
     swatch:'linear-gradient(135deg,#0f0f1a 0%,#1a0533 50%,#001a33 100%)',
     bg:`radial-gradient(ellipse at 15% 10%,rgba(0,255,200,0.15) 0%,transparent 50%),
         radial-gradient(ellipse at 85% 5%,rgba(160,0,255,0.2) 0%,transparent 50%),
@@ -2003,8 +2032,17 @@ const THEMES = {
         linear-gradient(155deg,#080818 0%,#100020 50%,#040c18 100%)`,
     night:true
   },
+  lavender:{
+    label:'Lavender Fields', emoji:'💜', unlock:22,
+    swatch:'linear-gradient(135deg,#e9d5ff 0%,#c084fc 50%,#a855f7 100%)',
+    bg:`radial-gradient(ellipse at 10% 5%,rgba(192,132,252,0.4) 0%,transparent 55%),
+        radial-gradient(ellipse at 85% 15%,rgba(168,85,247,0.25) 0%,transparent 50%),
+        radial-gradient(ellipse at 50% 90%,rgba(139,92,246,0.15) 0%,transparent 50%),
+        linear-gradient(155deg,#f5f3ff 0%,#ede9fe 50%,#faf5ff 100%)`,
+    night:false
+  },
   desert:{
-    label:'Desert Dune', emoji:'🏜', unlock:10,
+    label:'Desert Dune', emoji:'🏜', unlock:27,
     swatch:'linear-gradient(135deg,#e0a458 0%,#c97b3c 50%,#8a5a3b 100%)',
     bg:`radial-gradient(ellipse at 10% 10%,rgba(224,164,88,0.35) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 15%,rgba(201,123,60,0.25) 0%,transparent 50%),
@@ -2013,7 +2051,7 @@ const THEMES = {
     night:false
   },
   aurora:{
-    label:'Aurora', emoji:'🌌', unlock:15,
+    label:'Aurora', emoji:'🌌', unlock:33,
     swatch:'linear-gradient(135deg,#0f2027 0%,#2c5364 45%,#4ade80 100%)',
     bg:`radial-gradient(ellipse at 15% 5%,rgba(74,222,128,0.2) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 10%,rgba(56,189,248,0.22) 0%,transparent 50%),
@@ -2022,7 +2060,7 @@ const THEMES = {
     night:true
   },
   volcano:{
-    label:'Volcano', emoji:'🌋', unlock:21,
+    label:'Volcano', emoji:'🌋', unlock:40,
     swatch:'linear-gradient(135deg,#1a1a1a 0%,#7f1d1d 50%,#f97316 100%)',
     bg:`radial-gradient(ellipse at 15% 10%,rgba(249,115,22,0.3) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 20%,rgba(127,29,29,0.35) 0%,transparent 50%),
@@ -2031,7 +2069,7 @@ const THEMES = {
     night:true
   },
   glacier:{
-    label:'Glacier', emoji:'🧊', unlock:30,
+    label:'Glacier', emoji:'🧊', unlock:48,
     swatch:'linear-gradient(135deg,#e0f7fa 0%,#80deea 50%,#4fc3f7 100%)',
     bg:`radial-gradient(ellipse at 10% 5%,rgba(128,222,234,0.4) 0%,transparent 55%),
         radial-gradient(ellipse at 90% 15%,rgba(79,195,247,0.3) 0%,transparent 50%),
@@ -2039,17 +2077,8 @@ const THEMES = {
         linear-gradient(155deg,#f0fbff 0%,#e0f7fa 50%,#eafdff 100%)`,
     night:false
   },
-  lavender:{
-    label:'Lavender Fields', emoji:'💜', unlock:10,
-    swatch:'linear-gradient(135deg,#e9d5ff 0%,#c084fc 50%,#a855f7 100%)',
-    bg:`radial-gradient(ellipse at 10% 5%,rgba(192,132,252,0.4) 0%,transparent 55%),
-        radial-gradient(ellipse at 85% 15%,rgba(168,85,247,0.25) 0%,transparent 50%),
-        radial-gradient(ellipse at 50% 90%,rgba(139,92,246,0.15) 0%,transparent 50%),
-        linear-gradient(155deg,#f5f3ff 0%,#ede9fe 50%,#faf5ff 100%)`,
-    night:false
-  },
   vintage:{
-    label:'Vintage Paper', emoji:'📜', unlock:30,
+    label:'Vintage Paper', emoji:'📜', unlock:60,
     swatch:'linear-gradient(135deg,#92400e 0%,#b45309 50%,#d97706 100%)',
     bg:`radial-gradient(ellipse at 10% 5%,rgba(180,83,9,0.2) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 15%,rgba(217,119,6,0.15) 0%,transparent 50%),
@@ -2058,7 +2087,7 @@ const THEMES = {
     night:false
   },
   cyberpunk:{
-    label:'Cyberpunk', emoji:'🤖', unlock:45,
+    label:'Cyberpunk', emoji:'🤖', unlock:75,
     swatch:'linear-gradient(135deg,#0a0a0a 0%,#ff0080 50%,#00ffff 100%)',
     bg:`radial-gradient(ellipse at 10% 20%,rgba(255,0,128,0.25) 0%,transparent 50%),
         radial-gradient(ellipse at 90% 10%,rgba(0,255,255,0.2) 0%,transparent 50%),
@@ -2067,7 +2096,7 @@ const THEMES = {
     night:true
   },
   legend:{
-    label:'Leyenda Dorada', emoji:'👑', unlock:50, custom:true,
+    label:'Leyenda Dorada', emoji:'👑', unlock:90, custom:true,
     swatch:'linear-gradient(135deg,#fff8dc 0%,#ffd700 45%,#b8860b 100%)',
     bg:`radial-gradient(ellipse at 15% 5%,rgba(255,215,0,0.35) 0%,transparent 55%),
         radial-gradient(ellipse at 85% 10%,rgba(184,134,11,0.25) 0%,transparent 50%),
@@ -2730,9 +2759,10 @@ async function loadCloudData(uid){
       const d=doc.data();
       const sessions=(d.date===TODAY)?(d.sessions||0):0;
       const totalMin=(d.date===TODAY)?(d.totalMin||0):0;
-      applyAccountState(sessions,totalMin,d.streakDays||[]);
+      applyAccountState(sessions,totalMin,(d.weekId===CUR_WEEK_ID)?(d.streakDays||[]):[]);
       if(typeof d.consecutiveStreak==='number'){ consecutiveStreak=d.consecutiveStreak; localStorage.setItem('ft-consecutive',consecutiveStreak); }
       if(typeof d.lastStudyDate==='string'){ lastStudyDate=d.lastStudyDate; localStorage.setItem('ft-laststudy',lastStudyDate); }
+      reconcileStreak(); // por si la racha ya se rompió desde el último guardado en la nube
       if(Array.isArray(d.unlockedThemes)){ unlockedThemes=d.unlockedThemes; localStorage.setItem('ft-unlocked-themes',JSON.stringify(unlockedThemes)); }
       if(d.customImgUnlocked){ customImgUnlocked=true; localStorage.setItem('ft-custom-img-unlocked','1'); }
       // Tienda
@@ -2779,6 +2809,7 @@ async function saveCloudDataNow(){
       sessions:sessionsDone,
       totalMin:parseInt(localStorage.getItem('ft-totalmin')||'0'),
       streakDays,
+      weekId:CUR_WEEK_ID,
       consecutiveStreak,
       lastStudyDate,
       unlockedThemes,
@@ -2806,6 +2837,7 @@ function saveCloudData(){
 //  INIT
 // ══════════════════════════════════════
 updateClock(); updateStats(); buildStreak(); renderTasks(); updateScore(); buildAccordion();
+reconcileStreak(); // corrige la racha mostrada si ya se rompió, sin esperar a la próxima sesión
 checkPermanentUnlocks();
 buildThemeSwatches();
 updateCoinDisplay();   // muestra las monedas actuales
