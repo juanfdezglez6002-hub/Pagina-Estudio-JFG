@@ -877,19 +877,19 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <div id="shop-modal" onclick="if(event.target===this)closeShop()">
   <div class="shop-panel">
     <div class="shop-header">
-      <div class="shop-title">🏪 Tienda Focus-Tap</div>
-      <div class="shop-balance"><span class="coin-badge">C</span> <span id="shop-coin-count">0</span> monedas</div>
+      <div class="shop-title" id="txt-shop-title">🏪 Tienda Focus-Tap</div>
+      <div class="shop-balance"><span class="coin-badge">C</span> <span id="shop-coin-count">0</span> <span id="txt-shop-coins-word">monedas</span></div>
       <button class="lib-close" onclick="closeShop()">✕</button>
     </div>
     <div class="shop-body">
-      <div class="shop-earn-tip">
+      <div class="shop-earn-tip" id="txt-shop-earn-tip">
         <span class="coin-badge" style="vertical-align:middle;margin-right:4px;">C</span> Ganas monedas por tramos de estudio cada día: <strong>1ª moneda a los 30 min</strong>, <strong>2ª a los 90 min</strong> y <strong>3ª a los 150 min</strong>. Hasta 3 monedas al día. Las monedas se guardan en tu cuenta y nunca caducan.
       </div>
-      <div class="shop-section-title">🎨 Paletas de color</div>
+      <div class="shop-section-title" id="txt-shop-sec-palettes">🎨 Paletas de color</div>
       <div class="shop-grid" id="shop-palettes"></div>
-      <div class="shop-section-title">✨ Efectos de tarjeta</div>
+      <div class="shop-section-title" id="txt-shop-sec-effects">✨ Efectos de tarjeta</div>
       <div class="shop-grid" id="shop-effects"></div>
-      <div class="shop-section-title">🔔 Sonidos premium</div>
+      <div class="shop-section-title" id="txt-shop-sec-sounds">🔔 Sonidos premium</div>
       <div class="shop-grid" id="shop-sounds"></div>
     </div>
   </div>
@@ -1219,7 +1219,7 @@ startBtn.onclick=()=>{
         localStorage.setItem('ft-totalmin',prev+mins);
         updateStats(); updateScore(); markStreak(); launchCelebration(mins);
         tryEarnCoin(); // comprueba si gana moneda hoy
-        playAlarmOnce(selectedAlarm); // alarm at session end
+        playAlarm(); // alarm at session end — en bucle hasta que se cierre la celebración
         saveCloudData();
         timerLeft=(parseInt(document.getElementById('m-in').value)||25)*60; updateClock();
       }
@@ -1646,10 +1646,11 @@ function playAlarmOnce(type){
   setTimeout(()=>ctx.close(),(maxEnd+0.3)*1000);
 }
 
+const ALARM_LOOP_GAP=3200; // ms entre repeticiones del bucle de alarma — pausado, no instantáneo, pero perceptible
 function playAlarm(){
   stopAlarm();
   alarmCtx=new(window.AudioContext||window.webkitAudioContext)();
-  function schedule(){ buildPattern(alarmCtx,selectedAlarm,alarmCtx.currentTime); alarmLoop=setTimeout(schedule,1600); }
+  function schedule(){ buildPattern(alarmCtx,selectedAlarm,alarmCtx.currentTime); alarmLoop=setTimeout(schedule,ALARM_LOOP_GAP); }
   schedule();
 }
 
@@ -1851,7 +1852,7 @@ function buildShop(){
   buildShopSection('shop-palettes','palettes',(item)=>{ applyPalette(item.id); saveCloudData(); buildShop(); });
   buildShopSection('shop-effects','effects',(item)=>{ applyEffect(item.id); saveCloudData(); buildShop(); });
   // Sonidos: comprar = tenerlo. La selección se hace desde el modal de alarma.
-  buildShopSection('shop-sounds','sounds',()=>{ showToast('✅ Sonido disponible en el selector de alarmas'); buildShop(); });
+  buildShopSection('shop-sounds','sounds',()=>{ showToast(tr('shopSoundAvailable')); buildShop(); });
 }
 
 function buildShopSection(gridId,section,onActivate){
@@ -1868,15 +1869,15 @@ function buildShopSection(gridId,section,onActivate){
     const canAfford=coins>=item.price;
     const div=document.createElement('div');
     div.className='shop-item'+(active?' active-item':owned?' owned':!canAfford?' cant-afford':'');
-    let badge=active?`<span class="shop-item-badge badge-active">Activo</span>`:owned?`<span class="shop-item-badge badge-owned">Tuyo</span>`:'';
-    let priceHtml=(owned||active)?'':(item.price===0?`<span class="shop-item-price" style="color:var(--mint2)">Gratis</span>`:`<span class="shop-item-price">C ${item.price}</span>`);
-    let previewBtn=section==='sounds'?`<br><button class="shop-preview-btn" onclick="previewShopSound('${item.alarmId}',event)">▶ Escuchar</button>`:'';
+    let badge=active?`<span class="shop-item-badge badge-active">${tr('shopBadgeActive')}</span>`:owned?`<span class="shop-item-badge badge-owned">${tr('shopBadgeOwned')}</span>`:'';
+    let priceHtml=(owned||active)?'':(item.price===0?`<span class="shop-item-price" style="color:var(--mint2)">${tr('shopFree')}</span>`:`<span class="shop-item-price">C ${item.price}</span>`);
+    let previewBtn=section==='sounds'?`<br><button class="shop-preview-btn" onclick="previewShopSound('${item.alarmId}',event)">▶ ${tr('shopListen')}</button>`:'';
     div.innerHTML=`${badge}<span class="shop-item-preview">${item.preview}</span><div class="shop-item-name">${item.name}</div>${priceHtml}${previewBtn}`;
     div.onclick=(e)=>{
       if(e.target.classList.contains('shop-preview-btn')) return;
       if(active) return;
       if(owned){ onActivate(item); return; }
-      if(!canAfford){ showToast(`Necesitas ${item.price} monedas (tienes ${coins})`); return; }
+      if(!canAfford){ showToast(tr('shopNeedCoins').replace('{price}',item.price).replace('{coins}',coins)); return; }
       coins-=item.price;
       localStorage.setItem('ft-coins',coins);
       ownedItems.push(item.id);
@@ -1884,7 +1885,7 @@ function buildShopSection(gridId,section,onActivate){
       updateCoinDisplay();
       saveCloudData();
       onActivate(item);
-      showToast(`✅ ¡${item.name} desbloqueado!`);
+      showToast(tr('shopUnlockedToast').replace('{name}',item.name));
     };
     grid.appendChild(div);
   });
@@ -2305,7 +2306,12 @@ const T={
       accCreated:'✅ Cuenta creada y sesión iniciada',accLoggedInToast:'✅ Sesión iniciada',accLoggedOutToast:'👋 Sesión cerrada',
       errEmailInUse:'Ese email ya tiene una cuenta. Prueba a iniciar sesión.',errInvalidEmail:'Email no válido.',errWeakPass:'La contraseña debe tener 6+ caracteres.',errBadCreds:'Email o contraseña incorrectos.',errGeneric:'Error: ',
       cloudSynced:'☁️ Datos sincronizados desde la nube',cloudNewAccount:'☁️ Cuenta nueva — empezando desde cero',cloudSyncErr:'⚠️ Error al sincronizar con la nube',
-      prioHigh:'🔴 Alta',prioMed:'🟡 Media',prioLow:'🟢 Baja'},
+      prioHigh:'🔴 Alta',prioMed:'🟡 Media',prioLow:'🟢 Baja',
+      shopTitle:'🏪 Tienda Focus-Tap',shopCoinsWord:'monedas',
+      shopEarnTip:'Ganas monedas por tramos de estudio cada día: <strong>1ª moneda a los 30 min</strong>, <strong>2ª a los 90 min</strong> y <strong>3ª a los 150 min</strong>. Hasta 3 monedas al día. Las monedas se guardan en tu cuenta y nunca caducan.',
+      shopSecPalettes:'🎨 Paletas de color',shopSecEffects:'✨ Efectos de tarjeta',shopSecSounds:'🔔 Sonidos premium',
+      shopBadgeActive:'Activo',shopBadgeOwned:'Tuyo',shopFree:'Gratis',shopListen:'Escuchar',
+      shopNeedCoins:'Necesitas {price} monedas (tienes {coins})',shopUnlockedToast:'✅ ¡{name} desbloqueado!',shopSoundAvailable:'✅ Sonido disponible en el selector de alarmas'},
   en:{start:'▶ Start',pause:'⏸ Pause',resume:'▶ Resume',reset:'↺ Reset',deep:'🎯 Focus Mode',prod:'⚡ Productivity',
       s1:'Sessions today',s2:'Min focused',s3:'Day streak',lib:'Browse Library',
       tasks:'Study Goals',taskph:'+ New task... press Enter',notes:'Quick Notes',notesph:'Dump your thoughts here...',
@@ -2341,7 +2347,12 @@ const T={
       accCreated:'✅ Account created and logged in',accLoggedInToast:'✅ Logged in',accLoggedOutToast:'👋 Logged out',
       errEmailInUse:'That email already has an account. Try logging in.',errInvalidEmail:'Invalid email.',errWeakPass:'Password must be 6+ characters.',errBadCreds:'Incorrect email or password.',errGeneric:'Error: ',
       cloudSynced:'☁️ Data synced from the cloud',cloudNewAccount:'☁️ New account — starting fresh',cloudSyncErr:'⚠️ Error syncing with the cloud',
-      prioHigh:'🔴 High',prioMed:'🟡 Medium',prioLow:'🟢 Low'},
+      prioHigh:'🔴 High',prioMed:'🟡 Medium',prioLow:'🟢 Low',
+      shopTitle:'🏪 Focus-Tap Shop',shopCoinsWord:'coins',
+      shopEarnTip:'You earn coins in daily study tiers: <strong>1st coin at 30 min</strong>, <strong>2nd at 90 min</strong> and <strong>3rd at 150 min</strong>. Up to 3 coins a day. Coins are saved to your account and never expire.',
+      shopSecPalettes:'🎨 Color palettes',shopSecEffects:'✨ Card effects',shopSecSounds:'🔔 Premium sounds',
+      shopBadgeActive:'Active',shopBadgeOwned:'Owned',shopFree:'Free',shopListen:'Listen',
+      shopNeedCoins:'You need {price} coins (you have {coins})',shopUnlockedToast:'✅ {name} unlocked!',shopSoundAvailable:'✅ Sound available in the alarm picker'},
   fr:{start:'▶ Démarrer',pause:'⏸ Pause',resume:'▶ Reprendre',reset:'↺ Réinitialiser',deep:'🎯 Mode Focus',prod:'⚡ Productivité',
       s1:'Sessions auj.',s2:'Min concentré',s3:'Jours streak',lib:'Bibliothèque',
       tasks:'Objectifs d\'étude',taskph:'+ Nouvelle tâche... Entrée',notes:'Notes rapides',notesph:'Videz vos pensées ici...',
@@ -2377,7 +2388,12 @@ const T={
       accCreated:'✅ Compte créé et connecté',accLoggedInToast:'✅ Connecté',accLoggedOutToast:'👋 Déconnecté',
       errEmailInUse:'Cet email a déjà un compte. Essaie de te connecter.',errInvalidEmail:'Email invalide.',errWeakPass:'Le mot de passe doit avoir 6+ caractères.',errBadCreds:'Email ou mot de passe incorrect.',errGeneric:'Erreur : ',
       cloudSynced:'☁️ Données synchronisées depuis le cloud',cloudNewAccount:'☁️ Nouveau compte — on repart de zéro',cloudSyncErr:'⚠️ Erreur de synchronisation avec le cloud',
-      prioHigh:'🔴 Élevée',prioMed:'🟡 Moyenne',prioLow:'🟢 Basse'},
+      prioHigh:'🔴 Élevée',prioMed:'🟡 Moyenne',prioLow:'🟢 Basse',
+      shopTitle:'🏪 Boutique Focus-Tap',shopCoinsWord:'pièces',
+      shopEarnTip:'Tu gagnes des pièces par paliers d\'étude chaque jour : <strong>1ère pièce à 30 min</strong>, <strong>2ème à 90 min</strong> et <strong>3ème à 150 min</strong>. Jusqu\'à 3 pièces par jour. Les pièces sont sauvegardées sur ton compte et n\'expirent jamais.',
+      shopSecPalettes:'🎨 Palettes de couleurs',shopSecEffects:'✨ Effets de carte',shopSecSounds:'🔔 Sons premium',
+      shopBadgeActive:'Actif',shopBadgeOwned:'À toi',shopFree:'Gratuit',shopListen:'Écouter',
+      shopNeedCoins:'Il te faut {price} pièces (tu en as {coins})',shopUnlockedToast:'✅ {name} débloqué !',shopSoundAvailable:'✅ Son disponible dans le sélecteur d\'alarme'},
   de:{start:'▶ Starten',pause:'⏸ Pause',resume:'▶ Fortsetzen',reset:'↺ Zurücksetzen',deep:'🎯 Fokusmodus',prod:'⚡ Produktivität',
       s1:'Sitzungen heute',s2:'Min fokussiert',s3:'Tage-Streak',lib:'Bibliothek',
       tasks:'Lernziele',taskph:'+ Neue Aufgabe... Enter',notes:'Schnellnotizen',notesph:'Schreibe deine Gedanken hier...',
@@ -2413,7 +2429,12 @@ const T={
       accCreated:'✅ Konto erstellt und angemeldet',accLoggedInToast:'✅ Angemeldet',accLoggedOutToast:'👋 Abgemeldet',
       errEmailInUse:'Diese E-Mail hat bereits ein Konto. Versuche dich anzumelden.',errInvalidEmail:'Ungültige E-Mail.',errWeakPass:'Das Passwort muss 6+ Zeichen haben.',errBadCreds:'E-Mail oder Passwort falsch.',errGeneric:'Fehler: ',
       cloudSynced:'☁️ Daten aus der Cloud synchronisiert',cloudNewAccount:'☁️ Neues Konto — wir starten bei null',cloudSyncErr:'⚠️ Fehler bei der Cloud-Synchronisierung',
-      prioHigh:'🔴 Hoch',prioMed:'🟡 Mittel',prioLow:'🟢 Niedrig'},
+      prioHigh:'🔴 Hoch',prioMed:'🟡 Mittel',prioLow:'🟢 Niedrig',
+      shopTitle:'🏪 Focus-Tap Shop',shopCoinsWord:'Münzen',
+      shopEarnTip:'Du verdienst Münzen in täglichen Lernstufen: <strong>1. Münze bei 30 Min</strong>, <strong>2. bei 90 Min</strong> und <strong>3. bei 150 Min</strong>. Bis zu 3 Münzen pro Tag. Münzen werden in deinem Konto gespeichert und verfallen nie.',
+      shopSecPalettes:'🎨 Farbpaletten',shopSecEffects:'✨ Karteneffekte',shopSecSounds:'🔔 Premium-Sounds',
+      shopBadgeActive:'Aktiv',shopBadgeOwned:'Dein',shopFree:'Kostenlos',shopListen:'Anhören',
+      shopNeedCoins:'Du brauchst {price} Münzen (du hast {coins})',shopUnlockedToast:'✅ {name} freigeschaltet!',shopSoundAvailable:'✅ Sound in der Alarmauswahl verfügbar'},
   pt:{start:'▶ Começar',pause:'⏸ Pausar',resume:'▶ Retomar',reset:'↺ Reiniciar',deep:'🎯 Modo Foco',prod:'⚡ Produtividade',
       s1:'Sessões hoje',s2:'Min focado',s3:'Dias seguidos',lib:'Biblioteca',
       tasks:'Metas de Estudo',taskph:'+ Nova tarefa... Enter',notes:'Notas Rápidas',notesph:'Escreva seus pensamentos aqui...',
@@ -2449,7 +2470,12 @@ const T={
       accCreated:'✅ Conta criada e sessão iniciada',accLoggedInToast:'✅ Sessão iniciada',accLoggedOutToast:'👋 Sessão encerrada',
       errEmailInUse:'Esse email já tem uma conta. Tente entrar.',errInvalidEmail:'Email inválido.',errWeakPass:'A senha deve ter 6+ caracteres.',errBadCreds:'Email ou senha incorretos.',errGeneric:'Erro: ',
       cloudSynced:'☁️ Dados sincronizados da nuvem',cloudNewAccount:'☁️ Conta nova — começando do zero',cloudSyncErr:'⚠️ Erro ao sincronizar com a nuvem',
-      prioHigh:'🔴 Alta',prioMed:'🟡 Média',prioLow:'🟢 Baixa'},
+      prioHigh:'🔴 Alta',prioMed:'🟡 Média',prioLow:'🟢 Baixa',
+      shopTitle:'🏪 Loja Focus-Tap',shopCoinsWord:'moedas',
+      shopEarnTip:'Você ganha moedas por níveis de estudo a cada dia: <strong>1ª moeda aos 30 min</strong>, <strong>2ª aos 90 min</strong> e <strong>3ª aos 150 min</strong>. Até 3 moedas por dia. As moedas ficam salvas na sua conta e nunca expiram.',
+      shopSecPalettes:'🎨 Paletas de cores',shopSecEffects:'✨ Efeitos de cartão',shopSecSounds:'🔔 Sons premium',
+      shopBadgeActive:'Ativo',shopBadgeOwned:'Seu',shopFree:'Grátis',shopListen:'Ouvir',
+      shopNeedCoins:'Você precisa de {price} moedas (tem {coins})',shopUnlockedToast:'✅ {name} desbloqueado!',shopSoundAvailable:'✅ Som disponível no seletor de alarme'},
   it:{start:'▶ Inizia',pause:'⏸ Pausa',resume:'▶ Riprendi',reset:'↺ Reimposta',deep:'🎯 Modalità Focus',prod:'⚡ Produttività',
       s1:'Sessioni oggi',s2:'Min concentrato',s3:'Giorni streak',lib:'Libreria',
       tasks:'Obiettivi di Studio',taskph:'+ Nuova attività... Invio',notes:'Note Veloci',notesph:'Scrivi i tuoi pensieri qui...',
@@ -2485,7 +2511,12 @@ const T={
       accCreated:'✅ Account creato e connesso',accLoggedInToast:'✅ Connesso',accLoggedOutToast:'👋 Disconnesso',
       errEmailInUse:'Questa email ha già un account. Prova ad accedere.',errInvalidEmail:'Email non valida.',errWeakPass:'La password deve avere 6+ caratteri.',errBadCreds:'Email o password errati.',errGeneric:'Errore: ',
       cloudSynced:'☁️ Dati sincronizzati dal cloud',cloudNewAccount:'☁️ Nuovo account — si parte da zero',cloudSyncErr:'⚠️ Errore di sincronizzazione con il cloud',
-      prioHigh:'🔴 Alta',prioMed:'🟡 Media',prioLow:'🟢 Bassa'},
+      prioHigh:'🔴 Alta',prioMed:'🟡 Media',prioLow:'🟢 Bassa',
+      shopTitle:'🏪 Negozio Focus-Tap',shopCoinsWord:'monete',
+      shopEarnTip:'Guadagni monete per fasce di studio ogni giorno: <strong>1ª moneta a 30 min</strong>, <strong>2ª a 90 min</strong> e <strong>3ª a 150 min</strong>. Fino a 3 monete al giorno. Le monete restano salvate nel tuo account e non scadono mai.',
+      shopSecPalettes:'🎨 Palette di colori',shopSecEffects:'✨ Effetti carta',shopSecSounds:'🔔 Suoni premium',
+      shopBadgeActive:'Attivo',shopBadgeOwned:'Tuo',shopFree:'Gratis',shopListen:'Ascolta',
+      shopNeedCoins:'Ti servono {price} monete (ne hai {coins})',shopUnlockedToast:'✅ {name} sbloccato!',shopSoundAvailable:'✅ Suono disponibile nel selettore sveglia'},
 };
 
 function tr(key){
@@ -2554,6 +2585,14 @@ function setLang(lang,btn){
   document.getElementById('txt-ad-sidebar').innerText=t.adSidebar;
   const adCeleb=document.getElementById('txt-ad-celeb'); if(adCeleb) adCeleb.innerText=t.adLabel;
   const adCorner=document.getElementById('txt-ad-corner'); if(adCorner) adCorner.innerText=t.adLabel;
+  // Tienda
+  document.getElementById('txt-shop-title').innerText=t.shopTitle;
+  document.getElementById('txt-shop-coins-word').innerText=t.shopCoinsWord;
+  document.getElementById('txt-shop-earn-tip').innerHTML=`<span class="coin-badge" style="vertical-align:middle;margin-right:4px;">C</span> ${t.shopEarnTip}`;
+  document.getElementById('txt-shop-sec-palettes').innerText=t.shopSecPalettes;
+  document.getElementById('txt-shop-sec-effects').innerText=t.shopSecEffects;
+  document.getElementById('txt-shop-sec-sounds').innerText=t.shopSecSounds;
+  if(document.getElementById('shop-modal').classList.contains('open')) buildShop();
   // Music default track name (only if nothing is playing yet)
   if(!currentGenre) document.getElementById('track-name').innerText=t.trackDefault;
   // Settings panel
@@ -2646,7 +2685,7 @@ function launchCelebration(mins){
   document.getElementById('celebration').classList.add('show');
   spawnConfetti();
 }
-function closeCelebration(){ document.getElementById('celebration').classList.remove('show'); document.querySelectorAll('.confetti-piece').forEach(e=>e.remove()); }
+function closeCelebration(){ document.getElementById('celebration').classList.remove('show'); document.querySelectorAll('.confetti-piece').forEach(e=>e.remove()); stopAlarm(); }
 function spawnConfetti(){
   for(let i=0;i<80;i++) setTimeout(()=>{
     const el=document.createElement('div'); el.className='confetti-piece';
@@ -2765,6 +2804,7 @@ async function loadCloudData(uid){
       reconcileStreak(); // por si la racha ya se rompió desde el último guardado en la nube
       if(Array.isArray(d.unlockedThemes)){ unlockedThemes=d.unlockedThemes; localStorage.setItem('ft-unlocked-themes',JSON.stringify(unlockedThemes)); }
       if(d.customImgUnlocked){ customImgUnlocked=true; localStorage.setItem('ft-custom-img-unlocked','1'); }
+      if(d.customVideoUnlocked){ customVideoUnlocked=true; localStorage.setItem('ft-custom-video-unlocked','1'); }
       // Tienda
       if(typeof d.coins==='number'){ coins=d.coins; localStorage.setItem('ft-coins',coins); }
       if(Array.isArray(d.ownedItems)){ ownedItems=d.ownedItems; localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems)); }
@@ -2782,11 +2822,12 @@ async function loadCloudData(uid){
     } else {
       // Brand-new account: start this account from a clean zero, never from guest/leftover progress
       applyAccountState(0,0,[]);
-      consecutiveStreak=0; lastStudyDate=''; unlockedThemes=[]; customImgUnlocked=false;
+      consecutiveStreak=0; lastStudyDate=''; unlockedThemes=[]; customImgUnlocked=false; customVideoUnlocked=false;
       coins=0; ownedItems=['pal-default','fx-none','snd-beep','snd-bell','snd-pulse','snd-chime','snd-urgent'];
       activeItems={palette:'pal-default',effect:'fx-none'}; coinTiersEarnedToday=[];
       localStorage.setItem('ft-consecutive','0'); localStorage.setItem('ft-laststudy','');
       localStorage.setItem('ft-unlocked-themes','[]'); localStorage.removeItem('ft-custom-img-unlocked');
+      localStorage.removeItem('ft-custom-video-unlocked');
       localStorage.setItem('ft-coins','0');
       localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
       localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
@@ -2814,6 +2855,7 @@ async function saveCloudDataNow(){
       lastStudyDate,
       unlockedThemes,
       customImgUnlocked,
+      customVideoUnlocked,
       coins,
       ownedItems,
       activeItems,
