@@ -1646,7 +1646,7 @@ function playAlarmOnce(type){
   setTimeout(()=>ctx.close(),(maxEnd+0.3)*1000);
 }
 
-const ALARM_LOOP_GAP=3200; // ms entre repeticiones del bucle de alarma — pausado, no instantáneo, pero perceptible
+const ALARM_LOOP_GAP=4000; // ms entre repeticiones del bucle de alarma — pausado, no instantáneo, pero perceptible
 function playAlarm(){
   stopAlarm();
   alarmCtx=new(window.AudioContext||window.webkitAudioContext)();
@@ -1863,16 +1863,25 @@ function buildShopSection(gridId,section,onActivate){
     if(section==='effects')  return activeItems.effect===item.id;
     return false; // sonidos: sin estado "activo" en tienda — se gestiona desde modal de alarma
   };
+  // Nombre a mostrar: los sonidos reutilizan la traducción ya existente en ALARMS_I18N
+  // (para no duplicar textos), el efecto "Estándar" tiene su propia clave, y el resto
+  // (paletas, efectos con nombre propio) se mantienen como nombres de marca sin traducir.
+  const displayName=(item)=>{
+    if(section==='sounds') return alarmMeta(item.alarmId).name;
+    if(item.id==='fx-none') return tr('shopEffectStandard');
+    return item.name;
+  };
   SHOP_CATALOGUE[section].forEach(item=>{
     const owned=ownedItems.includes(item.id);
     const active=isActive(item);
     const canAfford=coins>=item.price;
+    const name=displayName(item);
     const div=document.createElement('div');
     div.className='shop-item'+(active?' active-item':owned?' owned':!canAfford?' cant-afford':'');
     let badge=active?`<span class="shop-item-badge badge-active">${tr('shopBadgeActive')}</span>`:owned?`<span class="shop-item-badge badge-owned">${tr('shopBadgeOwned')}</span>`:'';
     let priceHtml=(owned||active)?'':(item.price===0?`<span class="shop-item-price" style="color:var(--mint2)">${tr('shopFree')}</span>`:`<span class="shop-item-price">C ${item.price}</span>`);
     let previewBtn=section==='sounds'?`<br><button class="shop-preview-btn" onclick="previewShopSound('${item.alarmId}',event)">▶ ${tr('shopListen')}</button>`:'';
-    div.innerHTML=`${badge}<span class="shop-item-preview">${item.preview}</span><div class="shop-item-name">${item.name}</div>${priceHtml}${previewBtn}`;
+    div.innerHTML=`${badge}<span class="shop-item-preview">${item.preview}</span><div class="shop-item-name">${name}</div>${priceHtml}${previewBtn}`;
     div.onclick=(e)=>{
       if(e.target.classList.contains('shop-preview-btn')) return;
       if(active) return;
@@ -1885,7 +1894,7 @@ function buildShopSection(gridId,section,onActivate){
       updateCoinDisplay();
       saveCloudData();
       onActivate(item);
-      showToast(tr('shopUnlockedToast').replace('{name}',item.name));
+      showToast(tr('shopUnlockedToast').replace('{name}',name));
     };
     grid.appendChild(div);
   });
@@ -2310,7 +2319,7 @@ const T={
       shopTitle:'🏪 Tienda Focus-Tap',shopCoinsWord:'monedas',
       shopEarnTip:'Ganas monedas por tramos de estudio cada día: <strong>1ª moneda a los 30 min</strong>, <strong>2ª a los 90 min</strong> y <strong>3ª a los 150 min</strong>. Hasta 3 monedas al día. Las monedas se guardan en tu cuenta y nunca caducan.',
       shopSecPalettes:'🎨 Paletas de color',shopSecEffects:'✨ Efectos de tarjeta',shopSecSounds:'🔔 Sonidos premium',
-      shopBadgeActive:'Activo',shopBadgeOwned:'Tuyo',shopFree:'Gratis',shopListen:'Escuchar',
+      shopBadgeActive:'Activo',shopBadgeOwned:'Tuyo',shopFree:'Gratis',shopListen:'Escuchar',shopEffectStandard:'Estándar',
       shopNeedCoins:'Necesitas {price} monedas (tienes {coins})',shopUnlockedToast:'✅ ¡{name} desbloqueado!',shopSoundAvailable:'✅ Sonido disponible en el selector de alarmas'},
   en:{start:'▶ Start',pause:'⏸ Pause',resume:'▶ Resume',reset:'↺ Reset',deep:'🎯 Focus Mode',prod:'⚡ Productivity',
       s1:'Sessions today',s2:'Min focused',s3:'Day streak',lib:'Browse Library',
@@ -2351,7 +2360,7 @@ const T={
       shopTitle:'🏪 Focus-Tap Shop',shopCoinsWord:'coins',
       shopEarnTip:'You earn coins in daily study tiers: <strong>1st coin at 30 min</strong>, <strong>2nd at 90 min</strong> and <strong>3rd at 150 min</strong>. Up to 3 coins a day. Coins are saved to your account and never expire.',
       shopSecPalettes:'🎨 Color palettes',shopSecEffects:'✨ Card effects',shopSecSounds:'🔔 Premium sounds',
-      shopBadgeActive:'Active',shopBadgeOwned:'Owned',shopFree:'Free',shopListen:'Listen',
+      shopBadgeActive:'Active',shopBadgeOwned:'Owned',shopFree:'Free',shopListen:'Listen',shopEffectStandard:'Standard',
       shopNeedCoins:'You need {price} coins (you have {coins})',shopUnlockedToast:'✅ {name} unlocked!',shopSoundAvailable:'✅ Sound available in the alarm picker'},
   fr:{start:'▶ Démarrer',pause:'⏸ Pause',resume:'▶ Reprendre',reset:'↺ Réinitialiser',deep:'🎯 Mode Focus',prod:'⚡ Productivité',
       s1:'Sessions auj.',s2:'Min concentré',s3:'Jours streak',lib:'Bibliothèque',
@@ -2392,7 +2401,7 @@ const T={
       shopTitle:'🏪 Boutique Focus-Tap',shopCoinsWord:'pièces',
       shopEarnTip:'Tu gagnes des pièces par paliers d\'étude chaque jour : <strong>1ère pièce à 30 min</strong>, <strong>2ème à 90 min</strong> et <strong>3ème à 150 min</strong>. Jusqu\'à 3 pièces par jour. Les pièces sont sauvegardées sur ton compte et n\'expirent jamais.',
       shopSecPalettes:'🎨 Palettes de couleurs',shopSecEffects:'✨ Effets de carte',shopSecSounds:'🔔 Sons premium',
-      shopBadgeActive:'Actif',shopBadgeOwned:'À toi',shopFree:'Gratuit',shopListen:'Écouter',
+      shopBadgeActive:'Actif',shopBadgeOwned:'À toi',shopFree:'Gratuit',shopListen:'Écouter',shopEffectStandard:'Standard',
       shopNeedCoins:'Il te faut {price} pièces (tu en as {coins})',shopUnlockedToast:'✅ {name} débloqué !',shopSoundAvailable:'✅ Son disponible dans le sélecteur d\'alarme'},
   de:{start:'▶ Starten',pause:'⏸ Pause',resume:'▶ Fortsetzen',reset:'↺ Zurücksetzen',deep:'🎯 Fokusmodus',prod:'⚡ Produktivität',
       s1:'Sitzungen heute',s2:'Min fokussiert',s3:'Tage-Streak',lib:'Bibliothek',
@@ -2433,7 +2442,7 @@ const T={
       shopTitle:'🏪 Focus-Tap Shop',shopCoinsWord:'Münzen',
       shopEarnTip:'Du verdienst Münzen in täglichen Lernstufen: <strong>1. Münze bei 30 Min</strong>, <strong>2. bei 90 Min</strong> und <strong>3. bei 150 Min</strong>. Bis zu 3 Münzen pro Tag. Münzen werden in deinem Konto gespeichert und verfallen nie.',
       shopSecPalettes:'🎨 Farbpaletten',shopSecEffects:'✨ Karteneffekte',shopSecSounds:'🔔 Premium-Sounds',
-      shopBadgeActive:'Aktiv',shopBadgeOwned:'Dein',shopFree:'Kostenlos',shopListen:'Anhören',
+      shopBadgeActive:'Aktiv',shopBadgeOwned:'Dein',shopFree:'Kostenlos',shopListen:'Anhören',shopEffectStandard:'Standard',
       shopNeedCoins:'Du brauchst {price} Münzen (du hast {coins})',shopUnlockedToast:'✅ {name} freigeschaltet!',shopSoundAvailable:'✅ Sound in der Alarmauswahl verfügbar'},
   pt:{start:'▶ Começar',pause:'⏸ Pausar',resume:'▶ Retomar',reset:'↺ Reiniciar',deep:'🎯 Modo Foco',prod:'⚡ Produtividade',
       s1:'Sessões hoje',s2:'Min focado',s3:'Dias seguidos',lib:'Biblioteca',
@@ -2474,7 +2483,7 @@ const T={
       shopTitle:'🏪 Loja Focus-Tap',shopCoinsWord:'moedas',
       shopEarnTip:'Você ganha moedas por níveis de estudo a cada dia: <strong>1ª moeda aos 30 min</strong>, <strong>2ª aos 90 min</strong> e <strong>3ª aos 150 min</strong>. Até 3 moedas por dia. As moedas ficam salvas na sua conta e nunca expiram.',
       shopSecPalettes:'🎨 Paletas de cores',shopSecEffects:'✨ Efeitos de cartão',shopSecSounds:'🔔 Sons premium',
-      shopBadgeActive:'Ativo',shopBadgeOwned:'Seu',shopFree:'Grátis',shopListen:'Ouvir',
+      shopBadgeActive:'Ativo',shopBadgeOwned:'Seu',shopFree:'Grátis',shopListen:'Ouvir',shopEffectStandard:'Padrão',
       shopNeedCoins:'Você precisa de {price} moedas (tem {coins})',shopUnlockedToast:'✅ {name} desbloqueado!',shopSoundAvailable:'✅ Som disponível no seletor de alarme'},
   it:{start:'▶ Inizia',pause:'⏸ Pausa',resume:'▶ Riprendi',reset:'↺ Reimposta',deep:'🎯 Modalità Focus',prod:'⚡ Produttività',
       s1:'Sessioni oggi',s2:'Min concentrato',s3:'Giorni streak',lib:'Libreria',
@@ -2515,7 +2524,7 @@ const T={
       shopTitle:'🏪 Negozio Focus-Tap',shopCoinsWord:'monete',
       shopEarnTip:'Guadagni monete per fasce di studio ogni giorno: <strong>1ª moneta a 30 min</strong>, <strong>2ª a 90 min</strong> e <strong>3ª a 150 min</strong>. Fino a 3 monete al giorno. Le monete restano salvate nel tuo account e non scadono mai.',
       shopSecPalettes:'🎨 Palette di colori',shopSecEffects:'✨ Effetti carta',shopSecSounds:'🔔 Suoni premium',
-      shopBadgeActive:'Attivo',shopBadgeOwned:'Tuo',shopFree:'Gratis',shopListen:'Ascolta',
+      shopBadgeActive:'Attivo',shopBadgeOwned:'Tuo',shopFree:'Gratis',shopListen:'Ascolta',shopEffectStandard:'Standard',
       shopNeedCoins:'Ti servono {price} monete (ne hai {coins})',shopUnlockedToast:'✅ {name} sbloccato!',shopSoundAvailable:'✅ Suono disponibile nel selettore sveglia'},
 };
 
@@ -2727,15 +2736,25 @@ try{
   }
 }catch(e){ console.warn('Firebase no configurado todavía:',e); }
 
-// Snapshot of whatever streak/score/tasks/notes existed before switching into an account,
-// so each account keeps its OWN racha/puntuación, isolated from other accounts and from guest mode.
+// Snapshot of whatever streak/score/tasks/notes/desbloqueos existed before switching into
+// una cuenta, so each account keeps its OWN progreso, isolated from other accounts and from
+// guest mode (nada se "pega" de una cuenta a otra al iniciar/cerrar sesión).
 function captureGuestSnapshot(){
   return {
     sessions: parseInt(localStorage.getItem('ft-sessions')||'0'),
     totalMin: parseInt(localStorage.getItem('ft-totalmin')||'0'),
     streakDays: JSON.parse(localStorage.getItem('ft-streak')||'[]'),
     tasks: JSON.parse(localStorage.getItem('ft-tasks')||'[]'),
-    notesVal: localStorage.getItem('ft-notes')||''
+    notesVal: localStorage.getItem('ft-notes')||'',
+    consecutiveStreak: parseInt(localStorage.getItem('ft-consecutive')||'0'),
+    lastStudyDate: localStorage.getItem('ft-laststudy')||'',
+    unlockedThemes: JSON.parse(localStorage.getItem('ft-unlocked-themes')||'[]'),
+    customImgUnlocked: localStorage.getItem('ft-custom-img-unlocked')==='1',
+    customVideoUnlocked: localStorage.getItem('ft-custom-video-unlocked')==='1',
+    coins: parseInt(localStorage.getItem('ft-coins')||'0'),
+    ownedItems: JSON.parse(localStorage.getItem('ft-owned-items')||'["pal-default","fx-none","snd-beep","snd-bell","snd-pulse","snd-chime","snd-urgent"]'),
+    activeItems: JSON.parse(localStorage.getItem('ft-active-items')||'{"palette":"pal-default","effect":"fx-none"}'),
+    coinTiers: (()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.tiers:[]; }catch(e){ return []; } })()
   };
 }
 function applyAccountState(sessions,totalMin,streak){
@@ -2750,6 +2769,18 @@ function restoreGuestSnapshot(snap){
   applyAccountState(snap.sessions,snap.totalMin,snap.streakDays);
   tasks=snap.tasks; localStorage.setItem('ft-tasks',JSON.stringify(tasks)); renderTasks();
   notes.value=snap.notesVal; localStorage.setItem('ft-notes',notes.value);
+  // Restaurar también los desbloqueos permanentes exactos que tenía el invitado antes de
+  // iniciar sesión — sin esto, un desbloqueo de una cuenta se quedaba "pegado" al salir.
+  consecutiveStreak=snap.consecutiveStreak; localStorage.setItem('ft-consecutive',consecutiveStreak);
+  lastStudyDate=snap.lastStudyDate; localStorage.setItem('ft-laststudy',lastStudyDate);
+  unlockedThemes=snap.unlockedThemes; localStorage.setItem('ft-unlocked-themes',JSON.stringify(unlockedThemes));
+  customImgUnlocked=snap.customImgUnlocked; localStorage.setItem('ft-custom-img-unlocked',customImgUnlocked?'1':'0');
+  customVideoUnlocked=snap.customVideoUnlocked; localStorage.setItem('ft-custom-video-unlocked',customVideoUnlocked?'1':'0');
+  coins=snap.coins; localStorage.setItem('ft-coins',coins);
+  ownedItems=snap.ownedItems; localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
+  activeItems=snap.activeItems; localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
+  coinTiersEarnedToday=snap.coinTiers; localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:coinTiersEarnedToday}));
+  updateCoinDisplay(); applyActiveItems(); reconcileStreak(); buildThemeSwatches();
 }
 
 function updateAccountUI(){
