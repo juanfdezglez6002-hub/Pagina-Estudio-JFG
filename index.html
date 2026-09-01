@@ -539,6 +539,16 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 .badge-owned{background:var(--mint2);color:white;}
 .shop-preview-btn{margin-top:6px;background:rgba(121,134,203,0.12);border:1px solid rgba(121,134,203,0.25);border-radius:8px;padding:3px 10px;font-size:0.68rem;font-weight:700;color:var(--accent2);cursor:pointer;transition:all 0.2s;}
 .shop-preview-btn:hover{background:rgba(121,134,203,0.28);}
+
+/* ── ONBOARDING ── */
+.ob-slide-body{padding:34px 30px 10px;text-align:center;}
+.ob-emoji{font-size:52px;margin-bottom:14px;animation:celeb-bounce 2.4s ease-in-out infinite alternate;}
+.ob-title{font-family:'Lora',serif;font-size:1.35rem;font-weight:600;color:var(--text);margin-bottom:10px;}
+.ob-desc{font-size:0.86rem;color:var(--text2);line-height:1.6;max-width:36ch;margin:0 auto;}
+.ob-dots{display:flex;justify-content:center;gap:7px;padding:20px 0 4px;}
+.ob-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:all 0.25s;}
+.ob-dot.active{background:var(--accent2);width:20px;border-radius:4px;}
+.ob-actions{display:flex;align-items:center;justify-content:space-between;padding:18px 26px 26px;}
 </style>
 </head>
 <body>
@@ -561,6 +571,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
   <!-- Language float button -->
   <button class="lang-float-btn" id="lang-float-btn" onclick="toggleLangPanel()" title="Idioma">🌐</button>
+  <button class="lang-float-btn" id="onboarding-replay-btn" onclick="openOnboarding()" title="Ver tutorial de nuevo">❔</button>
 
   <!-- Settings panel (Background + Feedback only) -->
   <div class="settings-panel" id="settings-panel">
@@ -891,6 +902,22 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
       <div class="shop-grid" id="shop-effects"></div>
       <div class="shop-section-title" id="txt-shop-sec-sounds">🔔 Sonidos premium</div>
       <div class="shop-grid" id="shop-sounds"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ONBOARDING (solo primera visita) -->
+<div id="onboarding-modal" class="lib-modal" style="z-index:9995;">
+  <div class="lib-panel" style="width:min(440px,92vw);">
+    <div class="ob-slide-body">
+      <div class="ob-emoji" id="ob-emoji">🐼</div>
+      <div class="ob-title" id="ob-title"></div>
+      <div class="ob-desc" id="ob-desc"></div>
+    </div>
+    <div class="ob-dots" id="ob-dots"></div>
+    <div class="ob-actions">
+      <button class="btn-tiny" id="ob-skip" onclick="skipOnboarding()"></button>
+      <button class="btn-main" id="ob-next" onclick="nextOnboardingSlide()" style="padding:9px 22px;font-size:0.8rem;"></button>
     </div>
   </div>
 </div>
@@ -2320,7 +2347,8 @@ const T={
       shopEarnTip:'Ganas monedas por tramos de estudio cada día: <strong>1ª moneda a los 30 min</strong>, <strong>2ª a los 90 min</strong> y <strong>3ª a los 150 min</strong>. Hasta 3 monedas al día. Las monedas se guardan en tu cuenta y nunca caducan.',
       shopSecPalettes:'🎨 Paletas de color',shopSecEffects:'✨ Efectos de tarjeta',shopSecSounds:'🔔 Sonidos premium',
       shopBadgeActive:'Activo',shopBadgeOwned:'Tuyo',shopFree:'Gratis',shopListen:'Escuchar',shopEffectStandard:'Estándar',
-      shopNeedCoins:'Necesitas {price} monedas (tienes {coins})',shopUnlockedToast:'✅ ¡{name} desbloqueado!',shopSoundAvailable:'✅ Sonido disponible en el selector de alarmas'},
+      shopNeedCoins:'Necesitas {price} monedas (tienes {coins})',shopUnlockedToast:'✅ ¡{name} desbloqueado!',shopSoundAvailable:'✅ Sonido disponible en el selector de alarmas',
+      obNext:'Siguiente',obSkip:'Saltar',obStart:'¡Empezar!',obReplay:'❔ Ver tutorial de nuevo'},
   en:{start:'▶ Start',pause:'⏸ Pause',resume:'▶ Resume',reset:'↺ Reset',deep:'🎯 Focus Mode',prod:'⚡ Productivity',
       s1:'Sessions today',s2:'Min focused',s3:'Day streak',lib:'Browse Library',
       tasks:'Study Goals',taskph:'+ New task... press Enter',notes:'Quick Notes',notesph:'Dump your thoughts here...',
@@ -2361,7 +2389,8 @@ const T={
       shopEarnTip:'You earn coins in daily study tiers: <strong>1st coin at 30 min</strong>, <strong>2nd at 90 min</strong> and <strong>3rd at 150 min</strong>. Up to 3 coins a day. Coins are saved to your account and never expire.',
       shopSecPalettes:'🎨 Color palettes',shopSecEffects:'✨ Card effects',shopSecSounds:'🔔 Premium sounds',
       shopBadgeActive:'Active',shopBadgeOwned:'Owned',shopFree:'Free',shopListen:'Listen',shopEffectStandard:'Standard',
-      shopNeedCoins:'You need {price} coins (you have {coins})',shopUnlockedToast:'✅ {name} unlocked!',shopSoundAvailable:'✅ Sound available in the alarm picker'},
+      shopNeedCoins:'You need {price} coins (you have {coins})',shopUnlockedToast:'✅ {name} unlocked!',shopSoundAvailable:'✅ Sound available in the alarm picker',
+      obNext:'Next',obSkip:'Skip',obStart:'Let\'s go!',obReplay:'❔ Watch tutorial again'},
   fr:{start:'▶ Démarrer',pause:'⏸ Pause',resume:'▶ Reprendre',reset:'↺ Réinitialiser',deep:'🎯 Mode Focus',prod:'⚡ Productivité',
       s1:'Sessions auj.',s2:'Min concentré',s3:'Jours streak',lib:'Bibliothèque',
       tasks:'Objectifs d\'étude',taskph:'+ Nouvelle tâche... Entrée',notes:'Notes rapides',notesph:'Videz vos pensées ici...',
@@ -2402,7 +2431,8 @@ const T={
       shopEarnTip:'Tu gagnes des pièces par paliers d\'étude chaque jour : <strong>1ère pièce à 30 min</strong>, <strong>2ème à 90 min</strong> et <strong>3ème à 150 min</strong>. Jusqu\'à 3 pièces par jour. Les pièces sont sauvegardées sur ton compte et n\'expirent jamais.',
       shopSecPalettes:'🎨 Palettes de couleurs',shopSecEffects:'✨ Effets de carte',shopSecSounds:'🔔 Sons premium',
       shopBadgeActive:'Actif',shopBadgeOwned:'À toi',shopFree:'Gratuit',shopListen:'Écouter',shopEffectStandard:'Standard',
-      shopNeedCoins:'Il te faut {price} pièces (tu en as {coins})',shopUnlockedToast:'✅ {name} débloqué !',shopSoundAvailable:'✅ Son disponible dans le sélecteur d\'alarme'},
+      shopNeedCoins:'Il te faut {price} pièces (tu en as {coins})',shopUnlockedToast:'✅ {name} débloqué !',shopSoundAvailable:'✅ Son disponible dans le sélecteur d\'alarme',
+      obNext:'Suivant',obSkip:'Passer',obStart:'C\'est parti !',obReplay:'❔ Revoir le tutoriel'},
   de:{start:'▶ Starten',pause:'⏸ Pause',resume:'▶ Fortsetzen',reset:'↺ Zurücksetzen',deep:'🎯 Fokusmodus',prod:'⚡ Produktivität',
       s1:'Sitzungen heute',s2:'Min fokussiert',s3:'Tage-Streak',lib:'Bibliothek',
       tasks:'Lernziele',taskph:'+ Neue Aufgabe... Enter',notes:'Schnellnotizen',notesph:'Schreibe deine Gedanken hier...',
@@ -2443,7 +2473,8 @@ const T={
       shopEarnTip:'Du verdienst Münzen in täglichen Lernstufen: <strong>1. Münze bei 30 Min</strong>, <strong>2. bei 90 Min</strong> und <strong>3. bei 150 Min</strong>. Bis zu 3 Münzen pro Tag. Münzen werden in deinem Konto gespeichert und verfallen nie.',
       shopSecPalettes:'🎨 Farbpaletten',shopSecEffects:'✨ Karteneffekte',shopSecSounds:'🔔 Premium-Sounds',
       shopBadgeActive:'Aktiv',shopBadgeOwned:'Dein',shopFree:'Kostenlos',shopListen:'Anhören',shopEffectStandard:'Standard',
-      shopNeedCoins:'Du brauchst {price} Münzen (du hast {coins})',shopUnlockedToast:'✅ {name} freigeschaltet!',shopSoundAvailable:'✅ Sound in der Alarmauswahl verfügbar'},
+      shopNeedCoins:'Du brauchst {price} Münzen (du hast {coins})',shopUnlockedToast:'✅ {name} freigeschaltet!',shopSoundAvailable:'✅ Sound in der Alarmauswahl verfügbar',
+      obNext:'Weiter',obSkip:'Überspringen',obStart:'Los geht\'s!',obReplay:'❔ Tutorial erneut ansehen'},
   pt:{start:'▶ Começar',pause:'⏸ Pausar',resume:'▶ Retomar',reset:'↺ Reiniciar',deep:'🎯 Modo Foco',prod:'⚡ Produtividade',
       s1:'Sessões hoje',s2:'Min focado',s3:'Dias seguidos',lib:'Biblioteca',
       tasks:'Metas de Estudo',taskph:'+ Nova tarefa... Enter',notes:'Notas Rápidas',notesph:'Escreva seus pensamentos aqui...',
@@ -2484,7 +2515,8 @@ const T={
       shopEarnTip:'Você ganha moedas por níveis de estudo a cada dia: <strong>1ª moeda aos 30 min</strong>, <strong>2ª aos 90 min</strong> e <strong>3ª aos 150 min</strong>. Até 3 moedas por dia. As moedas ficam salvas na sua conta e nunca expiram.',
       shopSecPalettes:'🎨 Paletas de cores',shopSecEffects:'✨ Efeitos de cartão',shopSecSounds:'🔔 Sons premium',
       shopBadgeActive:'Ativo',shopBadgeOwned:'Seu',shopFree:'Grátis',shopListen:'Ouvir',shopEffectStandard:'Padrão',
-      shopNeedCoins:'Você precisa de {price} moedas (tem {coins})',shopUnlockedToast:'✅ {name} desbloqueado!',shopSoundAvailable:'✅ Som disponível no seletor de alarme'},
+      shopNeedCoins:'Você precisa de {price} moedas (tem {coins})',shopUnlockedToast:'✅ {name} desbloqueado!',shopSoundAvailable:'✅ Som disponível no seletor de alarme',
+      obNext:'Próximo',obSkip:'Pular',obStart:'Vamos lá!',obReplay:'❔ Ver tutorial de novo'},
   it:{start:'▶ Inizia',pause:'⏸ Pausa',resume:'▶ Riprendi',reset:'↺ Reimposta',deep:'🎯 Modalità Focus',prod:'⚡ Produttività',
       s1:'Sessioni oggi',s2:'Min concentrato',s3:'Giorni streak',lib:'Libreria',
       tasks:'Obiettivi di Studio',taskph:'+ Nuova attività... Invio',notes:'Note Veloci',notesph:'Scrivi i tuoi pensieri qui...',
@@ -2525,7 +2557,8 @@ const T={
       shopEarnTip:'Guadagni monete per fasce di studio ogni giorno: <strong>1ª moneta a 30 min</strong>, <strong>2ª a 90 min</strong> e <strong>3ª a 150 min</strong>. Fino a 3 monete al giorno. Le monete restano salvate nel tuo account e non scadono mai.',
       shopSecPalettes:'🎨 Palette di colori',shopSecEffects:'✨ Effetti carta',shopSecSounds:'🔔 Suoni premium',
       shopBadgeActive:'Attivo',shopBadgeOwned:'Tuo',shopFree:'Gratis',shopListen:'Ascolta',shopEffectStandard:'Standard',
-      shopNeedCoins:'Ti servono {price} monete (ne hai {coins})',shopUnlockedToast:'✅ {name} sbloccato!',shopSoundAvailable:'✅ Suono disponibile nel selettore sveglia'},
+      shopNeedCoins:'Ti servono {price} monete (ne hai {coins})',shopUnlockedToast:'✅ {name} sbloccato!',shopSoundAvailable:'✅ Suono disponibile nel selettore sveglia',
+      obNext:'Avanti',obSkip:'Salta',obStart:'Iniziamo!',obReplay:'❔ Rivedi il tutorial'},
 };
 
 function tr(key){
@@ -2602,6 +2635,8 @@ function setLang(lang,btn){
   document.getElementById('txt-shop-sec-effects').innerText=t.shopSecEffects;
   document.getElementById('txt-shop-sec-sounds').innerText=t.shopSecSounds;
   if(document.getElementById('shop-modal').classList.contains('open')) buildShop();
+  if(document.getElementById('onboarding-modal').classList.contains('open')) renderOnboardingSlide();
+  const obReplayBtn=document.getElementById('onboarding-replay-btn'); if(obReplayBtn) obReplayBtn.title=t.obReplay;
   // Music default track name (only if nothing is playing yet)
   if(!currentGenre) document.getElementById('track-name').innerText=t.trackDefault;
   // Settings panel
@@ -2660,6 +2695,106 @@ function reattachMinInput(){
 //  CELEBRATION
 // ══════════════════════════════════════
 const CONFETTI_COLORS=['#7986cb','#4db6ac','#f48fb1','#ffcc80','#a5d6a7','#ce93d8','#80deea'];
+// ══════════════════════════════════════
+//  ONBOARDING — tour de bienvenida (solo primera visita)
+// ══════════════════════════════════════
+const ONBOARDING_I18N={
+  es:[
+    {emoji:'🐼',title:'¡Bienvenido a Focus-Tap!',desc:'Tu espacio de estudio con temporizador, música, tareas y mucho más. Te lo enseño en un minuto.'},
+    {emoji:'⏱️',title:'Elige tu tiempo y tu modo',desc:'Ajusta los minutos y pulsa Empezar. El Modo Enfoque pasa a pantalla completa y penaliza si cambias de pestaña; el Modo Productividad es más ligero, sin pantalla completa forzada.'},
+    {emoji:'☕',title:'Tus descansos, a tu ritmo',desc:'Junto a la racha tienes un temporizador de descanso independiente (5, 10 o 15 min) con su propio aviso al terminar.'},
+    {emoji:'✅',title:'Metas de estudio',desc:'Anota tus tareas con su nivel de prioridad (alta/media/baja), márcalas al completarlas y se quedan guardadas para cuando vuelvas.'},
+    {emoji:'📝',title:'Notas rápidas',desc:'Vuelca tus ideas mientras estudias. Se guardan solas, y puedes copiarlas o descargarlas como .txt para tus trabajos.'},
+    {emoji:'🎵',title:'Música de fondo',desc:'Explora la biblioteca por categorías (lofi, lluvia, café, clásica, jazz...) y déjala sonando mientras estudias.'},
+    {emoji:'🔥',title:'Racha y monedas',desc:'Cada día que estudias suma racha y monedas. Gástalas en la tienda 🏪 para desbloquear paletas, efectos y sonidos.'},
+    {emoji:'🎨',title:'Hazla tu área de estudio',desc:'Cambia el tema de fondo y el idioma desde el engranaje ⚙️, y crea una cuenta gratis para guardar todo en la nube. A tu gusto.'}
+  ],
+  en:[
+    {emoji:'🐼',title:'Welcome to Focus-Tap!',desc:'Your study space with a timer, music, tasks and more. Here\'s a quick tour.'},
+    {emoji:'⏱️',title:'Pick your time and mode',desc:'Set your session length and hit Start. Focus Mode goes fullscreen and penalizes tab-switching; Productivity Mode is lighter, no forced fullscreen.'},
+    {emoji:'☕',title:'Breaks, at your own pace',desc:'Next to the streak you\'ll find an independent break timer (5, 10 or 15 min) with its own alarm when it\'s done.'},
+    {emoji:'✅',title:'Study goals',desc:'Add tasks with a priority level (high/medium/low), check them off as you go — they stay saved for next time.'},
+    {emoji:'📝',title:'Quick notes',desc:'Jot down your thoughts as you study. They autosave, and you can copy them or download them as .txt for your work.'},
+    {emoji:'🎵',title:'Background music',desc:'Browse the library by category (lofi, rain, café, classical, jazz...) and let it play while you focus.'},
+    {emoji:'🔥',title:'Streak and coins',desc:'Every day you study earns streak and coins. Spend them in the shop 🏪 to unlock palettes, effects and sounds.'},
+    {emoji:'🎨',title:'Make it your workspace',desc:'Change the background theme and language from the gear ⚙️, and create a free account to save it all in the cloud. However you like it.'}
+  ],
+  fr:[
+    {emoji:'🐼',title:'Bienvenue sur Focus-Tap !',desc:'Ton espace d\'étude avec minuteur, musique, tâches et bien plus. Petit tour rapide.'},
+    {emoji:'⏱️',title:'Choisis ton temps et ton mode',desc:'Règle la durée et appuie sur Démarrer. Le Mode Focus passe en plein écran et pénalise si tu changes d\'onglet ; le Mode Productivité est plus léger, sans plein écran forcé.'},
+    {emoji:'☕',title:'Tes pauses, à ton rythme',desc:'À côté de la série, un minuteur de pause indépendant (5, 10 ou 15 min) avec sa propre alarme à la fin.'},
+    {emoji:'✅',title:'Objectifs d\'étude',desc:'Ajoute des tâches avec un niveau de priorité (haute/moyenne/basse), coche-les une fois faites — elles restent sauvegardées.'},
+    {emoji:'📝',title:'Notes rapides',desc:'Note tes idées pendant que tu étudies. Elles s\'enregistrent seules, et tu peux les copier ou les télécharger en .txt.'},
+    {emoji:'🎵',title:'Musique de fond',desc:'Explore la bibliothèque par catégorie (lofi, pluie, café, classique, jazz...) et laisse-la jouer pendant que tu te concentres.'},
+    {emoji:'🔥',title:'Série et pièces',desc:'Chaque jour étudié te donne série et pièces. Dépense-les dans la boutique 🏪 pour débloquer des palettes, effets et sons.'},
+    {emoji:'🎨',title:'Fais-en ton espace',desc:'Change le thème de fond et la langue depuis l\'engrenage ⚙️, et crée un compte gratuit pour tout sauvegarder dans le cloud. À ta façon.'}
+  ],
+  de:[
+    {emoji:'🐼',title:'Willkommen bei Focus-Tap!',desc:'Dein Lernraum mit Timer, Musik, Aufgaben und mehr. Eine kurze Tour.'},
+    {emoji:'⏱️',title:'Zeit und Modus wählen',desc:'Stelle die Sitzungsdauer ein und drücke Start. Der Fokusmodus geht in den Vollbildmodus und bestraft Tab-Wechsel; der Produktivitätsmodus ist leichter, ohne erzwungenes Vollbild.'},
+    {emoji:'☕',title:'Pausen, in deinem Tempo',desc:'Neben dem Streak findest du einen eigenen Pausentimer (5, 10 oder 15 Min) mit eigenem Alarm am Ende.'},
+    {emoji:'✅',title:'Lernziele',desc:'Füge Aufgaben mit einer Priorität hinzu (hoch/mittel/niedrig), hake sie ab — sie bleiben gespeichert.'},
+    {emoji:'📝',title:'Schnellnotizen',desc:'Halte deine Gedanken beim Lernen fest. Sie werden automatisch gespeichert, du kannst sie kopieren oder als .txt herunterladen.'},
+    {emoji:'🎵',title:'Hintergrundmusik',desc:'Durchstöbere die Bibliothek nach Kategorie (Lofi, Regen, Café, Klassik, Jazz...) und lass sie beim Lernen laufen.'},
+    {emoji:'🔥',title:'Streak und Münzen',desc:'Jeder Lerntag bringt Streak und Münzen. Gib sie im Shop 🏪 aus, um Paletten, Effekte und Sounds freizuschalten.'},
+    {emoji:'🎨',title:'Mach sie zu deinem Arbeitsbereich',desc:'Ändere Hintergrundthema und Sprache über das Zahnrad ⚙️, und erstelle ein kostenloses Konto, um alles in der Cloud zu speichern. Ganz nach deinem Geschmack.'}
+  ],
+  pt:[
+    {emoji:'🐼',title:'Bem-vindo ao Focus-Tap!',desc:'Seu espaço de estudo com temporizador, música, tarefas e muito mais. Um tour rápido.'},
+    {emoji:'⏱️',title:'Escolha seu tempo e modo',desc:'Ajuste a duração e toque em Começar. O Modo Foco vai para tela cheia e penaliza trocar de aba; o Modo Produtividade é mais leve, sem tela cheia forçada.'},
+    {emoji:'☕',title:'Suas pausas, no seu ritmo',desc:'Ao lado da sequência há um temporizador de pausa independente (5, 10 ou 15 min) com seu próprio aviso ao terminar.'},
+    {emoji:'✅',title:'Metas de estudo',desc:'Adicione tarefas com nível de prioridade (alta/média/baixa), marque-as ao concluir — ficam salvas para depois.'},
+    {emoji:'📝',title:'Notas rápidas',desc:'Anote suas ideias enquanto estuda. Elas se salvam sozinhas, e você pode copiá-las ou baixá-las em .txt.'},
+    {emoji:'🎵',title:'Música de fundo',desc:'Explore a biblioteca por categoria (lofi, chuva, café, clássica, jazz...) e deixe tocando enquanto estuda.'},
+    {emoji:'🔥',title:'Sequência e moedas',desc:'Cada dia de estudo soma sequência e moedas. Gaste-as na loja 🏪 para desbloquear paletas, efeitos e sons.'},
+    {emoji:'🎨',title:'Deixe do seu jeito',desc:'Mude o tema de fundo e o idioma na engrenagem ⚙️, e crie uma conta grátis para salvar tudo na nuvem. Do jeito que você quiser.'}
+  ],
+  it:[
+    {emoji:'🐼',title:'Benvenuto su Focus-Tap!',desc:'Il tuo spazio di studio con timer, musica, attività e altro. Un tour veloce.'},
+    {emoji:'⏱️',title:'Scegli tempo e modalità',desc:'Imposta la durata e premi Inizia. La Modalità Focus va a schermo intero e penalizza il cambio scheda; la Modalità Produttività è più leggera, senza schermo intero forzato.'},
+    {emoji:'☕',title:'Le tue pause, al tuo ritmo',desc:'Accanto alla serie trovi un timer di pausa indipendente (5, 10 o 15 min) con il suo avviso finale.'},
+    {emoji:'✅',title:'Obiettivi di studio',desc:'Aggiungi attività con un livello di priorità (alta/media/bassa), spuntale al completarle — restano salvate.'},
+    {emoji:'📝',title:'Note veloci',desc:'Annota i tuoi pensieri mentre studi. Si salvano da sole, e puoi copiarle o scaricarle in .txt.'},
+    {emoji:'🎵',title:'Musica di sottofondo',desc:'Esplora la libreria per categoria (lofi, pioggia, caffè, classica, jazz...) e lasciala suonare mentre studi.'},
+    {emoji:'🔥',title:'Serie e monete',desc:'Ogni giorno di studio somma serie e monete. Spendile nel negozio 🏪 per sbloccare palette, effetti e suoni.'},
+    {emoji:'🎨',title:'Rendilo il tuo spazio',desc:'Cambia tema di sfondo e lingua dall\'ingranaggio ⚙️, e crea un account gratuito per salvare tutto nel cloud. Come preferisci tu.'}
+  ],
+};
+let obSlideIdx=0;
+function getOnboardingSlides(){ return ONBOARDING_I18N[currentLang]||ONBOARDING_I18N.es; }
+function renderOnboardingSlide(){
+  const slides=getOnboardingSlides();
+  const s=slides[obSlideIdx];
+  document.getElementById('ob-emoji').innerText=s.emoji;
+  document.getElementById('ob-title').innerText=s.title;
+  document.getElementById('ob-desc').innerText=s.desc;
+  const dots=document.getElementById('ob-dots'); dots.innerHTML='';
+  slides.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='ob-dot'+(i===obSlideIdx?' active':'');
+    dots.appendChild(d);
+  });
+  const isLast=obSlideIdx===slides.length-1;
+  document.getElementById('ob-next').innerText=isLast?tr('obStart'):tr('obNext');
+  document.getElementById('ob-skip').innerText=tr('obSkip');
+  document.getElementById('ob-skip').style.visibility=isLast?'hidden':'visible';
+}
+function nextOnboardingSlide(){
+  const slides=getOnboardingSlides();
+  if(obSlideIdx<slides.length-1){ obSlideIdx++; renderOnboardingSlide(); }
+  else finishOnboarding();
+}
+function skipOnboarding(){ finishOnboarding(); }
+function finishOnboarding(){
+  document.getElementById('onboarding-modal').classList.remove('open');
+  localStorage.setItem('ft-onboarding-seen','1');
+}
+function openOnboarding(){
+  obSlideIdx=0;
+  renderOnboardingSlide();
+  document.getElementById('onboarding-modal').classList.add('open');
+}
+
 const CELEB_MSGS_I18N={
   es:[['¡Sesión Completada! 🎉','Has terminado tu sesión. ¡Sigue así, campeón! 🐼✨'],
       ['¡Increíble! 🚀','Otro bloque en el bolsillo. ¡Estás imparable!'],
@@ -2931,10 +3066,23 @@ if(savedAlarm&&ALARMS.find(a=>a.id===savedAlarm)) selectAlarm(savedAlarm);
   setBg(key,sw);
 })();
 
-// Restore language
+// Restore language — si nunca ha elegido idioma, se detecta el de su navegador/sistema
 (()=>{
-  const lang=localStorage.getItem('ft-lang');
-  if(lang&&lang!=='es'){ const btn=document.getElementById(`lang-${lang}`); setLang(lang,btn); }
+  const SUPPORTED_LANGS=['es','en','fr','de','pt','it'];
+  const savedLang=localStorage.getItem('ft-lang');
+  if(savedLang){
+    if(savedLang!=='es'){ const btn=document.getElementById(`lang-${savedLang}`); setLang(savedLang,btn); }
+    else document.getElementById('lang-es').classList.add('active');
+    return;
+  }
+  // Primera visita: detectar idioma del navegador (ej. 'de-DE' -> 'de', 'es-CO' -> 'es')
+  const browserLangs=(navigator.languages&&navigator.languages.length)?navigator.languages:[navigator.language||'en'];
+  let detected='en'; // si su idioma no está soportado, inglés es el más universal como respaldo
+  for(const l of browserLangs){
+    const primary=(l||'').slice(0,2).toLowerCase();
+    if(SUPPORTED_LANGS.includes(primary)){ detected=primary; break; }
+  }
+  if(detected!=='es'){ const btn=document.getElementById(`lang-${detected}`); setLang(detected,btn); }
   else document.getElementById('lang-es').classList.add('active');
 })();
 
@@ -2945,6 +3093,11 @@ document.getElementById('quote-text').innerText='\u201C'+_q.text+'\u201D';
 document.getElementById('quote-author').innerText='— '+_q.author;
 document.getElementById('quote-timer').style.setProperty('--quote-dur',QUOTE_INTERVAL/1000+'s');
 startQuoteTimer();
+
+// Onboarding: solo se lanza automáticamente si nunca se ha visto en este navegador
+if(localStorage.getItem('ft-onboarding-seen')!=='1'){
+  setTimeout(openOnboarding, 500); // pequeño respiro tras el primer pintado
+}
 </script>
 </body>
 </html>
