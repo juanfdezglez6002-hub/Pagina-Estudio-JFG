@@ -552,8 +552,8 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
 /* ── ACCESORIOS DE FONDO ── */
 .acc-raindrop{
-  position:absolute; top:-10%; width:1.5px;
-  background:linear-gradient(to bottom, rgba(190,205,230,0), rgba(190,205,230,0.4));
+  position:absolute; top:-10%; width:2px; border-radius:1px;
+  background:linear-gradient(to bottom, rgba(100,140,190,0) 0%, rgba(90,130,185,0.9) 65%, rgba(140,175,215,0.95) 100%);
   animation:acc-rain-fall linear infinite;
 }
 @keyframes acc-rain-fall{
@@ -566,7 +566,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
 <!-- Fondos animados (vídeo silencioso / gif) — ocultos hasta que se elige un tema de este tipo -->
 <video id="bg-video" muted loop playsinline style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;"></video>
-<div id="accessory-layer" style="position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;"></div>
+<div id="accessory-layer" style="position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden;"></div>
 
 
 <!-- SETTINGS GEAR + LANG FLOAT -->
@@ -1123,24 +1123,12 @@ const PLAYLISTS = {
       {name:'Jazz Cafe',       artist:'Waveloom',       url:'cafe2.mp3', dur:196},
       {name:'Jazz Cafe Morning Music', artist:'alex-morgan', url:'cafe3.mp3', dur:134},
       {name:'Jazz Sunny Cafe Music',   artist:'alex-morgan', url:'cafe4.mp3', dur:155},
-      {name:'Relaxed Lofi Cafe Music',   artist:'Tunetank', url:'cafe5.mp3', dur:168},
-      {name:'Relaxed Elevator Lounge Cafe Music',   artist:'Tunetank', url:'cafe6.mp3', dur:329},
-      {name:'Cafe Music',   artist:'LiteSaturation', url:'cafe7.mp3', dur:138},
-      {name:'Gentle Cafe Background',   artist:'Tunetank', url:'cafe8.mp3', dur:177},
-      {name:'Cafe Restaurant Background Music',   artist:'Tunetank', url:'cafe9.mp3', dur:115},
-      {name:'Free Cafe Music',   artist:'LiteSaturation', url:'cafe10.mp3', dur:198},      
-      {name:'Calm Lounge Cafe Music',   artist:'Tunetank', url:'cafe11.mp3', dur:249},      
-      {name:'Cafe Music',   artist:'VibeDepot', url:'cafe12.mp3', dur:175},
-
-      
-      {name:'cafe13',   artist:'cafe10', url:'cafe13.mp3', dur:198},
-      {name:'cafe14',   artist:'cafe10', url:'cafe14.mp3', dur:198},
-      {name:'cafe15',   artist:'cafe10', url:'cafe15.mp3', dur:198},
-      {name:'cafe16',   artist:'cafe10', url:'cafe16.mp3', dur:198},
-      {name:'cafe17',   artist:'cafe10', url:'cafe17.mp3', dur:198},
-      {name:'cafe18',   artist:'cafe10', url:'cafe18.mp3', dur:198},
-      {name:'cafe19',   artist:'cafe10', url:'cafe19.mp3', dur:198},     
-      {name:'cafe20',   artist:'cafe10', url:'cafe20.mp3', dur:198},
+      {name:'cafe5',   artist:'cafe5', url:'cafe5.mp3', dur:168},
+      {name:'cafe6',   artist:'cafe6', url:'cafe6.mp3', dur:329},
+      {name:'cafe7',   artist:'cafe7', url:'cafe7.mp3', dur:138},
+      {name:'cafe8',   artist:'cafe8', url:'cafe8.mp3', dur:177},
+      {name:'cafe9',   artist:'cafe9', url:'cafe9.mp3', dur:115},
+      {name:'cafe10',   artist:'cafe10', url:'cafe10.mp3', dur:198},
     ]
   },
   classical:{
@@ -1764,7 +1752,7 @@ const SHOP_CATALOGUE = {
   ],
   effects:[
     { id:'fx-none',    name:'Estándar',       price:0, preview:'🪟', vars:{'--glass':'rgba(255,255,255,0.6)','--card-radius':'24px','--border':'rgba(255,255,255,0.85)','--shadow':'rgba(120,140,180,0.12)'} },
-    { id:'fx-frosted', name:'Muy Esmerilado', price:9, preview:'❄️', vars:{'--glass':'rgba(255,255,255,0.96)','--card-radius':'30px','--border':'rgba(255,255,255,1)','--shadow':'rgba(120,140,180,0.05)'} },
+    { id:'fx-frosted', name:'Frosted Glass', price:9, preview:'❄️', vars:{'--glass':'rgba(255,255,255,0.96)','--card-radius':'30px','--border':'rgba(255,255,255,1)','--shadow':'rgba(120,140,180,0.05)'} },
     { id:'fx-sharp',   name:'Sharp Glass',    price:9, preview:'💎', vars:{'--glass':'rgba(255,255,255,0.18)','--card-radius':'4px','--border':'rgba(255,255,255,0.4)','--shadow':'rgba(0,0,0,0.28)'} },
     { id:'fx-warm',    name:'Warm Paper',     price:11, preview:'📄', vars:{'--glass':'rgba(255,243,210,0.93)','--card-radius':'16px','--border':'rgba(210,170,100,0.5)','--shadow':'rgba(140,90,30,0.14)'} },
     { id:'fx-dark',    name:'Dark Cards',     price:13, preview:'🌑', vars:{'--glass':'rgba(20,28,45,0.75)','--card-radius':'24px','--border':'rgba(255,255,255,0.1)','--shadow':'rgba(0,0,0,0.35)'} },
@@ -2176,7 +2164,7 @@ function applyAccessory(id){
       d.style.height=(28+Math.random()*38)+'px';
       d.style.animationDuration=dur+'s';
       d.style.animationDelay=delay+'s';
-      d.style.opacity=(0.22+Math.random()*0.35).toFixed(2);
+      d.style.opacity=(0.5+Math.random()*0.4).toFixed(2);
       layer.appendChild(d);
     }
   }
