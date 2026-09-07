@@ -552,9 +552,16 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
 /* ── ACCESORIOS DE FONDO ── */
 .acc-raindrop{
-  position:absolute; top:-10%; width:2px; border-radius:1px;
-  background:linear-gradient(to bottom, rgba(100,140,190,0) 0%, rgba(90,130,185,0.9) 65%, rgba(140,175,215,0.95) 100%);
+  position:absolute; top:-8%;
+  border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;
+  background:radial-gradient(circle at 32% 24%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.3) 16%, rgba(120,155,195,0.8) 42%, rgba(70,100,150,0.6) 100%);
+  box-shadow:0 0 3px rgba(60,90,140,0.25);
   animation:acc-rain-fall linear infinite;
+}
+@keyframes acc-rain-fall{
+  0%{ transform:translateY(-8vh) translateX(0) rotate(0deg); }
+  50%{ transform:translateY(50vh) translateX(8px) rotate(1deg); }
+  100%{ transform:translateY(112vh) translateX(-6px) rotate(-1deg); }
 }
 @keyframes acc-rain-fall{
   from{ transform:translateY(-10vh) translateX(0); }
@@ -2154,17 +2161,19 @@ function applyAccessory(id){
   if(!layer) return;
   layer.innerHTML='';
   if(id==='acc-rain'){
-    const count=window.innerWidth<600?30:55; // menos gotas en móvil, por rendimiento
+    const count=window.innerWidth<600?12:20; // pocas gotas, sensación contemplativa, no tormenta
     for(let i=0;i<count;i++){
       const d=document.createElement('div');
       d.className='acc-raindrop';
-      const dur=(0.6+Math.random()*0.9).toFixed(2);
-      const delay=(-Math.random()*2.5).toFixed(2);
+      const size=(4+Math.random()*4); // 4-8px de ancho
+      const dur=(4+Math.random()*5).toFixed(2); // caída lenta: 4-9s
+      const delay=(-Math.random()*9).toFixed(2);
       d.style.left=(Math.random()*100)+'vw';
-      d.style.height=(28+Math.random()*38)+'px';
+      d.style.width=size+'px';
+      d.style.height=(size*1.35)+'px';
       d.style.animationDuration=dur+'s';
       d.style.animationDelay=delay+'s';
-      d.style.opacity=(0.5+Math.random()*0.4).toFixed(2);
+      d.style.opacity=(0.55+Math.random()*0.35).toFixed(2);
       layer.appendChild(d);
     }
   }
