@@ -549,12 +549,24 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 .ob-dot{width:7px;height:7px;border-radius:50%;background:var(--border2);transition:all 0.25s;}
 .ob-dot.active{background:var(--accent2);width:20px;border-radius:4px;}
 .ob-actions{display:flex;align-items:center;justify-content:space-between;padding:18px 26px 26px;}
+
+/* ── ACCESORIOS DE FONDO ── */
+.acc-raindrop{
+  position:absolute; top:-10%; width:1.5px;
+  background:linear-gradient(to bottom, rgba(190,205,230,0), rgba(190,205,230,0.4));
+  animation:acc-rain-fall linear infinite;
+}
+@keyframes acc-rain-fall{
+  from{ transform:translateY(-10vh) translateX(0); }
+  to{ transform:translateY(110vh) translateX(-30px); }
+}
 </style>
 </head>
 <body>
 
 <!-- Fondos animados (vídeo silencioso / gif) — ocultos hasta que se elige un tema de este tipo -->
 <video id="bg-video" muted loop playsinline style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;z-index:-1;"></video>
+<div id="accessory-layer" style="position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;"></div>
 
 
 <!-- SETTINGS GEAR + LANG FLOAT -->
@@ -572,6 +584,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
   <!-- Language float button -->
   <button class="lang-float-btn" id="lang-float-btn" onclick="toggleLangPanel()" title="Idioma">🌐</button>
   <button class="lang-float-btn" id="onboarding-replay-btn" onclick="openOnboarding()" title="Ver tutorial de nuevo">❔</button>
+  <button class="lang-float-btn" id="social-float-btn" onclick="toggleSocialPanel()" title="Síguenos">📣</button>
 
   <!-- Settings panel (Background + Feedback only) -->
   <div class="settings-panel" id="settings-panel">
@@ -643,6 +656,16 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
       <button class="lang-btn"        id="lang-it" onclick="setLang('it',this);closeLangPanel()">🇮🇹 Italiano</button>
     </div>
   </div>
+
+  <!-- Social float panel -->
+  <div class="lang-float-panel" id="social-float-panel" style="width:210px;">
+    <div class="lang-float-title" id="txt-social-title">📣 Síguenos</div>
+    <div class="lang-float-grid" style="grid-template-columns:1fr;">
+      <a class="lang-btn" href="https://www.youtube.com" target="_blank" rel="noopener" style="text-decoration:none;">▶️ YouTube</a>
+      <a class="lang-btn" href="https://twitter.com" target="_blank" rel="noopener" style="text-decoration:none;">𝕏 Twitter / X</a>
+      <a class="lang-btn" href="https://www.tiktok.com" target="_blank" rel="noopener" style="text-decoration:none;">🎵 TikTok</a>
+    </div>
+  </div>
 </div>
 
 <header>
@@ -650,6 +673,9 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
   <h1 class="logo-text">Focus·Tap</h1>
   <button class="coin-display" onclick="openShop()" title="Tienda de personalización">
     <span class="coin-badge">C</span> <span id="coin-count">0</span>
+  </button>
+  <button class="coin-display" id="event-coin-display" onclick="openShop(true)" style="display:none;background:rgba(255,138,61,0.15);border-color:rgba(255,138,61,0.35);color:#c2410c;box-shadow:0 3px 10px rgba(255,138,61,0.15);">
+    <span class="coin-badge" id="event-coin-badge" style="background:linear-gradient(135deg,#ff7518,#c2410c);color:white;">🎃</span> <span id="event-coin-count">0</span>
   </button>
 </header>
 
@@ -893,15 +919,27 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
       <button class="lib-close" onclick="closeShop()">✕</button>
     </div>
     <div class="shop-body">
-      <div class="shop-earn-tip" id="txt-shop-earn-tip">
-        <span class="coin-badge" style="vertical-align:middle;margin-right:4px;">C</span> Ganas monedas por tramos de estudio cada día: <strong>1ª moneda a los 30 min</strong>, <strong>2ª a los 90 min</strong> y <strong>3ª a los 150 min</strong>. Hasta 3 monedas al día. Las monedas se guardan en tu cuenta y nunca caducan.
+      <div id="shop-main-sections">
+        <div class="shop-earn-tip" id="txt-shop-earn-tip">
+          <span class="coin-badge" style="vertical-align:middle;margin-right:4px;">C</span> Ganas monedas por tramos de estudio cada día: <strong>1ª moneda a los 30 min</strong>, <strong>2ª a los 90 min</strong> y <strong>3ª a los 150 min</strong>. Hasta 3 monedas al día. Las monedas se guardan en tu cuenta y nunca caducan.
+        </div>
+        <div class="shop-section-title" id="txt-shop-sec-palettes">🎨 Paletas de color</div>
+        <div class="shop-grid" id="shop-palettes"></div>
+        <div class="shop-section-title" id="txt-shop-sec-effects">✨ Efectos de tarjeta</div>
+        <div class="shop-grid" id="shop-effects"></div>
+        <div class="shop-section-title" id="txt-shop-sec-sounds">🔔 Sonidos premium</div>
+        <div class="shop-grid" id="shop-sounds"></div>
+        <div class="shop-section-title" id="txt-shop-sec-accessories">🌟 Accesorios de fondo</div>
+        <div class="shop-grid" id="shop-accessories"></div>
       </div>
-      <div class="shop-section-title" id="txt-shop-sec-palettes">🎨 Paletas de color</div>
-      <div class="shop-grid" id="shop-palettes"></div>
-      <div class="shop-section-title" id="txt-shop-sec-effects">✨ Efectos de tarjeta</div>
-      <div class="shop-grid" id="shop-effects"></div>
-      <div class="shop-section-title" id="txt-shop-sec-sounds">🔔 Sonidos premium</div>
-      <div class="shop-grid" id="shop-sounds"></div>
+      <div id="shop-event-wrap" style="display:none;">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:4px;margin-bottom:12px;">
+          <div class="shop-section-title" id="shop-event-title" style="margin-bottom:0;flex:1;"></div>
+          <div class="shop-balance" id="shop-event-balance-chip" style="background:rgba(255,138,61,0.15);border-color:rgba(255,138,61,0.3);color:#c2410c;white-space:nowrap;"></div>
+        </div>
+        <div class="shop-earn-tip" id="shop-event-tip" style="background:linear-gradient(135deg,rgba(255,138,61,0.1),rgba(124,58,237,0.07));border-color:rgba(255,138,61,0.25);color:#9a4a0e;"></div>
+        <div class="shop-grid" id="shop-event-grid"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1085,24 +1123,12 @@ const PLAYLISTS = {
       {name:'Jazz Cafe',       artist:'Waveloom',       url:'cafe2.mp3', dur:196},
       {name:'Jazz Cafe Morning Music', artist:'alex-morgan', url:'cafe3.mp3', dur:134},
       {name:'Jazz Sunny Cafe Music',   artist:'alex-morgan', url:'cafe4.mp3', dur:155},
-      {name:'Relaxed Lofi Cafe Music',   artist:'Tunetank', url:'cafe5.mp3', dur:168},
-      {name:'Relaxed Elevator Lounge Cafe Music',   artist:'Tunetank', url:'cafe6.mp3', dur:329},
-      {name:'Cafe Music',   artist:'LiteSaturation', url:'cafe7.mp3', dur:138},
-      {name:'Gentle Cafe Background',   artist:'Tunetank', url:'cafe8.mp3', dur:177},
-      {name:'Cafe Restaurant Background Music',   artist:'Tunetank', url:'cafe9.mp3', dur:115},
-      {name:'Free Cafe Music',   artist:'LiteSaturation', url:'cafe10.mp3', dur:198},      
-      {name:'Calm Lounge Cafe Music',   artist:'Tunetank', url:'cafe11.mp3', dur:249},      
-      {name:'Cafe Music',   artist:'VibeDepot', url:'cafe12.mp3', dur:175},
-
-      
-      {name:'cafe13',   artist:'cafe10', url:'cafe13.mp3', dur:198},
-      {name:'cafe14',   artist:'cafe10', url:'cafe14.mp3', dur:198},
-      {name:'cafe15',   artist:'cafe10', url:'cafe15.mp3', dur:198},
-      {name:'cafe16',   artist:'cafe10', url:'cafe16.mp3', dur:198},
-      {name:'cafe17',   artist:'cafe10', url:'cafe17.mp3', dur:198},
-      {name:'cafe18',   artist:'cafe10', url:'cafe18.mp3', dur:198},
-      {name:'cafe19',   artist:'cafe10', url:'cafe19.mp3', dur:198},     
-      {name:'cafe20',   artist:'cafe10', url:'cafe20.mp3', dur:198},
+      {name:'cafe5',   artist:'cafe5', url:'cafe5.mp3', dur:168},
+      {name:'cafe6',   artist:'cafe6', url:'cafe6.mp3', dur:329},
+      {name:'cafe7',   artist:'cafe7', url:'cafe7.mp3', dur:138},
+      {name:'cafe8',   artist:'cafe8', url:'cafe8.mp3', dur:177},
+      {name:'cafe9',   artist:'cafe9', url:'cafe9.mp3', dur:115},
+      {name:'cafe10',   artist:'cafe10', url:'cafe10.mp3', dur:198},
     ]
   },
   classical:{
@@ -1136,15 +1162,17 @@ const ALARMS = [
   {id:'crystal', icon:'💎', name:'Cristal',         desc:'Arpeggio de cristal ascendente', shopId:'snd-crystal'},
   {id:'gentle',  icon:'🌅', name:'Gentle Wake',    desc:'Despertar suave y progresivo',   shopId:'snd-gentle'},
   {id:'melody',  icon:'🎶', name:'Melodía',          desc:'Escala musical completa',         shopId:'snd-melody'},
+  // Sonido exclusivo de evento — visible/comprable solo mientras el evento esté activo
+  {id:'howl',    icon:'🦇', name:'Aullido',          desc:'Tono descendente y espectral',    shopId:'evt-halloween-snd'},
 ];
 
 const ALARMS_I18N = {
-  es:{beep:{name:'Beep clásico',desc:'Dos pitidos cortos + tono largo'},bell:{name:'Campana suave',desc:'Dos tonos calmados y suaves'},pulse:{name:'Pulso digital',desc:'Cuatro pulsos rápidos ascendentes'},chime:{name:'Carillón',desc:'Melodía suave de cuatro notas'},urgent:{name:'Urgente',desc:'Señal de alerta rápida'},crystal:{name:'Cristal',desc:'Arpeggio de cristal ascendente'},gentle:{name:'Gentle Wake',desc:'Despertar suave y progresivo'},melody:{name:'Melodía',desc:'Escala musical completa'}},
-  en:{beep:{name:'Classic beep',desc:'Two short beeps + long tone'},bell:{name:'Soft bell',desc:'Two calm, gentle tones'},pulse:{name:'Digital pulse',desc:'Four quick rising pulses'},chime:{name:'Chime',desc:'Soft four-note melody'},urgent:{name:'Urgent',desc:'Fast alert signal'},crystal:{name:'Crystal',desc:'Rising crystal arpeggio'},gentle:{name:'Gentle Wake',desc:'Soft progressive wake'},melody:{name:'Melody',desc:'Full musical scale'}},
-  fr:{beep:{name:'Bip classique',desc:'Deux bips courts + tonalité longue'},bell:{name:'Cloche douce',desc:'Deux tonalités calmes et douces'},pulse:{name:'Pulsation digitale',desc:'Quatre pulsations rapides ascendantes'},chime:{name:'Carillon',desc:'Douce mélodie de quatre notes'},urgent:{name:'Urgent',desc:'Signal d\'alerte rapide'},crystal:{name:'Cristal',desc:'Arpège de cristal ascendant'},gentle:{name:'Réveil doux',desc:'Réveil progressif et doux'},melody:{name:'Mélodie',desc:'Gamme musicale complète'}},
-  de:{beep:{name:'Klassischer Piepton',desc:'Zwei kurze Pieptöne + langer Ton'},bell:{name:'Sanfte Glocke',desc:'Zwei ruhige, sanfte Töne'},pulse:{name:'Digitaler Impuls',desc:'Vier schnelle aufsteigende Impulse'},chime:{name:'Glockenspiel',desc:'Sanfte Melodie aus vier Noten'},urgent:{name:'Dringend',desc:'Schnelles Warnsignal'},crystal:{name:'Kristall',desc:'Aufsteigendes Kristall-Arpeggio'},gentle:{name:'Sanftes Erwachen',desc:'Weiches, progressives Erwachen'},melody:{name:'Melodie',desc:'Vollständige Tonleiter'}},
-  pt:{beep:{name:'Beep clássico',desc:'Dois bipes curtos + tom longo'},bell:{name:'Sino suave',desc:'Dois tons calmos e suaves'},pulse:{name:'Pulso digital',desc:'Quatro pulsos rápidos ascendentes'},chime:{name:'Carrilhão',desc:'Melodia suave de quatro notas'},urgent:{name:'Urgente',desc:'Sinal de alerta rápido'},crystal:{name:'Cristal',desc:'Arpejo de cristal ascendente'},gentle:{name:'Despertar suave',desc:'Despertar progressivo e suave'},melody:{name:'Melodia',desc:'Escala musical completa'}},
-  it:{beep:{name:'Beep classico',desc:'Due bip brevi + tono lungo'},bell:{name:'Campana dolce',desc:'Due toni calmi e delicati'},pulse:{name:'Impulso digitale',desc:'Quattro impulsi rapidi ascendenti'},chime:{name:'Carillon',desc:'Dolce melodia di quattro note'},urgent:{name:'Urgente',desc:'Segnale di allerta rapido'},crystal:{name:'Cristallo',desc:'Arpeggio di cristallo ascendente'},gentle:{name:'Risveglio dolce',desc:'Risveglio progressivo e delicato'},melody:{name:'Melodia',desc:'Scala musicale completa'}},
+  es:{beep:{name:'Beep clásico',desc:'Dos pitidos cortos + tono largo'},bell:{name:'Campana suave',desc:'Dos tonos calmados y suaves'},pulse:{name:'Pulso digital',desc:'Cuatro pulsos rápidos ascendentes'},chime:{name:'Carillón',desc:'Melodía suave de cuatro notas'},urgent:{name:'Urgente',desc:'Señal de alerta rápida'},crystal:{name:'Cristal',desc:'Arpeggio de cristal ascendente'},gentle:{name:'Gentle Wake',desc:'Despertar suave y progresivo'},melody:{name:'Melodía',desc:'Escala musical completa'},howl:{name:'Aullido',desc:'Tono descendente y espectral'}},
+  en:{beep:{name:'Classic beep',desc:'Two short beeps + long tone'},bell:{name:'Soft bell',desc:'Two calm, gentle tones'},pulse:{name:'Digital pulse',desc:'Four quick rising pulses'},chime:{name:'Chime',desc:'Soft four-note melody'},urgent:{name:'Urgent',desc:'Fast alert signal'},crystal:{name:'Crystal',desc:'Rising crystal arpeggio'},gentle:{name:'Gentle Wake',desc:'Soft progressive wake'},melody:{name:'Melody',desc:'Full musical scale'},howl:{name:'Howl',desc:'Spooky descending tone'}},
+  fr:{beep:{name:'Bip classique',desc:'Deux bips courts + tonalité longue'},bell:{name:'Cloche douce',desc:'Deux tonalités calmes et douces'},pulse:{name:'Pulsation digitale',desc:'Quatre pulsations rapides ascendantes'},chime:{name:'Carillon',desc:'Douce mélodie de quatre notes'},urgent:{name:'Urgent',desc:'Signal d\'alerte rapide'},crystal:{name:'Cristal',desc:'Arpège de cristal ascendant'},gentle:{name:'Réveil doux',desc:'Réveil progressif et doux'},melody:{name:'Mélodie',desc:'Gamme musicale complète'},howl:{name:'Hurlement',desc:'Tonalité descendante et spectrale'}},
+  de:{beep:{name:'Klassischer Piepton',desc:'Zwei kurze Pieptöne + langer Ton'},bell:{name:'Sanfte Glocke',desc:'Zwei ruhige, sanfte Töne'},pulse:{name:'Digitaler Impuls',desc:'Vier schnelle aufsteigende Impulse'},chime:{name:'Glockenspiel',desc:'Sanfte Melodie aus vier Noten'},urgent:{name:'Dringend',desc:'Schnelles Warnsignal'},crystal:{name:'Kristall',desc:'Aufsteigendes Kristall-Arpeggio'},gentle:{name:'Sanftes Erwachen',desc:'Weiches, progressives Erwachen'},melody:{name:'Melodie',desc:'Vollständige Tonleiter'},howl:{name:'Heulen',desc:'Gespenstischer absteigender Ton'}},
+  pt:{beep:{name:'Beep clássico',desc:'Dois bipes curtos + tom longo'},bell:{name:'Sino suave',desc:'Dois tons calmos e suaves'},pulse:{name:'Pulso digital',desc:'Quatro pulsos rápidos ascendentes'},chime:{name:'Carrilhão',desc:'Melodia suave de quatro notas'},urgent:{name:'Urgente',desc:'Sinal de alerta rápido'},crystal:{name:'Cristal',desc:'Arpejo de cristal ascendente'},gentle:{name:'Despertar suave',desc:'Despertar progressivo e suave'},melody:{name:'Melodia',desc:'Escala musical completa'},howl:{name:'Uivo',desc:'Tom descendente e fantasmagórico'}},
+  it:{beep:{name:'Beep classico',desc:'Due bip brevi + tono lungo'},bell:{name:'Campana dolce',desc:'Due toni calmi e delicati'},pulse:{name:'Impulso digitale',desc:'Quattro impulsi rapidi ascendenti'},chime:{name:'Carillon',desc:'Dolce melodia di quattro note'},urgent:{name:'Urgente',desc:'Segnale di allerta rapido'},crystal:{name:'Cristallo',desc:'Arpeggio di cristallo ascendente'},gentle:{name:'Risveglio dolce',desc:'Risveglio progressivo e delicato'},melody:{name:'Melodia',desc:'Scala musicale completa'},howl:{name:'Ululato',desc:'Tono discendente e spettrale'}},
 };
 function alarmMeta(id){
   const table=ALARMS_I18N[currentLang]||ALARMS_I18N.es;
@@ -1160,6 +1188,7 @@ if(localStorage.getItem('ft-date') !== TODAY){
   localStorage.setItem('ft-sessions','0');
   localStorage.setItem('ft-totalmin','0');
   localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:[]}));
+  localStorage.setItem('ft-event-coin-tiers-day',JSON.stringify({date:TODAY,data:{}}));
 }
 function getWeekId(){
   // Semana alineada a lunes (igual que la fila L M X J V S D que se muestra),
@@ -1202,11 +1231,16 @@ let libActiveGenre=null;
 let selectedAlarm='beep';
 // ── Tienda ──
 let coins=parseInt(localStorage.getItem('ft-coins')||'0');
-let ownedItems=JSON.parse(localStorage.getItem('ft-owned-items')||'["pal-default","fx-none","snd-beep","snd-bell","snd-pulse","snd-chime","snd-urgent"]');
-let activeItems=JSON.parse(localStorage.getItem('ft-active-items')||'{"palette":"pal-default","effect":"fx-none"}');
+let ownedItems=JSON.parse(localStorage.getItem('ft-owned-items')||'["pal-default","fx-none","acc-none","snd-beep","snd-bell","snd-pulse","snd-chime","snd-urgent"]');
+let activeItems=JSON.parse(localStorage.getItem('ft-active-items')||'{"palette":"pal-default","effect":"fx-none","accessory":"acc-none"}');
 let coinEarnedToday=localStorage.getItem('ft-coin-day')===TODAY;
 // Tramos de moneda diaria ya cobrados hoy (índices de COIN_TIERS), persistidos como {date,tiers}
 let coinTiersEarnedToday=(()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.tiers:[]; }catch(e){ return []; } })();
+// Monedas de eventos de temporada (una por evento, ej. {halloween:3}) y sus tramos ya cobrados hoy
+let eventCoins=JSON.parse(localStorage.getItem('ft-event-coins')||'{}');
+let eventCoinTiersToday=(()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-event-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.data:{}; }catch(e){ return {}; } })();
+// Último año en que se reinició la moneda de cada evento (ej. {halloween:2026})
+let eventCoinsResetYear=JSON.parse(localStorage.getItem('ft-event-coins-reset-year')||'{}');
 let alarmCtx=null, alarmNodes=[], alarmLoop=null;
 
 // ══════════════════════════════════════
@@ -1258,6 +1292,7 @@ startBtn.onclick=()=>{
         localStorage.setItem('ft-totalmin',prev+mins);
         updateStats(); updateScore(); markStreak(); launchCelebration(mins);
         tryEarnCoin(); // comprueba si gana moneda hoy
+        tryEarnEventCoins(); // comprueba si hay algún evento de temporada activo hoy
         playAlarm(); // alarm at session end — en bucle hasta que se cierre la celebración
         saveCloudData();
         timerLeft=(parseInt(document.getElementById('m-in').value)||25)*60; updateClock();
@@ -1733,6 +1768,10 @@ const SHOP_CATALOGUE = {
     { id:'snd-gentle',  name:'Gentle Wake',     price:9, preview:'🌅', alarmId:'gentle' },
     { id:'snd-melody',  name:'Melodía',          price:13, preview:'🎶', alarmId:'melody' },
   ],
+  accessories:[
+    { id:'acc-none', name:'Ninguno', price:0, preview:'🚫', particle:'none' },
+    { id:'acc-rain', name:'Lluvia Suave', price:10, preview:'🌧️', particle:'rain' },
+  ],
 };
 
 const PREMIUM_ALARM_PATTERNS = {
@@ -1759,6 +1798,16 @@ const PREMIUM_ALARM_PATTERNS = {
       g.gain.setValueAtTime(0,t+i*0.12);g.gain.linearRampToValueAtTime(0.2,t+i*0.12+0.02);
       g.gain.exponentialRampToValueAtTime(0.001,t+i*0.12+0.35);o.start(t+i*0.12);o.stop(t+i*0.12+0.4);
     });
+  },
+  howl:(ctx,t)=>{
+    // Tono descendente y ligeramente vibrante — sonido exclusivo del evento de Halloween
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);o.type='sawtooth';
+    o.frequency.setValueAtTime(720,t);
+    o.frequency.exponentialRampToValueAtTime(180,t+1.1);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.16,t+0.08);
+    g.gain.linearRampToValueAtTime(0,t+1.15);
+    o.start(t);o.stop(t+1.2);
   },
 };
 
@@ -1807,8 +1856,197 @@ function tryEarnCoin(){
   }
 }
 
+// ══════════════════════════════════════
+//  EVENTOS TEMÁTICOS DE TEMPORADA
+//  Prueba de concepto: Halloween. Fechas repetidas cada año (sin año fijo).
+//  Los objetos comprados son PERMANENTES (van al mismo ownedItems de siempre);
+//  lo único que dura solo el evento es la OPORTUNIDAD de conseguirlos.
+// ══════════════════════════════════════
+const SEASONAL_EVENTS={
+  halloween:{ id:'halloween', emoji:'🎃', startMonth:9, startDay:2, endMonth:9, endDay:3, coinIcon:'🎃' }
+};
+// Nombre del evento y de su moneda, traducidos — igual que el resto de la tienda
+const EVENTS_I18N={
+  halloween:{
+    es:{label:'Halloween', coinName:'calabazas'}, en:{label:'Halloween', coinName:'pumpkins'},
+    fr:{label:'Halloween', coinName:'citrouilles'}, de:{label:'Halloween', coinName:'Kürbisse'},
+    pt:{label:'Halloween', coinName:'abóboras'}, it:{label:'Halloween', coinName:'zucche'}
+  }
+};
+function eventMeta(evId){
+  const t=EVENTS_I18N[evId];
+  return (t&&(t[currentLang]||t.es))||{label:evId,coinName:'monedas'};
+}
+const EVENT_ITEMS={
+  halloween:[
+    { id:'evt-halloween-pal', price:5, preview:'🎃', type:'palette', event:'halloween',
+      vars:{'--accent2':'#ff7518','--mint2':'#7c3aed','--rose':'#ff9d4d'} },
+    { id:'evt-halloween-pal2', price:7, preview:'🌑', type:'palette', event:'halloween',
+      vars:{'--accent2':'#b8460e','--mint2':'#4c1d95','--rose':'#7c2d12'} },
+    { id:'evt-halloween-fx', price:6, preview:'👻', type:'effect', event:'halloween',
+      vars:{'--glass':'rgba(20,10,30,0.78)','--card-radius':'18px','--border':'rgba(255,117,24,0.45)','--shadow':'rgba(124,58,237,0.22)'}, glow:'halloween' },
+    { id:'evt-halloween-fx2', price:6, preview:'🌫️', type:'effect', event:'halloween',
+      vars:{'--glass':'rgba(230,230,235,0.4)','--card-radius':'26px','--border':'rgba(200,200,210,0.5)','--shadow':'rgba(140,140,160,0.2)'}, glow:'fog' },
+    { id:'evt-halloween-snd', price:5, preview:'🐺', type:'sound', event:'halloween', alarmId:'howl' }
+  ]
+};
+// Nombres de los artículos de evento, traducidos (los de la tienda base como "Cherry
+// Blossom" se dejan como nombres de marca sin traducir; estos, al ser descriptivos, sí)
+const EVENT_ITEM_NAMES_I18N={
+  es:{'evt-halloween-pal':'Halloween Fright','evt-halloween-pal2':'Calabaza Nocturna','evt-halloween-fx':'Resplandor Tétrico','evt-halloween-fx2':'Niebla Espectral'},
+  en:{'evt-halloween-pal':'Halloween Fright','evt-halloween-pal2':'Midnight Pumpkin','evt-halloween-fx':'Spooky Glow','evt-halloween-fx2':'Spectral Fog'},
+  fr:{'evt-halloween-pal':'Frayeur d\'Halloween','evt-halloween-pal2':'Citrouille Nocturne','evt-halloween-fx':'Lueur Sinistre','evt-halloween-fx2':'Brume Spectrale'},
+  de:{'evt-halloween-pal':'Halloween-Schrecken','evt-halloween-pal2':'Nächtlicher Kürbis','evt-halloween-fx':'Gruseliger Schein','evt-halloween-fx2':'Geisternebel'},
+  pt:{'evt-halloween-pal':'Pavor de Halloween','evt-halloween-pal2':'Abóbora Noturna','evt-halloween-fx':'Brilho Assustador','evt-halloween-fx2':'Névoa Espectral'},
+  it:{'evt-halloween-pal':'Terrore di Halloween','evt-halloween-pal2':'Zucca Notturna','evt-halloween-fx':'Bagliore Spettrale','evt-halloween-fx2':'Nebbia Spettrale'}
+};
+function eventItemName(item){
+  if(item.type==='sound') return alarmMeta(item.alarmId).name; // reutiliza la tabla de sonidos ya traducida
+  const t=EVENT_ITEM_NAMES_I18N[currentLang]||EVENT_ITEM_NAMES_I18N.es;
+  return t[item.id]||EVENT_ITEM_NAMES_I18N.es[item.id]||item.id;
+}
+
+function isEventActive(id){
+  const ev=SEASONAL_EVENTS[id]; if(!ev) return false;
+  const now=new Date();
+  const code=(now.getMonth()+1)*100+now.getDate();
+  const start=ev.startMonth*100+ev.startDay, end=ev.endMonth*100+ev.endDay;
+  return start<=end ? (code>=start&&code<=end) : (code>=start||code<=end);
+}
+function getActiveEvent(){ return Object.keys(SEASONAL_EVENTS).find(isEventActive)||null; }
+
+// Busca un artículo tanto en el catálogo normal como en los de evento — así, una vez
+// comprado, sigue aplicándose correctamente aunque el evento ya haya terminado.
+function findShopItem(id){
+  for(const arr of Object.values(SHOP_CATALOGUE)){ const f=arr.find(i=>i.id===id); if(f) return f; }
+  for(const arr of Object.values(EVENT_ITEMS)){ const f=arr.find(i=>i.id===id); if(f) return f; }
+  return null;
+}
+// Artículos de evento ya comprados, para mostrarlos también en la sección principal
+// correspondiente (paletas/efectos/sonidos) aunque el evento ya haya terminado.
+function ownedEventItemsFor(section){
+  const wantType={palettes:'palette',effects:'effect',sounds:'sound'}[section];
+  const out=[];
+  Object.values(EVENT_ITEMS).forEach(arr=>{
+    arr.forEach(item=>{ if(item.type===wantType && ownedItems.includes(item.id)) out.push(item); });
+  });
+  return out;
+}
+
+// Reinicia la moneda de un evento a 0 cuando detecta que es una EDICIÓN NUEVA (ha
+// cambiado el año desde la última vez que estuvo activo), no cada vez que se recarga
+// la página durante la misma edición — así lo ganado esta semana no se pierde entre
+// sesiones, pero sí se parte de cero cuando el evento vuelve el año siguiente.
+function checkEventCoinReset(evId){
+  const currentYear=new Date().getFullYear();
+  if(eventCoinsResetYear[evId]!==currentYear){
+    eventCoins[evId]=0;
+    eventCoinsResetYear[evId]=currentYear;
+    localStorage.setItem('ft-event-coins',JSON.stringify(eventCoins));
+    localStorage.setItem('ft-event-coins-reset-year',JSON.stringify(eventCoinsResetYear));
+    saveCloudData();
+  }
+}
+
+function applySeasonalUI(){
+  const activeEv=getActiveEvent();
+  const logo=document.querySelector('.panda-logo');
+  const evBtn=document.getElementById('event-coin-display');
+  if(activeEv){
+    checkEventCoinReset(activeEv);
+    const ev=SEASONAL_EVENTS[activeEv], meta=eventMeta(activeEv);
+    if(logo) logo.innerText=ev.emoji;
+    if(evBtn){
+      evBtn.style.display='flex';
+      document.getElementById('event-coin-badge').innerText=ev.coinIcon;
+      document.getElementById('event-coin-count').innerText=eventCoins[activeEv]||0;
+      evBtn.title=`${meta.label} — ${meta.coinName}`;
+    }
+  } else {
+    if(logo) logo.innerText='🐼';
+    if(evBtn) evBtn.style.display='none';
+  }
+}
+
+function tryEarnEventCoins(){
+  const totalMin=parseInt(localStorage.getItem('ft-totalmin')||'0');
+  Object.keys(SEASONAL_EVENTS).forEach(evId=>{
+    if(!isEventActive(evId)) return;
+    const ev=SEASONAL_EVENTS[evId], meta=eventMeta(evId);
+    const earnedTiers=eventCoinTiersToday[evId]||[];
+    let earned=0;
+    COIN_TIERS.forEach((tier,idx)=>{
+      if(totalMin>=tier.min && !earnedTiers.includes(idx)){ earnedTiers.push(idx); earned++; }
+    });
+    if(earned>0){
+      eventCoins[evId]=(eventCoins[evId]||0)+earned;
+      eventCoinTiersToday[evId]=earnedTiers;
+      localStorage.setItem('ft-event-coins',JSON.stringify(eventCoins));
+      localStorage.setItem('ft-event-coin-tiers-day',JSON.stringify({date:TODAY,data:eventCoinTiersToday}));
+      applySeasonalUI();
+      showToast(`${ev.coinIcon} +${earned} ${meta.coinName} — ¡evento ${meta.label}!`);
+      saveCloudData();
+    }
+  });
+}
+
+function buyOrActivateEventItem(item, activeEv, balance){
+  const active=item.type==='sound'?false:(item.type==='palette'?activeItems.palette===item.id:activeItems.effect===item.id);
+  if(active) return;
+  const owned=ownedItems.includes(item.id);
+  if(owned){
+    if(item.type==='palette') applyPalette(item.id);
+    else if(item.type==='effect') applyEffect(item.id);
+    else showToast(tr('shopSoundAvailable'));
+    saveCloudData(); buildShop(); return;
+  }
+  if(balance<item.price){ showToast(tr('shopNeedCoins').replace('{price}',item.price).replace('{coins}',balance)); return; }
+  eventCoins[activeEv]=balance-item.price;
+  localStorage.setItem('ft-event-coins',JSON.stringify(eventCoins));
+  ownedItems.push(item.id);
+  localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
+  if(item.type==='palette') applyPalette(item.id);
+  else if(item.type==='effect') applyEffect(item.id);
+  applySeasonalUI();
+  saveCloudData();
+  showToast(tr('shopUnlockedToast').replace('{name}',eventItemName(item)));
+  buildShop();
+}
+
+function buildEventShop(){
+  const wrap=document.getElementById('shop-event-wrap');
+  const activeEv=getActiveEvent();
+  if(!activeEv || !EVENT_ITEMS[activeEv]){ wrap.style.display='none'; return; }
+  wrap.style.display='block';
+  const ev=SEASONAL_EVENTS[activeEv], meta=eventMeta(activeEv);
+  const balance=eventCoins[activeEv]||0;
+  document.getElementById('shop-event-title').innerText=`${ev.emoji} ${tr('shopEventPrefix')}: ${meta.label}`;
+  document.getElementById('shop-event-balance-chip').innerHTML=`${ev.coinIcon} ${balance} ${meta.coinName}`;
+  document.getElementById('shop-event-tip').innerHTML=tr('shopEventTip').replace(/\{coinName\}/g,meta.coinName);
+  const grid=document.getElementById('shop-event-grid'); grid.innerHTML='';
+  // "retired:true" saca el objeto de la venta sin borrarlo — sigue existiendo para quien
+  // ya lo tenga, y tú decides cuándo volver a ponerlo disponible cambiando ese único valor.
+  EVENT_ITEMS[activeEv].filter(item=>!item.retired).forEach(item=>{
+    const owned=ownedItems.includes(item.id);
+    const active=item.type==='sound'?false:(item.type==='palette'?activeItems.palette===item.id:activeItems.effect===item.id);
+    const canAfford=balance>=item.price;
+    const name=eventItemName(item);
+    const div=document.createElement('div');
+    div.className='shop-item'+(active?' active-item':owned?' owned':!canAfford?' cant-afford':'');
+    let badge=active?`<span class="shop-item-badge badge-active">${tr('shopBadgeActive')}</span>`:owned?`<span class="shop-item-badge badge-owned">${tr('shopBadgeOwned')}</span>`:'';
+    let priceHtml=(owned||active)?'':`<span class="shop-item-price">${ev.coinIcon} ${item.price}</span>`;
+    let previewBtn=item.type==='sound'?`<br><button class="shop-preview-btn" onclick="previewShopSound('${item.alarmId}',event)">▶ ${tr('shopListen')}</button>`:'';
+    div.innerHTML=`${badge}<span class="shop-item-preview">${item.preview}</span><div class="shop-item-name">${name}</div>${priceHtml}${previewBtn}`;
+    div.onclick=(e)=>{
+      if(e.target.classList.contains('shop-preview-btn')) return;
+      buyOrActivateEventItem(item, activeEv, balance);
+    };
+    grid.appendChild(div);
+  });
+}
+
 function applyPalette(id){
-  const item=SHOP_CATALOGUE.palettes.find(p=>p.id===id); if(!item) return;
+  const item=findShopItem(id); if(!item) return;
   // 1. Aplicar variables CSS
   Object.entries(item.vars).forEach(([k,v])=>document.documentElement.style.setProperty(k,v));
   // 2. Sincronizar --accent con --accent2 (algunos elementos lo usan)
@@ -1837,13 +2075,13 @@ function applyPalette(id){
 }
 
 function applyEffect(id){
-  const item=SHOP_CATALOGUE.effects.find(e=>e.id===id); if(!item) return;
+  const item=findShopItem(id); if(!item) return;
   const root=document.documentElement;
   ['--glass','--card-radius','--border','--shadow'].forEach(k=>root.style.removeProperty(k));
   if(item.vars) Object.entries(item.vars).forEach(([k,v])=>root.style.setProperty(k,v));
 
   // Limpiar estilos inyectados de efectos anteriores
-  ['fx-neon-style','fx-frosted-style'].forEach(sid=>{
+  ['fx-neon-style','fx-frosted-style','fx-halloween-style'].forEach(sid=>{
     const el=document.getElementById(sid); if(el) el.textContent='';
   });
 
@@ -1875,16 +2113,78 @@ function applyEffect(id){
       }`;
   }
 
+  if(id==='evt-halloween-fx'){
+    // Resplandor naranja/morado de temporada
+    let tag=document.getElementById('fx-halloween-style');
+    if(!tag){tag=document.createElement('style');tag.id='fx-halloween-style';document.head.appendChild(tag);}
+    tag.textContent=`
+      .card,.sidebar-card{
+        border:1.5px solid rgba(255,117,24,0.85)!important;
+        box-shadow:
+          0 0 6px rgba(255,117,24,0.7),
+          0 0 18px rgba(124,58,237,0.4),
+          0 0 36px rgba(255,117,24,0.15),
+          inset 0 0 10px rgba(124,58,237,0.1)!important;
+      }`;
+  }
+
+  if(id==='evt-halloween-fx2'){
+    // Niebla real: desenfoque extra + halo difuso, más frío que el resplandor
+    let tag=document.getElementById('fx-halloween-style');
+    if(!tag){tag=document.createElement('style');tag.id='fx-halloween-style';document.head.appendChild(tag);}
+    tag.textContent=`
+      .card,.sidebar-card{
+        backdrop-filter:blur(14px) saturate(0.8)!important;
+        -webkit-backdrop-filter:blur(14px) saturate(0.8)!important;
+        border:1.5px solid rgba(200,200,215,0.55)!important;
+        box-shadow:
+          0 0 30px rgba(180,175,210,0.3),
+          inset 0 0 26px rgba(255,255,255,0.12)!important;
+      }`;
+  }
+
   activeItems.effect=id;
+  localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
+}
+
+// Genera (o quita) la capa de partículas ambientales que se ve por encima de
+// cualquier fondo, tema o imagen/vídeo personalizado — no sustituye el fondo, lo complementa.
+function applyAccessory(id){
+  const layer=document.getElementById('accessory-layer');
+  if(!layer) return;
+  layer.innerHTML='';
+  if(id==='acc-rain'){
+    const count=window.innerWidth<600?30:55; // menos gotas en móvil, por rendimiento
+    for(let i=0;i<count;i++){
+      const d=document.createElement('div');
+      d.className='acc-raindrop';
+      const dur=(0.6+Math.random()*0.9).toFixed(2);
+      const delay=(-Math.random()*2.5).toFixed(2);
+      d.style.left=(Math.random()*100)+'vw';
+      d.style.height=(28+Math.random()*38)+'px';
+      d.style.animationDuration=dur+'s';
+      d.style.animationDelay=delay+'s';
+      d.style.opacity=(0.22+Math.random()*0.35).toFixed(2);
+      layer.appendChild(d);
+    }
+  }
+  activeItems.accessory=id;
   localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
 }
 
 function applyActiveItems(){
   applyPalette(activeItems.palette||'pal-default');
   applyEffect(activeItems.effect||'fx-none');
+  applyAccessory(activeItems.accessory||'acc-none');
 }
 
-function openShop(){ buildShop(); updateCoinDisplay(); document.getElementById('shop-modal').classList.add('open'); }
+function openShop(onlyEvent){
+  buildShop();
+  updateCoinDisplay();
+  const mainSections=document.getElementById('shop-main-sections');
+  if(mainSections) mainSections.style.display=onlyEvent?'none':'';
+  document.getElementById('shop-modal').classList.add('open');
+}
 function closeShop(){ document.getElementById('shop-modal').classList.remove('open'); }
 
 function buildShop(){
@@ -1892,6 +2192,8 @@ function buildShop(){
   buildShopSection('shop-effects','effects',(item)=>{ applyEffect(item.id); saveCloudData(); buildShop(); });
   // Sonidos: comprar = tenerlo. La selección se hace desde el modal de alarma.
   buildShopSection('shop-sounds','sounds',()=>{ showToast(tr('shopSoundAvailable')); buildShop(); });
+  buildShopSection('shop-accessories','accessories',(item)=>{ applyAccessory(item.id); saveCloudData(); buildShop(); });
+  buildEventShop();
 }
 
 function buildShopSection(gridId,section,onActivate){
@@ -1900,26 +2202,38 @@ function buildShopSection(gridId,section,onActivate){
   const isActive=(item)=>{
     if(section==='palettes') return activeItems.palette===item.id;
     if(section==='effects')  return activeItems.effect===item.id;
+    if(section==='accessories') return activeItems.accessory===item.id;
     return false; // sonidos: sin estado "activo" en tienda — se gestiona desde modal de alarma
   };
   // Nombre a mostrar: los sonidos reutilizan la traducción ya existente en ALARMS_I18N
-  // (para no duplicar textos), el efecto "Estándar" tiene su propia clave, y el resto
-  // (paletas, efectos con nombre propio) se mantienen como nombres de marca sin traducir.
+  // (para no duplicar textos), el efecto "Estándar" tiene su propia clave, los artículos
+  // de evento tienen su propia tabla traducida, y el resto (paletas, efectos con nombre
+  // propio) se mantienen como nombres de marca sin traducir.
   const displayName=(item)=>{
+    if(item.event) return eventItemName(item);
     if(section==='sounds') return alarmMeta(item.alarmId).name;
     if(item.id==='fx-none') return tr('shopEffectStandard');
+    if(item.id==='acc-none') return tr('shopAccessoryNone');
+    if(item.id==='acc-rain') return tr('shopAccessoryRainName');
     return item.name;
   };
-  SHOP_CATALOGUE[section].forEach(item=>{
+  // Artículos normales + artículos de evento YA COMPRADOS (aunque el evento haya terminado)
+  const items=SHOP_CATALOGUE[section].concat(ownedEventItemsFor(section));
+  items.forEach(item=>{
     const owned=ownedItems.includes(item.id);
     const active=isActive(item);
-    const canAfford=coins>=item.price;
+    const canAfford=coins>=(item.price||0);
     const name=displayName(item);
     const div=document.createElement('div');
     div.className='shop-item'+(active?' active-item':owned?' owned':!canAfford?' cant-afford':'');
-    let badge=active?`<span class="shop-item-badge badge-active">${tr('shopBadgeActive')}</span>`:owned?`<span class="shop-item-badge badge-owned">${tr('shopBadgeOwned')}</span>`:'';
+    let badge=active?`<span class="shop-item-badge badge-active">${tr('shopBadgeActive')}</span>`
+      :owned?(item.event?`<span class="shop-item-badge badge-owned">${SEASONAL_EVENTS[item.event].emoji} ${tr('shopBadgeEvent')}</span>`:`<span class="shop-item-badge badge-owned">${tr('shopBadgeOwned')}</span>`)
+      :'';
+    // Los artículos de evento no comprados no se muestran aquí (solo en su sección de
+    // evento, con su propia moneda) — así que si no está en ownedItems, se omite.
+    if(item.event && !owned) return;
     let priceHtml=(owned||active)?'':(item.price===0?`<span class="shop-item-price" style="color:var(--mint2)">${tr('shopFree')}</span>`:`<span class="shop-item-price">C ${item.price}</span>`);
-    let previewBtn=section==='sounds'?`<br><button class="shop-preview-btn" onclick="previewShopSound('${item.alarmId}',event)">▶ ${tr('shopListen')}</button>`:'';
+    let previewBtn=(section==='sounds')?`<br><button class="shop-preview-btn" onclick="previewShopSound('${item.alarmId}',event)">▶ ${tr('shopListen')}</button>`:'';
     div.innerHTML=`${badge}<span class="shop-item-preview">${item.preview}</span><div class="shop-item-name">${name}</div>${priceHtml}${previewBtn}`;
     div.onclick=(e)=>{
       if(e.target.classList.contains('shop-preview-btn')) return;
@@ -1973,6 +2287,8 @@ function closeAllFloatPanels(){
   document.getElementById('lang-float-btn').classList.remove('active');
   document.getElementById('account-panel').classList.remove('open');
   document.getElementById('account-btn').classList.remove('open');
+  document.getElementById('social-float-panel').classList.remove('open');
+  document.getElementById('social-float-btn').classList.remove('active');
 }
 function toggleSettings(){
   const wasOpen=document.getElementById('settings-panel').classList.contains('open');
@@ -2002,6 +2318,15 @@ function toggleLangPanel(){
 function closeLangPanel(){
   document.getElementById('lang-float-panel').classList.remove('open');
   document.getElementById('lang-float-btn').classList.remove('active');
+}
+function toggleSocialPanel(){
+  const wasOpen=document.getElementById('social-float-panel').classList.contains('open');
+  closeAllFloatPanels();
+  if(!wasOpen){
+    document.getElementById('social-float-panel').classList.add('open');
+    document.getElementById('social-float-btn').classList.add('active');
+    setTimeout(()=>document.addEventListener('click',outsideSettings,true),10);
+  } else document.removeEventListener('click',outsideSettings,true);
 }
 function toggleAccountPanel(){
   const wasOpen=document.getElementById('account-panel').classList.contains('open');
@@ -2337,7 +2662,7 @@ const T={
       feedbackLbl:'💬 Feedback',feedbackDesc:'Ayúdanos a mejorar Focus-Tap con tu opinión anónima. Solo tarda 2 minutos.',feedbackBtn:'📝 Abrir formulario',
       accountTitle:'👤 Cuenta · Sincronización',accountDesc:'Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.',
       accEmailPh:'Email',accPassPh:'Contraseña (mín. 6)',accRegister:'✨ Crear cuenta',accLogin:'🔑 Iniciar sesión',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Cerrar sesión',
-      langTitle:'🌐 Idioma',breakFinished:'🔔 ¡Descanso terminado!',stopAlarmBtn:'⏹ Parar alarma',
+      langTitle:'🌐 Idioma',socialTitle:'📣 Síguenos',breakFinished:'🔔 ¡Descanso terminado!',stopAlarmBtn:'⏹ Parar alarma',
       libModalTitle:'🎵 Biblioteca de Música',libEmpty:'← Selecciona una categoría',libChooseCat:'Elige una categoría',libTracksWord:'pistas',
       alarmModalTitle:'🔔 Sonido de Alarma',alarmForTimerTitle:'Alarma al terminar la sesión',celebDismiss:'¡A por el descanso! ☕',
       celebCompleted:'Has completado {mins} minutos de estudio.',
@@ -2359,8 +2684,10 @@ const T={
       shopEarnTip:'Ganas monedas por tramos de estudio cada día: <strong>1ª moneda a los 30 min</strong>, <strong>2ª a los 90 min</strong> y <strong>3ª a los 150 min</strong>. Hasta 3 monedas al día. Las monedas se guardan en tu cuenta y nunca caducan.',
       shopSecPalettes:'🎨 Paletas de color',shopSecEffects:'✨ Efectos de tarjeta',shopSecSounds:'🔔 Sonidos premium',
       shopBadgeActive:'Activo',shopBadgeOwned:'Tuyo',shopFree:'Gratis',shopListen:'Escuchar',shopEffectStandard:'Estándar',
+      shopSecAccessories:'🌟 Accesorios de fondo',shopAccessoryNone:'Ninguno',shopAccessoryRainName:'Lluvia Suave',
       shopNeedCoins:'Necesitas {price} monedas (tienes {coins})',shopUnlockedToast:'✅ ¡{name} desbloqueado!',shopSoundAvailable:'✅ Sonido disponible en el selector de alarmas',
-      obNext:'Siguiente',obSkip:'Saltar',obStart:'¡Empezar!',obReplay:'❔ Ver tutorial de nuevo'},
+      obNext:'Siguiente',obSkip:'Saltar',obStart:'¡Empezar!',obReplay:'❔ Ver tutorial de nuevo',
+      shopBadgeEvent:'Evento',shopEventPrefix:'Evento',shopEventTip:'Gana {coinName} estudiando estos días (mismos tramos: 30/90/150 min). Solo disponibles durante el evento — pero una vez comprados, son tuyos para siempre.'},
   en:{start:'▶ Start',pause:'⏸ Pause',resume:'▶ Resume',reset:'↺ Reset',deep:'🎯 Focus Mode',prod:'⚡ Productivity',
       s1:'Sessions today',s2:'Min focused',s3:'Day streak',lib:'Browse Library',
       tasks:'Study Goals',taskph:'+ New task... press Enter',notes:'Quick Notes',notesph:'Dump your thoughts here...',
@@ -2379,7 +2706,7 @@ const T={
       feedbackLbl:'💬 Feedback',feedbackDesc:'Help us improve Focus-Tap with your anonymous feedback. Takes only 2 minutes.',feedbackBtn:'📝 Open form',
       accountTitle:'👤 Account · Sync',accountDesc:'Create a free account to store your streak and score in the cloud and see them from any device.',
       accEmailPh:'Email',accPassPh:'Password (6+ chars)',accRegister:'✨ Create account',accLogin:'🔑 Log in',accLoggedAs:'✅ Logged in as:',accLogout:'🚪 Log out',
-      langTitle:'🌐 Language',breakFinished:'🔔 Break finished!',stopAlarmBtn:'⏹ Stop alarm',
+      langTitle:'🌐 Language',socialTitle:'📣 Follow us',breakFinished:'🔔 Break finished!',stopAlarmBtn:'⏹ Stop alarm',
       libModalTitle:'🎵 Music Library',libEmpty:'← Select a category',libChooseCat:'Choose a category',libTracksWord:'tracks',
       alarmModalTitle:'🔔 Alarm Sound',alarmForTimerTitle:'Alarm when the session ends',celebDismiss:'Off to break! ☕',
       celebCompleted:'You completed {mins} minutes of study.',
@@ -2401,8 +2728,10 @@ const T={
       shopEarnTip:'You earn coins in daily study tiers: <strong>1st coin at 30 min</strong>, <strong>2nd at 90 min</strong> and <strong>3rd at 150 min</strong>. Up to 3 coins a day. Coins are saved to your account and never expire.',
       shopSecPalettes:'🎨 Color palettes',shopSecEffects:'✨ Card effects',shopSecSounds:'🔔 Premium sounds',
       shopBadgeActive:'Active',shopBadgeOwned:'Owned',shopFree:'Free',shopListen:'Listen',shopEffectStandard:'Standard',
+      shopSecAccessories:'🌟 Background accessories',shopAccessoryNone:'None',shopAccessoryRainName:'Soft Rain',
       shopNeedCoins:'You need {price} coins (you have {coins})',shopUnlockedToast:'✅ {name} unlocked!',shopSoundAvailable:'✅ Sound available in the alarm picker',
-      obNext:'Next',obSkip:'Skip',obStart:'Let\'s go!',obReplay:'❔ Watch tutorial again'},
+      obNext:'Next',obSkip:'Skip',obStart:'Let\'s go!',obReplay:'❔ Watch tutorial again',
+      shopBadgeEvent:'Event',shopEventPrefix:'Event',shopEventTip:'Earn {coinName} by studying these days (same tiers: 30/90/150 min). Only available during the event — but once bought, they\'re yours forever.'},
   fr:{start:'▶ Démarrer',pause:'⏸ Pause',resume:'▶ Reprendre',reset:'↺ Réinitialiser',deep:'🎯 Mode Focus',prod:'⚡ Productivité',
       s1:'Sessions auj.',s2:'Min concentré',s3:'Jours streak',lib:'Bibliothèque',
       tasks:'Objectifs d\'étude',taskph:'+ Nouvelle tâche... Entrée',notes:'Notes rapides',notesph:'Videz vos pensées ici...',
@@ -2421,7 +2750,7 @@ const T={
       feedbackLbl:'💬 Feedback',feedbackDesc:'Aide-nous à améliorer Focus-Tap avec ton avis anonyme. Ça ne prend que 2 minutes.',feedbackBtn:'📝 Ouvrir le formulaire',
       accountTitle:'👤 Compte · Synchronisation',accountDesc:'Crée un compte gratuit pour sauvegarder ta série et ton score dans le cloud et les voir depuis n\'importe quel appareil.',
       accEmailPh:'Email',accPassPh:'Mot de passe (6+ car.)',accRegister:'✨ Créer un compte',accLogin:'🔑 Se connecter',accLoggedAs:'✅ Connecté en tant que :',accLogout:'🚪 Se déconnecter',
-      langTitle:'🌐 Langue',breakFinished:'🔔 Pause terminée !',stopAlarmBtn:'⏹ Arrêter l\'alarme',
+      langTitle:'🌐 Langue',socialTitle:'📣 Suis-nous',breakFinished:'🔔 Pause terminée !',stopAlarmBtn:'⏹ Arrêter l\'alarme',
       libModalTitle:'🎵 Bibliothèque musicale',libEmpty:'← Sélectionne une catégorie',libChooseCat:'Choisis une catégorie',libTracksWord:'pistes',
       alarmModalTitle:'🔔 Son d\'alarme',alarmForTimerTitle:'Alarme à la fin de la session',celebDismiss:'À la pause ! ☕',
       celebCompleted:'Tu as terminé {mins} minutes d\'étude.',
@@ -2443,8 +2772,10 @@ const T={
       shopEarnTip:'Tu gagnes des pièces par paliers d\'étude chaque jour : <strong>1ère pièce à 30 min</strong>, <strong>2ème à 90 min</strong> et <strong>3ème à 150 min</strong>. Jusqu\'à 3 pièces par jour. Les pièces sont sauvegardées sur ton compte et n\'expirent jamais.',
       shopSecPalettes:'🎨 Palettes de couleurs',shopSecEffects:'✨ Effets de carte',shopSecSounds:'🔔 Sons premium',
       shopBadgeActive:'Actif',shopBadgeOwned:'À toi',shopFree:'Gratuit',shopListen:'Écouter',shopEffectStandard:'Standard',
+      shopSecAccessories:'🌟 Accessoires de fond',shopAccessoryNone:'Aucun',shopAccessoryRainName:'Pluie Douce',
       shopNeedCoins:'Il te faut {price} pièces (tu en as {coins})',shopUnlockedToast:'✅ {name} débloqué !',shopSoundAvailable:'✅ Son disponible dans le sélecteur d\'alarme',
-      obNext:'Suivant',obSkip:'Passer',obStart:'C\'est parti !',obReplay:'❔ Revoir le tutoriel'},
+      obNext:'Suivant',obSkip:'Passer',obStart:'C\'est parti !',obReplay:'❔ Revoir le tutoriel',
+      shopBadgeEvent:'Événement',shopEventPrefix:'Événement',shopEventTip:'Gagne des {coinName} en étudiant ces jours-ci (mêmes paliers : 30/90/150 min). Disponibles seulement pendant l\'événement — mais une fois achetés, ils sont à toi pour toujours.'},
   de:{start:'▶ Starten',pause:'⏸ Pause',resume:'▶ Fortsetzen',reset:'↺ Zurücksetzen',deep:'🎯 Fokusmodus',prod:'⚡ Produktivität',
       s1:'Sitzungen heute',s2:'Min fokussiert',s3:'Tage-Streak',lib:'Bibliothek',
       tasks:'Lernziele',taskph:'+ Neue Aufgabe... Enter',notes:'Schnellnotizen',notesph:'Schreibe deine Gedanken hier...',
@@ -2463,7 +2794,7 @@ const T={
       feedbackLbl:'💬 Feedback',feedbackDesc:'Hilf uns, Focus-Tap mit deinem anonymen Feedback zu verbessern. Dauert nur 2 Minuten.',feedbackBtn:'📝 Formular öffnen',
       accountTitle:'👤 Konto · Synchronisierung',accountDesc:'Erstelle ein kostenloses Konto, um deinen Streak und Score in der Cloud zu speichern und von jedem Gerät zu sehen.',
       accEmailPh:'E-Mail',accPassPh:'Passwort (mind. 6 Zeichen)',accRegister:'✨ Konto erstellen',accLogin:'🔑 Anmelden',accLoggedAs:'✅ Angemeldet als:',accLogout:'🚪 Abmelden',
-      langTitle:'🌐 Sprache',breakFinished:'🔔 Pause beendet!',stopAlarmBtn:'⏹ Alarm stoppen',
+      langTitle:'🌐 Sprache',socialTitle:'📣 Folge uns',breakFinished:'🔔 Pause beendet!',stopAlarmBtn:'⏹ Alarm stoppen',
       libModalTitle:'🎵 Musikbibliothek',libEmpty:'← Wähle eine Kategorie',libChooseCat:'Wähle eine Kategorie',libTracksWord:'Titel',
       alarmModalTitle:'🔔 Alarmton',alarmForTimerTitle:'Alarm, wenn die Sitzung endet',celebDismiss:'Ab in die Pause! ☕',
       celebCompleted:'Du hast {mins} Minuten gelernt.',
@@ -2485,8 +2816,10 @@ const T={
       shopEarnTip:'Du verdienst Münzen in täglichen Lernstufen: <strong>1. Münze bei 30 Min</strong>, <strong>2. bei 90 Min</strong> und <strong>3. bei 150 Min</strong>. Bis zu 3 Münzen pro Tag. Münzen werden in deinem Konto gespeichert und verfallen nie.',
       shopSecPalettes:'🎨 Farbpaletten',shopSecEffects:'✨ Karteneffekte',shopSecSounds:'🔔 Premium-Sounds',
       shopBadgeActive:'Aktiv',shopBadgeOwned:'Dein',shopFree:'Kostenlos',shopListen:'Anhören',shopEffectStandard:'Standard',
+      shopSecAccessories:'🌟 Hintergrund-Accessoires',shopAccessoryNone:'Keiner',shopAccessoryRainName:'Sanfter Regen',
       shopNeedCoins:'Du brauchst {price} Münzen (du hast {coins})',shopUnlockedToast:'✅ {name} freigeschaltet!',shopSoundAvailable:'✅ Sound in der Alarmauswahl verfügbar',
-      obNext:'Weiter',obSkip:'Überspringen',obStart:'Los geht\'s!',obReplay:'❔ Tutorial erneut ansehen'},
+      obNext:'Weiter',obSkip:'Überspringen',obStart:'Los geht\'s!',obReplay:'❔ Tutorial erneut ansehen',
+      shopBadgeEvent:'Event',shopEventPrefix:'Event',shopEventTip:'Verdiene {coinName}, indem du an diesen Tagen lernst (gleiche Stufen: 30/90/150 Min). Nur während des Events verfügbar — aber einmal gekauft, gehören sie dir für immer.'},
   pt:{start:'▶ Começar',pause:'⏸ Pausar',resume:'▶ Retomar',reset:'↺ Reiniciar',deep:'🎯 Modo Foco',prod:'⚡ Produtividade',
       s1:'Sessões hoje',s2:'Min focado',s3:'Dias seguidos',lib:'Biblioteca',
       tasks:'Metas de Estudo',taskph:'+ Nova tarefa... Enter',notes:'Notas Rápidas',notesph:'Escreva seus pensamentos aqui...',
@@ -2505,7 +2838,7 @@ const T={
       feedbackLbl:'💬 Feedback',feedbackDesc:'Ajude-nos a melhorar o Focus-Tap com sua opinião anônima. Leva só 2 minutos.',feedbackBtn:'📝 Abrir formulário',
       accountTitle:'👤 Conta · Sincronização',accountDesc:'Crie uma conta gratuita para guardar sua sequência e pontuação na nuvem e vê-las em qualquer dispositivo.',
       accEmailPh:'Email',accPassPh:'Senha (mín. 6)',accRegister:'✨ Criar conta',accLogin:'🔑 Entrar',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Sair',
-      langTitle:'🌐 Idioma',breakFinished:'🔔 Pausa terminada!',stopAlarmBtn:'⏹ Parar alarme',
+      langTitle:'🌐 Idioma',socialTitle:'📣 Siga-nos',breakFinished:'🔔 Pausa terminada!',stopAlarmBtn:'⏹ Parar alarme',
       libModalTitle:'🎵 Biblioteca de Música',libEmpty:'← Selecione uma categoria',libChooseCat:'Escolha uma categoria',libTracksWord:'faixas',
       alarmModalTitle:'🔔 Som do Alarme',alarmForTimerTitle:'Alarme ao terminar a sessão',celebDismiss:'Vamos à pausa! ☕',
       celebCompleted:'Você completou {mins} minutos de estudo.',
@@ -2527,8 +2860,10 @@ const T={
       shopEarnTip:'Você ganha moedas por níveis de estudo a cada dia: <strong>1ª moeda aos 30 min</strong>, <strong>2ª aos 90 min</strong> e <strong>3ª aos 150 min</strong>. Até 3 moedas por dia. As moedas ficam salvas na sua conta e nunca expiram.',
       shopSecPalettes:'🎨 Paletas de cores',shopSecEffects:'✨ Efeitos de cartão',shopSecSounds:'🔔 Sons premium',
       shopBadgeActive:'Ativo',shopBadgeOwned:'Seu',shopFree:'Grátis',shopListen:'Ouvir',shopEffectStandard:'Padrão',
+      shopSecAccessories:'🌟 Acessórios de fundo',shopAccessoryNone:'Nenhum',shopAccessoryRainName:'Chuva Suave',
       shopNeedCoins:'Você precisa de {price} moedas (tem {coins})',shopUnlockedToast:'✅ {name} desbloqueado!',shopSoundAvailable:'✅ Som disponível no seletor de alarme',
-      obNext:'Próximo',obSkip:'Pular',obStart:'Vamos lá!',obReplay:'❔ Ver tutorial de novo'},
+      obNext:'Próximo',obSkip:'Pular',obStart:'Vamos lá!',obReplay:'❔ Ver tutorial de novo',
+      shopBadgeEvent:'Evento',shopEventPrefix:'Evento',shopEventTip:'Ganhe {coinName} estudando nesses dias (mesmos níveis: 30/90/150 min). Disponíveis só durante o evento — mas, uma vez comprados, são seus para sempre.'},
   it:{start:'▶ Inizia',pause:'⏸ Pausa',resume:'▶ Riprendi',reset:'↺ Reimposta',deep:'🎯 Modalità Focus',prod:'⚡ Produttività',
       s1:'Sessioni oggi',s2:'Min concentrato',s3:'Giorni streak',lib:'Libreria',
       tasks:'Obiettivi di Studio',taskph:'+ Nuova attività... Invio',notes:'Note Veloci',notesph:'Scrivi i tuoi pensieri qui...',
@@ -2547,7 +2882,7 @@ const T={
       feedbackLbl:'💬 Feedback',feedbackDesc:'Aiutaci a migliorare Focus-Tap con il tuo feedback anonimo. Richiede solo 2 minuti.',feedbackBtn:'📝 Apri modulo',
       accountTitle:'👤 Account · Sincronizzazione',accountDesc:'Crea un account gratuito per salvare la tua serie e il punteggio nel cloud e vederli da qualsiasi dispositivo.',
       accEmailPh:'Email',accPassPh:'Password (min. 6)',accRegister:'✨ Crea account',accLogin:'🔑 Accedi',accLoggedAs:'✅ Connesso come:',accLogout:'🚪 Esci',
-      langTitle:'🌐 Lingua',breakFinished:'🔔 Pausa terminata!',stopAlarmBtn:'⏹ Ferma allarme',
+      langTitle:'🌐 Lingua',socialTitle:'📣 Seguici',breakFinished:'🔔 Pausa terminata!',stopAlarmBtn:'⏹ Ferma allarme',
       libModalTitle:'🎵 Libreria Musicale',libEmpty:'← Seleziona una categoria',libChooseCat:'Scegli una categoria',libTracksWord:'brani',
       alarmModalTitle:'🔔 Suono Sveglia',alarmForTimerTitle:'Allarme al termine della sessione',celebDismiss:'Via alla pausa! ☕',
       celebCompleted:'Hai completato {mins} minuti di studio.',
@@ -2569,8 +2904,10 @@ const T={
       shopEarnTip:'Guadagni monete per fasce di studio ogni giorno: <strong>1ª moneta a 30 min</strong>, <strong>2ª a 90 min</strong> e <strong>3ª a 150 min</strong>. Fino a 3 monete al giorno. Le monete restano salvate nel tuo account e non scadono mai.',
       shopSecPalettes:'🎨 Palette di colori',shopSecEffects:'✨ Effetti carta',shopSecSounds:'🔔 Suoni premium',
       shopBadgeActive:'Attivo',shopBadgeOwned:'Tuo',shopFree:'Gratis',shopListen:'Ascolta',shopEffectStandard:'Standard',
+      shopSecAccessories:'🌟 Accessori di sfondo',shopAccessoryNone:'Nessuno',shopAccessoryRainName:'Pioggia Leggera',
       shopNeedCoins:'Ti servono {price} monete (ne hai {coins})',shopUnlockedToast:'✅ {name} sbloccato!',shopSoundAvailable:'✅ Suono disponibile nel selettore sveglia',
-      obNext:'Avanti',obSkip:'Salta',obStart:'Iniziamo!',obReplay:'❔ Rivedi il tutorial'},
+      obNext:'Avanti',obSkip:'Salta',obStart:'Iniziamo!',obReplay:'❔ Rivedi il tutorial',
+      shopBadgeEvent:'Evento',shopEventPrefix:'Evento',shopEventTip:'Guadagna {coinName} studiando in questi giorni (stesse fasce: 30/90/150 min). Disponibili solo durante l\'evento — ma una volta acquistati, sono tuoi per sempre.'},
 };
 
 function tr(key){
@@ -2646,6 +2983,7 @@ function setLang(lang,btn){
   document.getElementById('txt-shop-sec-palettes').innerText=t.shopSecPalettes;
   document.getElementById('txt-shop-sec-effects').innerText=t.shopSecEffects;
   document.getElementById('txt-shop-sec-sounds').innerText=t.shopSecSounds;
+  document.getElementById('txt-shop-sec-accessories').innerText=t.shopSecAccessories;
   if(document.getElementById('shop-modal').classList.contains('open')) buildShop();
   if(document.getElementById('onboarding-modal').classList.contains('open')) renderOnboardingSlide();
   const obReplayBtn=document.getElementById('onboarding-replay-btn'); if(obReplayBtn) obReplayBtn.title=t.obReplay;
@@ -2669,6 +3007,7 @@ function setLang(lang,btn){
   document.getElementById('txt-logout-btn').innerText=t.accLogout;
   // Language panel title
   document.getElementById('txt-lang-title').innerText=t.langTitle;
+  document.getElementById('txt-social-title').innerText=t.socialTitle;
   // Rebuild dynamic pieces that depend on the language
   buildStreak();
   buildAccordion();
@@ -2901,7 +3240,10 @@ function captureGuestSnapshot(){
     coins: parseInt(localStorage.getItem('ft-coins')||'0'),
     ownedItems: JSON.parse(localStorage.getItem('ft-owned-items')||'["pal-default","fx-none","snd-beep","snd-bell","snd-pulse","snd-chime","snd-urgent"]'),
     activeItems: JSON.parse(localStorage.getItem('ft-active-items')||'{"palette":"pal-default","effect":"fx-none"}'),
-    coinTiers: (()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.tiers:[]; }catch(e){ return []; } })()
+    coinTiers: (()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.tiers:[]; }catch(e){ return []; } })(),
+    eventCoins: JSON.parse(localStorage.getItem('ft-event-coins')||'{}'),
+    eventCoinsResetYear: JSON.parse(localStorage.getItem('ft-event-coins-reset-year')||'{}'),
+    eventCoinTiers: (()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-event-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.data:{}; }catch(e){ return {}; } })()
   };
 }
 function applyAccountState(sessions,totalMin,streak){
@@ -2927,6 +3269,10 @@ function restoreGuestSnapshot(snap){
   ownedItems=snap.ownedItems; localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
   activeItems=snap.activeItems; localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
   coinTiersEarnedToday=snap.coinTiers; localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:coinTiersEarnedToday}));
+  eventCoins=snap.eventCoins||{}; localStorage.setItem('ft-event-coins',JSON.stringify(eventCoins));
+  eventCoinsResetYear=snap.eventCoinsResetYear||{}; localStorage.setItem('ft-event-coins-reset-year',JSON.stringify(eventCoinsResetYear));
+  eventCoinTiersToday=snap.eventCoinTiers||{}; localStorage.setItem('ft-event-coin-tiers-day',JSON.stringify({date:TODAY,data:eventCoinTiersToday}));
+  applySeasonalUI();
   updateCoinDisplay(); applyActiveItems(); reconcileStreak(); buildThemeSwatches();
 }
 
@@ -2988,6 +3334,10 @@ async function loadCloudData(uid){
       if(Array.isArray(d.ownedItems)){ ownedItems=d.ownedItems; localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems)); }
       if(d.activeItems&&typeof d.activeItems==='object'){ activeItems=d.activeItems; localStorage.setItem('ft-active-items',JSON.stringify(activeItems)); }
       if(d.coinTiersEarnedDay&&typeof d.coinTiersEarnedDay==='object'){ coinTiersEarnedToday=(d.coinTiersEarnedDay.date===TODAY)?(d.coinTiersEarnedDay.tiers||[]):[]; localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:coinTiersEarnedToday})); }
+      if(d.eventCoins&&typeof d.eventCoins==='object'){ eventCoins=d.eventCoins; localStorage.setItem('ft-event-coins',JSON.stringify(eventCoins)); }
+      if(d.eventCoinsResetYear&&typeof d.eventCoinsResetYear==='object'){ eventCoinsResetYear=d.eventCoinsResetYear; localStorage.setItem('ft-event-coins-reset-year',JSON.stringify(eventCoinsResetYear)); }
+      if(d.eventCoinTiersDay&&typeof d.eventCoinTiersDay==='object'){ eventCoinTiersToday=(d.eventCoinTiersDay.date===TODAY)?(d.eventCoinTiersDay.data||{}):{}; localStorage.setItem('ft-event-coin-tiers-day',JSON.stringify({date:TODAY,data:eventCoinTiersToday})); }
+      applySeasonalUI();
       updateCoinDisplay(); applyActiveItems();
       checkPermanentUnlocks();
       buildStreak(); buildThemeSwatches();
@@ -3001,8 +3351,12 @@ async function loadCloudData(uid){
       // Brand-new account: start this account from a clean zero, never from guest/leftover progress
       applyAccountState(0,0,[]);
       consecutiveStreak=0; lastStudyDate=''; unlockedThemes=[]; customImgUnlocked=false; customVideoUnlocked=false;
-      coins=0; ownedItems=['pal-default','fx-none','snd-beep','snd-bell','snd-pulse','snd-chime','snd-urgent'];
-      activeItems={palette:'pal-default',effect:'fx-none'}; coinTiersEarnedToday=[];
+      coins=0; ownedItems=['pal-default','fx-none','acc-none','snd-beep','snd-bell','snd-pulse','snd-chime','snd-urgent'];
+      activeItems={palette:'pal-default',effect:'fx-none',accessory:'acc-none'}; coinTiersEarnedToday=[];
+      eventCoins={}; eventCoinTiersToday={}; eventCoinsResetYear={};
+      localStorage.setItem('ft-event-coins','{}'); localStorage.setItem('ft-event-coin-tiers-day',JSON.stringify({date:TODAY,data:{}}));
+      localStorage.setItem('ft-event-coins-reset-year','{}');
+      applySeasonalUI();
       localStorage.setItem('ft-consecutive','0'); localStorage.setItem('ft-laststudy','');
       localStorage.setItem('ft-unlocked-themes','[]'); localStorage.removeItem('ft-custom-img-unlocked');
       localStorage.removeItem('ft-custom-video-unlocked');
@@ -3038,6 +3392,9 @@ async function saveCloudDataNow(){
       ownedItems,
       activeItems,
       coinTiersEarnedDay:{date:TODAY,tiers:coinTiersEarnedToday},
+      eventCoins,
+      eventCoinTiersDay:{date:TODAY,data:eventCoinTiersToday},
+      eventCoinsResetYear,
       tasks,
       notes:notes.value,
       alarm:selectedAlarm,
@@ -3061,6 +3418,7 @@ reconcileStreak(); // corrige la racha mostrada si ya se rompió, sin esperar a 
 checkPermanentUnlocks();
 buildThemeSwatches();
 updateCoinDisplay();   // muestra las monedas actuales
+applySeasonalUI();     // logo y moneda de evento si hay uno activo hoy
 applyActiveItems();    // aplica paleta y efecto guardados
 
 // Restore alarm selection
