@@ -1658,7 +1658,7 @@ function showQuote(idx,restart){
   bar.style.setProperty('--quote-dur',QUOTE_INTERVAL/1000+'s'); bar.style.animation='';
   if(restart) startQuoteTimer();
 }
-function nextQuote(manual){ quoteIdx=(quoteIdx+1)%getQuotes().length; showQuote(quoteIdx,true); if(manual) clearTimeout(quoteAutoTimer); }
+function nextQuote(manual){ quoteIdx=(quoteIdx+1)%getQuotes().length; showQuote(quoteIdx,true); }
 function startQuoteTimer(){ clearTimeout(quoteAutoTimer); quoteAutoTimer=setTimeout(()=>{ quoteIdx=(quoteIdx+1)%getQuotes().length; showQuote(quoteIdx,true); },QUOTE_INTERVAL); }
 
 // ══════════════════════════════════════
@@ -3278,47 +3278,49 @@ const firebaseConfig = {
   measurementId: "G-SEMGRT1WLG"
 };
 
-let firebaseReady=false, currentUser=null, cloudSyncEnabled=false, syncTimeout=null, guestSnapshot=null;
+let firebaseReady=false, currentUser=null, cloudSyncEnabled=false, syncTimeout=null;
 try{
   if(firebaseConfig.apiKey!=="TU_API_KEY"){
     firebase.initializeApp(firebaseConfig);
     firebaseReady=true;
     firebase.auth().onAuthStateChanged(async (user)=>{
       if(user){
-        if(!guestSnapshot) guestSnapshot=captureGuestSnapshot(); // remember local/guest progress so we can restore it on logout
         currentUser=user; cloudSyncEnabled=true; updateAccountUI();
         await loadCloudData(user.uid);
       } else {
         currentUser=null; cloudSyncEnabled=false; updateAccountUI();
-        if(guestSnapshot){ restoreGuestSnapshot(guestSnapshot); guestSnapshot=null; }
+        // Sin cuenta, se empieza siempre desde cero — nunca se intenta "adivinar" qué había
+        // antes de iniciar sesión, porque esa foto solo era fiable dentro de la misma pestaña
+        // sin recargar. Fuera de ese caso muy concreto, acababa restaurando datos de la cuenta.
+        resetLocalToFreshState();
       }
     });
   }
 }catch(e){ console.warn('Firebase no configurado todavía:',e); }
 
-// Snapshot of whatever streak/score/tasks/notes/desbloqueos existed before switching into
-// una cuenta, so each account keeps its OWN progreso, isolated from other accounts and from
-// guest mode (nada se "pega" de una cuenta a otra al iniciar/cerrar sesión).
-function captureGuestSnapshot(){
-  return {
-    sessions: parseInt(localStorage.getItem('ft-sessions')||'0'),
-    totalMin: parseInt(localStorage.getItem('ft-totalmin')||'0'),
-    streakDays: JSON.parse(localStorage.getItem('ft-streak')||'[]'),
-    tasks: JSON.parse(localStorage.getItem('ft-tasks')||'[]'),
-    notesVal: localStorage.getItem('ft-notes')||'',
-    consecutiveStreak: parseInt(localStorage.getItem('ft-consecutive')||'0'),
-    lastStudyDate: localStorage.getItem('ft-laststudy')||'',
-    unlockedThemes: JSON.parse(localStorage.getItem('ft-unlocked-themes')||'[]'),
-    customImgUnlocked: localStorage.getItem('ft-custom-img-unlocked')==='1',
-    customVideoUnlocked: localStorage.getItem('ft-custom-video-unlocked')==='1',
-    coins: parseInt(localStorage.getItem('ft-coins')||'0'),
-    ownedItems: JSON.parse(localStorage.getItem('ft-owned-items')||'["pal-default","fx-none","snd-beep","snd-bell","snd-pulse","snd-chime","snd-urgent"]'),
-    activeItems: JSON.parse(localStorage.getItem('ft-active-items')||'{"palette":"pal-default","effect":"fx-none"}'),
-    coinTiers: (()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.tiers:[]; }catch(e){ return []; } })(),
-    eventCoins: JSON.parse(localStorage.getItem('ft-event-coins')||'{}'),
-    eventCoinsResetYear: JSON.parse(localStorage.getItem('ft-event-coins-reset-year')||'{}'),
-    eventCoinTiers: (()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-event-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.data:{}; }catch(e){ return {}; } })()
-  };
+// Reinicia todo el progreso local a un estado limpio — se usa tanto al cerrar sesión
+// como al detectar una cuenta nueva sin datos previos en la nube.
+function resetLocalToFreshState(){
+  applyAccountState(0,0,[]);
+  consecutiveStreak=0; lastStudyDate=''; unlockedThemes=[]; customImgUnlocked=false; customVideoUnlocked=false;
+  coins=0; ownedItems=['pal-default','fx-none','acc-none','snd-beep','snd-bell','snd-pulse','snd-chime','snd-urgent'];
+  activeItems={palette:'pal-default',effect:'fx-none',accessory:'acc-none'}; coinTiersEarnedToday=[];
+  eventCoins={}; eventCoinTiersToday={}; eventCoinsResetYear={};
+  localStorage.setItem('ft-event-coins','{}'); localStorage.setItem('ft-event-coin-tiers-day',JSON.stringify({date:TODAY,data:{}}));
+  localStorage.setItem('ft-event-coins-reset-year','{}');
+  applySeasonalUI();
+  localStorage.setItem('ft-consecutive','0'); localStorage.setItem('ft-laststudy','');
+  localStorage.setItem('ft-unlocked-themes','[]'); localStorage.removeItem('ft-custom-img-unlocked');
+  localStorage.removeItem('ft-custom-video-unlocked');
+  localStorage.setItem('ft-coins','0');
+  localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
+  localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
+  localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:[]}));
+  updateCoinDisplay(); applyActiveItems();
+  buildStreak(); buildThemeSwatches();
+  tasks=[]; localStorage.setItem('ft-tasks','[]'); renderTasks();
+  notes.value=''; localStorage.setItem('ft-notes','');
+  reconcileStreak();
 }
 function applyAccountState(sessions,totalMin,streak){
   sessionsDone=sessions;
@@ -3327,27 +3329,6 @@ function applyAccountState(sessions,totalMin,streak){
   streakDays=streak||[];
   localStorage.setItem('ft-streak',JSON.stringify(streakDays));
   updateStats(); buildStreak(); updateScore(); buildThemeSwatches();
-}
-function restoreGuestSnapshot(snap){
-  applyAccountState(snap.sessions,snap.totalMin,snap.streakDays);
-  tasks=snap.tasks; localStorage.setItem('ft-tasks',JSON.stringify(tasks)); renderTasks();
-  notes.value=snap.notesVal; localStorage.setItem('ft-notes',notes.value);
-  // Restaurar también los desbloqueos permanentes exactos que tenía el invitado antes de
-  // iniciar sesión — sin esto, un desbloqueo de una cuenta se quedaba "pegado" al salir.
-  consecutiveStreak=snap.consecutiveStreak; localStorage.setItem('ft-consecutive',consecutiveStreak);
-  lastStudyDate=snap.lastStudyDate; localStorage.setItem('ft-laststudy',lastStudyDate);
-  unlockedThemes=snap.unlockedThemes; localStorage.setItem('ft-unlocked-themes',JSON.stringify(unlockedThemes));
-  customImgUnlocked=snap.customImgUnlocked; localStorage.setItem('ft-custom-img-unlocked',customImgUnlocked?'1':'0');
-  customVideoUnlocked=snap.customVideoUnlocked; localStorage.setItem('ft-custom-video-unlocked',customVideoUnlocked?'1':'0');
-  coins=snap.coins; localStorage.setItem('ft-coins',coins);
-  ownedItems=snap.ownedItems; localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
-  activeItems=snap.activeItems; localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
-  coinTiersEarnedToday=snap.coinTiers; localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:coinTiersEarnedToday}));
-  eventCoins=snap.eventCoins||{}; localStorage.setItem('ft-event-coins',JSON.stringify(eventCoins));
-  eventCoinsResetYear=snap.eventCoinsResetYear||{}; localStorage.setItem('ft-event-coins-reset-year',JSON.stringify(eventCoinsResetYear));
-  eventCoinTiersToday=snap.eventCoinTiers||{}; localStorage.setItem('ft-event-coin-tiers-day',JSON.stringify({date:TODAY,data:eventCoinTiersToday}));
-  applySeasonalUI();
-  updateCoinDisplay(); applyActiveItems(); reconcileStreak(); buildThemeSwatches();
 }
 
 function updateAccountUI(){
@@ -3431,25 +3412,7 @@ async function loadCloudData(uid){
       showToast(tr('cloudSynced'));
     } else {
       // Brand-new account: start this account from a clean zero, never from guest/leftover progress
-      applyAccountState(0,0,[]);
-      consecutiveStreak=0; lastStudyDate=''; unlockedThemes=[]; customImgUnlocked=false; customVideoUnlocked=false;
-      coins=0; ownedItems=['pal-default','fx-none','acc-none','snd-beep','snd-bell','snd-pulse','snd-chime','snd-urgent'];
-      activeItems={palette:'pal-default',effect:'fx-none',accessory:'acc-none'}; coinTiersEarnedToday=[];
-      eventCoins={}; eventCoinTiersToday={}; eventCoinsResetYear={};
-      localStorage.setItem('ft-event-coins','{}'); localStorage.setItem('ft-event-coin-tiers-day',JSON.stringify({date:TODAY,data:{}}));
-      localStorage.setItem('ft-event-coins-reset-year','{}');
-      applySeasonalUI();
-      localStorage.setItem('ft-consecutive','0'); localStorage.setItem('ft-laststudy','');
-      localStorage.setItem('ft-unlocked-themes','[]'); localStorage.removeItem('ft-custom-img-unlocked');
-      localStorage.removeItem('ft-custom-video-unlocked');
-      localStorage.setItem('ft-coins','0');
-      localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
-      localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
-      localStorage.setItem('ft-coin-tiers-day',JSON.stringify({date:TODAY,tiers:[]}));
-      updateCoinDisplay(); applyActiveItems();
-      buildStreak(); buildThemeSwatches();
-      tasks=[]; localStorage.setItem('ft-tasks','[]'); renderTasks();
-      notes.value=''; localStorage.setItem('ft-notes','');
+      resetLocalToFreshState();
       await saveCloudDataNow();
       showToast(tr('cloudNewAccount'));
     }
