@@ -1178,8 +1178,8 @@ const PLAYLISTS = {
       {name:'Smooth',   artist:'LiteSaturation', url:'cafe20.mp3', dur:154},
     ]
   },
-  classical:{
-    label:'Clásica', emoji:'🎻',
+  mix:{
+    label:'Mix', emoji:'🎲​',
     bg:'linear-gradient(135deg,#f8bbd0,#f48fb1)',
     tracks:[
       {name:'Moonlight Study', artist:'Classical Essentials',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',dur:245},
@@ -1468,12 +1468,12 @@ const eq=document.getElementById('eq');
 
 // Category names only — track titles, artists and durations are intentionally NEVER translated
 const GENRE_LABELS_I18N = {
-  es:{lofi:'Lofi', nature:'Lluvia', cafe:'Café',  classical:'Clásica',  jazz:'Jazz'},
-  en:{lofi:'Lofi', nature:'Rain',   cafe:'Café',  classical:'Classical',jazz:'Jazz'},
-  fr:{lofi:'Lofi', nature:'Pluie',  cafe:'Café',  classical:'Classique',jazz:'Jazz'},
-  de:{lofi:'Lofi', nature:'Regen',  cafe:'Café',  classical:'Klassik',  jazz:'Jazz'},
-  pt:{lofi:'Lofi', nature:'Chuva',  cafe:'Café',  classical:'Clássica', jazz:'Jazz'},
-  it:{lofi:'Lofi', nature:'Pioggia',cafe:'Caffè', classical:'Classica', jazz:'Jazz'},
+  es:{lofi:'Lofi', nature:'Lluvia', cafe:'Café',  mix:'Mix musical',  jazz:'Jazz'},
+  en:{lofi:'Lofi', nature:'Rain',   cafe:'Café',  mix:'Music mix',jazz:'Jazz'},
+  fr:{lofi:'Lofi', nature:'Pluie',  cafe:'Café',  mix:'Mélange musical',jazz:'Jazz'},
+  de:{lofi:'Lofi', nature:'Regen',  cafe:'Café',  mix:'Musik-Mix',  jazz:'Jazz'},
+  pt:{lofi:'Lofi', nature:'Chuva',  cafe:'Café',  mix:'Mistura musical', jazz:'Jazz'},
+  it:{lofi:'Lofi', nature:'Pioggia',cafe:'Caffè', mix:'Mix musicale', jazz:'Jazz'},
 };
 function genreLabel(key){
   const g=GENRE_LABELS_I18N[currentLang]||GENRE_LABELS_I18N.es;
@@ -3140,7 +3140,7 @@ const ONBOARDING_I18N={
     {emoji:'☕',title:'Breaks, at your own pace',desc:'Next to the streak you\'ll find an independent break timer (5, 10 or 15 min) with its own alarm when it\'s done.'},
     {emoji:'✅',title:'Study goals',desc:'Add tasks with a priority level (high/medium/low), check them off as you go — they stay saved for next time.'},
     {emoji:'📝',title:'Quick notes',desc:'Jot down your thoughts as you study. They autosave, and you can copy them or download them as .txt for your work.'},
-    {emoji:'🎵',title:'Background music',desc:'Browse the library by category (lofi, rain, café, classical, jazz...) and let it play while you focus.'},
+    {emoji:'🎵',title:'Background music',desc:'Browse the library by category (lofi, rain, café, mix, jazz...) and let it play while you focus.'},
     {emoji:'🔥',title:'Streak and coins',desc:'Every day you study earns streak and coins. Spend them in the shop 🏪 to unlock palettes, effects and sounds.'},
     {emoji:'🎨',title:'Make it your workspace',desc:'Change the background theme and language from the gear ⚙️, and create a free account to save it all in the cloud. However you like it.'}
   ],
@@ -3180,7 +3180,7 @@ const ONBOARDING_I18N={
     {emoji:'☕',title:'Le tue pause, al tuo ritmo',desc:'Accanto alla serie trovi un timer di pausa indipendente (5, 10 o 15 min) con il suo avviso finale.'},
     {emoji:'✅',title:'Obiettivi di studio',desc:'Aggiungi attività con un livello di priorità (alta/media/bassa), spuntale al completarle — restano salvate.'},
     {emoji:'📝',title:'Note veloci',desc:'Annota i tuoi pensieri mentre studi. Si salvano da sole, e puoi copiarle o scaricarle in .txt.'},
-    {emoji:'🎵',title:'Musica di sottofondo',desc:'Esplora la libreria per categoria (lofi, pioggia, caffè, classica, jazz...) e lasciala suonare mentre studi.'},
+    {emoji:'🎵',title:'Musica di sottofondo',desc:'Esplora la libreria per categoria (lofi, pioggia, caffè, mix, jazz...) e lasciala suonare mentre studi.'},
     {emoji:'🔥',title:'Serie e monete',desc:'Ogni giorno di studio somma serie e monete. Spendile nel negozio 🏪 per sbloccare palette, effetti e suoni.'},
     {emoji:'🎨',title:'Rendilo il tuo spazio',desc:'Cambia tema di sfondo e lingua dall\'ingranaggio ⚙️, e crea un account gratuito per salvare tutto nel cloud. Come preferisci tu.'}
   ],
