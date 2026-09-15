@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Focus-Tap | Tu Espacio de Estudio</title>
+<title>Pandy-Tap | Tu Espacio de Estudio</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="icon" href="panda png.png" type="image/png">
 <style>
@@ -624,7 +624,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
     <!-- FEEDBACK -->
     <div class="settings-section">
       <div class="settings-lbl" id="txt-feedback-lbl">💬 Feedback</div>
-      <p class="settings-desc" id="txt-feedback-desc">Ayúdanos a mejorar Focus-Tap con tu opinión anónima. Solo tarda 2 minutos.</p>
+      <p class="settings-desc" id="txt-feedback-desc">Ayúdanos a mejorar Pandy-Tap con tu opinión anónima. Solo tarda 2 minutos.</p>
       <a class="feedback-btn" id="txt-feedback-btn" href="https://docs.google.com/forms/d/e/XXXXXXXXXXXXXXXX/viewform" target="_blank" rel="noopener">
         📝 Abrir formulario
       </a>
@@ -678,7 +678,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 
 <header>
   <div class="panda-logo">🐼</div>
-  <h1 class="logo-text">Focus·Tap</h1>
+  <h1 class="logo-text">Pandy·Tap</h1>
   <button class="coin-display" onclick="openShop()" title="Tienda de personalización">
     <span class="coin-badge">C</span> <span id="coin-count">0</span>
   </button>
@@ -744,7 +744,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
           <div class="album-art-emoji" id="album-emoji">🎹</div>
         </div>
         <div class="track-name" id="track-name">Selecciona una pista</div>
-        <div class="track-artist" id="track-artist">Focus-Tap Radio</div>
+        <div class="track-artist" id="track-artist">Pandy-Tap Radio</div>
         <div style="display:flex;align-items:center;justify-content:center;margin-bottom:12px;">
           <div class="eq" id="eq"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
         </div>
@@ -922,7 +922,7 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <div id="shop-modal" onclick="if(event.target===this)closeShop()">
   <div class="shop-panel">
     <div class="shop-header">
-      <div class="shop-title" id="txt-shop-title">🏪 Tienda Focus-Tap</div>
+      <div class="shop-title" id="txt-shop-title">🏪 Tienda Pandy-Tap</div>
       <div class="shop-balance"><span class="coin-badge">C</span> <span id="shop-coin-count">0</span> <span id="txt-shop-coins-word">monedas</span></div>
       <button class="lib-close" onclick="closeShop()">✕</button>
     </div>
@@ -985,13 +985,13 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <audio id="player"></audio>
 
 <footer id="site-footer" style="text-align:center;padding:26px 16px 34px;color:var(--text2);font-size:0.72rem;line-height:2;position:relative;z-index:1;">
-  <div id="txt-footer-copyright">© <span id="footer-year">2026</span> Focus-Tap. Todos los derechos reservados.</div>
+  <div id="txt-footer-copyright">© <span id="footer-year">2026</span> Pandy-Tap. Todos los derechos reservados.</div>
   <div>
     <a href="privacy.html" id="txt-footer-privacy" style="color:var(--text2);text-decoration:underline;">Política de Privacidad</a>
     &nbsp;·&nbsp;
     <a href="terms.html" id="txt-footer-terms" style="color:var(--text2);text-decoration:underline;">Términos de Uso</a>
     &nbsp;·&nbsp;
-    <a href="mailto:contacto@focustap" id="txt-footer-contact" style="color:var(--text2);text-decoration:underline;">Contacto</a>
+    <a href="mailto:contacto@pandytap" id="txt-footer-contact" style="color:var(--text2);text-decoration:underline;">Contacto</a>
   </div>
 </footer>
 
@@ -1014,12 +1014,12 @@ const QUOTES = [
   {text:'Un río corta la roca no por su fuerza, sino por su constancia.',author:'Ovidio'},
   {text:'No esperes el momento perfecto. Toma el momento y hazlo perfecto.',author:'Zig Ziglar'},
   {text:'La mente que se abre a una nueva idea nunca vuelve a su tamaño original.',author:'Albert Einstein'},
-  {text:'Cada sesión de estudio es un paso hacia la persona que quieres ser.',author:'Focus-Tap'},
-  {text:'Hoy no tienes que ser perfecto. Solo tienes que empezar.',author:'Focus-Tap'},
-  {text:'Tu cerebro se fortalece cada vez que eliges estudiar en vez de distraerte.',author:'Focus-Tap'},
+  {text:'Cada sesión de estudio es un paso hacia la persona que quieres ser.',author:'Pandy-Tap'},
+  {text:'Hoy no tienes que ser perfecto. Solo tienes que empezar.',author:'Pandy-Tap'},
+  {text:'Tu cerebro se fortalece cada vez que eliges estudiar en vez de distraerte.',author:'Pandy-Tap'},
   {text:'No estudias para los exámenes. Estudias para la vida.',author:'Anónimo'},
   {text:'El conocimiento es el único bien que crece cuando se comparte.',author:'Sócrates'},
-  {text:'Cada minuto de estudio hoy es un problema menos mañana.',author:'Focus-Tap'},
+  {text:'Cada minuto de estudio hoy es un problema menos mañana.',author:'Pandy-Tap'},
 ];
 
 // Same quotes, translated, so the rotating box respects the chosen language
@@ -1035,12 +1035,12 @@ const QUOTES_I18N = {
     {text:'A river cuts through rock not by its power, but by its persistence.',author:'Ovid'},
     {text:'Don\u2019t wait for the perfect moment. Take the moment and make it perfect.',author:'Zig Ziglar'},
     {text:'The mind that opens to a new idea never returns to its original size.',author:'Albert Einstein'},
-    {text:'Every study session is a step toward the person you want to be.',author:'Focus-Tap'},
-    {text:'You don\u2019t have to be perfect today. You just have to start.',author:'Focus-Tap'},
-    {text:'Your brain grows stronger every time you choose to study instead of getting distracted.',author:'Focus-Tap'},
+    {text:'Every study session is a step toward the person you want to be.',author:'Pandy-Tap'},
+    {text:'You don\u2019t have to be perfect today. You just have to start.',author:'Pandy-Tap'},
+    {text:'Your brain grows stronger every time you choose to study instead of getting distracted.',author:'Pandy-Tap'},
     {text:'You don\u2019t study for the exams. You study for life.',author:'Anonymous'},
     {text:'Knowledge is the only wealth that grows when it is shared.',author:'Socrates'},
-    {text:'Every minute you study today is one less problem tomorrow.',author:'Focus-Tap'},
+    {text:'Every minute you study today is one less problem tomorrow.',author:'Pandy-Tap'},
   ],
   fr: [
     {text:'La concentration n\u2019est pas ce que tu fais, mais ce que tu choisis de ne pas faire.',author:'Steve Jobs'},
@@ -1052,12 +1052,12 @@ const QUOTES_I18N = {
     {text:'Une rivière creuse la roche non par sa force, mais par sa constance.',author:'Ovide'},
     {text:'N\u2019attends pas le moment parfait. Prends le moment et rends-le parfait.',author:'Zig Ziglar'},
     {text:'L\u2019esprit qui s\u2019ouvre à une nouvelle idée ne revient jamais à sa taille initiale.',author:'Albert Einstein'},
-    {text:'Chaque session d\u2019étude est un pas vers la personne que tu veux devenir.',author:'Focus-Tap'},
-    {text:'Tu n\u2019as pas besoin d\u2019être parfait aujourd\u2019hui. Il faut juste commencer.',author:'Focus-Tap'},
-    {text:'Ton cerveau se renforce chaque fois que tu choisis d\u2019étudier plutôt que de te distraire.',author:'Focus-Tap'},
+    {text:'Chaque session d\u2019étude est un pas vers la personne que tu veux devenir.',author:'Pandy-Tap'},
+    {text:'Tu n\u2019as pas besoin d\u2019être parfait aujourd\u2019hui. Il faut juste commencer.',author:'Pandy-Tap'},
+    {text:'Ton cerveau se renforce chaque fois que tu choisis d\u2019étudier plutôt que de te distraire.',author:'Pandy-Tap'},
     {text:'Tu n\u2019étudies pas pour les examens. Tu étudies pour la vie.',author:'Anonyme'},
     {text:'Le savoir est la seule richesse qui grandit quand on la partage.',author:'Socrate'},
-    {text:'Chaque minute d\u2019étude aujourd\u2019hui est un problème de moins demain.',author:'Focus-Tap'},
+    {text:'Chaque minute d\u2019étude aujourd\u2019hui est un problème de moins demain.',author:'Pandy-Tap'},
   ],
   de: [
     {text:'Fokus bedeutet nicht, was du tust, sondern was du bewusst nicht tust.',author:'Steve Jobs'},
@@ -1069,12 +1069,12 @@ const QUOTES_I18N = {
     {text:'Ein Fluss durchbricht den Fels nicht durch Kraft, sondern durch Beständigkeit.',author:'Ovid'},
     {text:'Warte nicht auf den perfekten Moment. Nimm den Moment und mach ihn perfekt.',author:'Zig Ziglar'},
     {text:'Ein Geist, der sich einer neuen Idee öffnet, kehrt nie zu seiner ursprünglichen Größe zurück.',author:'Albert Einstein'},
-    {text:'Jede Lernsitzung ist ein Schritt zu der Person, die du sein willst.',author:'Focus-Tap'},
-    {text:'Du musst heute nicht perfekt sein. Du musst nur anfangen.',author:'Focus-Tap'},
-    {text:'Dein Gehirn wird jedes Mal stärker, wenn du dich fürs Lernen statt für Ablenkung entscheidest.',author:'Focus-Tap'},
+    {text:'Jede Lernsitzung ist ein Schritt zu der Person, die du sein willst.',author:'Pandy-Tap'},
+    {text:'Du musst heute nicht perfekt sein. Du musst nur anfangen.',author:'Pandy-Tap'},
+    {text:'Dein Gehirn wird jedes Mal stärker, wenn du dich fürs Lernen statt für Ablenkung entscheidest.',author:'Pandy-Tap'},
     {text:'Du lernst nicht für Prüfungen. Du lernst für das Leben.',author:'Anonym'},
     {text:'Wissen ist der einzige Reichtum, der wächst, wenn man ihn teilt.',author:'Sokrates'},
-    {text:'Jede Minute, die du heute lernst, ist morgen ein Problem weniger.',author:'Focus-Tap'},
+    {text:'Jede Minute, die du heute lernst, ist morgen ein Problem weniger.',author:'Pandy-Tap'},
   ],
   pt: [
     {text:'Foco não é o que você faz, mas sim o que você decide não fazer.',author:'Steve Jobs'},
@@ -1086,12 +1086,12 @@ const QUOTES_I18N = {
     {text:'Um rio corta a rocha não pela força, mas pela constância.',author:'Ovídio'},
     {text:'Não espere o momento perfeito. Aproveite o momento e o torne perfeito.',author:'Zig Ziglar'},
     {text:'A mente que se abre a uma nova ideia nunca volta ao seu tamanho original.',author:'Albert Einstein'},
-    {text:'Cada sessão de estudo é um passo rumo à pessoa que você quer ser.',author:'Focus-Tap'},
-    {text:'Você não precisa ser perfeito hoje. Só precisa começar.',author:'Focus-Tap'},
-    {text:'Seu cérebro fica mais forte cada vez que você escolhe estudar em vez de se distrair.',author:'Focus-Tap'},
+    {text:'Cada sessão de estudo é um passo rumo à pessoa que você quer ser.',author:'Pandy-Tap'},
+    {text:'Você não precisa ser perfeito hoje. Só precisa começar.',author:'Pandy-Tap'},
+    {text:'Seu cérebro fica mais forte cada vez que você escolhe estudar em vez de se distrair.',author:'Pandy-Tap'},
     {text:'Você não estuda para as provas. Você estuda para a vida.',author:'Anônimo'},
     {text:'O conhecimento é a única riqueza que cresce quando é compartilhada.',author:'Sócrates'},
-    {text:'Cada minuto de estudo hoje é um problema a menos amanhã.',author:'Focus-Tap'},
+    {text:'Cada minuto de estudo hoje é um problema a menos amanhã.',author:'Pandy-Tap'},
   ],
   it: [
     {text:'La concentrazione non è ciò che fai, ma ciò che scegli di non fare.',author:'Steve Jobs'},
@@ -1103,12 +1103,12 @@ const QUOTES_I18N = {
     {text:'Un fiume scava la roccia non con la forza, ma con la costanza.',author:'Ovidio'},
     {text:'Non aspettare il momento perfetto. Prendi il momento e rendilo perfetto.',author:'Zig Ziglar'},
     {text:'La mente che si apre a una nuova idea non torna mai alla sua dimensione originale.',author:'Albert Einstein'},
-    {text:'Ogni sessione di studio è un passo verso la persona che vuoi diventare.',author:'Focus-Tap'},
-    {text:'Non devi essere perfetto oggi. Devi solo iniziare.',author:'Focus-Tap'},
-    {text:'Il tuo cervello si rafforza ogni volta che scegli di studiare invece di distrarti.',author:'Focus-Tap'},
+    {text:'Ogni sessione di studio è un passo verso la persona che vuoi diventare.',author:'Pandy-Tap'},
+    {text:'Non devi essere perfetto oggi. Devi solo iniziare.',author:'Pandy-Tap'},
+    {text:'Il tuo cervello si rafforza ogni volta che scegli di studiare invece di distrarti.',author:'Pandy-Tap'},
     {text:'Non studi per gli esami. Studi per la vita.',author:'Anonimo'},
     {text:'La conoscenza è l\u2019unica ricchezza che cresce quando viene condivisa.',author:'Socrate'},
-    {text:'Ogni minuto di studio oggi è un problema in meno domani.',author:'Focus-Tap'},
+    {text:'Ogni minuto di studio oggi è un problema in meno domani.',author:'Pandy-Tap'},
   ],
 };
 
@@ -1311,7 +1311,7 @@ function updateClock(){
   clock.innerText=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
   const pct=timerLeft/(parseInt(document.getElementById('m-in').value)*60||1500);
   ring.style.strokeDashoffset=CIRCUM*(1-Math.max(0,Math.min(1,pct)));
-  document.title=`${clock.innerText} · Focus-Tap`;
+  document.title=`${clock.innerText} · Pandy-Tap`;
 }
 
 function toggleMode(mode){
@@ -1786,7 +1786,7 @@ function playAlarm(){
 function stopAlarm(){ clearTimeout(alarmLoop); alarmNodes.forEach(n=>{try{n.stop();}catch(e){}}); alarmNodes=[]; if(alarmCtx){alarmCtx.close();alarmCtx=null;} document.getElementById('alarm-banner').style.display='none'; }
 
 function fireBreakNotification(){
-  if(Notification.permission==='granted') new Notification('🐼 ¡Descanso terminado! — Focus-Tap',{body:'Es hora de volver al estudio. ¡Tú puedes!',icon:'panda png.png'});
+  if(Notification.permission==='granted') new Notification('🐼 ¡Descanso terminado! — Pandy-Tap',{body:'Es hora de volver al estudio. ¡Tú puedes!',icon:'panda png.png'});
   document.getElementById('alarm-banner').style.display='block';
   playAlarm();
 }
@@ -2716,7 +2716,7 @@ const T={
       notesSaved:'✓ Guardado',notesSaving:'...',confirmClearNotes:'¿Limpiar todas las notas?',
       settingsTitle:'⚙️ Ajustes',bgThemeLbl:'🖼 Tema de fondo',bgUpload:'Subir imagen propia',bgUploadLocked:'Se desbloquea a los 50 días',bgReset:'↺ Restablecer',
       bgVideoUpload:'Subir vídeo propio',bgVideoUploadLocked:'Se desbloquea a los 100 días',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Ayúdanos a mejorar Focus-Tap con tu opinión anónima. Solo tarda 2 minutos.',feedbackBtn:'📝 Abrir formulario',
+      feedbackLbl:'💬 Feedback',feedbackDesc:'Ayúdanos a mejorar Pandy-Tap con tu opinión anónima. Solo tarda 2 minutos.',feedbackBtn:'📝 Abrir formulario',
       accountTitle:'👤 Cuenta · Sincronización',accountDesc:'Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.',
       accEmailPh:'Email',accPassPh:'Contraseña (mín. 6)',accRegister:'✨ Crear cuenta',accLogin:'🔑 Iniciar sesión',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Cerrar sesión',
       langTitle:'🌐 Idioma',socialTitle:'📣 Síguenos',breakFinished:'🔔 ¡Descanso terminado!',stopAlarmBtn:'⏹ Parar alarma',
@@ -2739,7 +2739,7 @@ const T={
       errEmailInUse:'Ese email ya tiene una cuenta. Prueba a iniciar sesión.',errInvalidEmail:'Email no válido.',errWeakPass:'La contraseña debe tener 6+ caracteres.',errBadCreds:'Email o contraseña incorrectos.',errGeneric:'Error: ',
       cloudSynced:'☁️ Datos sincronizados desde la nube',cloudNewAccount:'☁️ Cuenta nueva — empezando desde cero',cloudSyncErr:'⚠️ Error al sincronizar con la nube',
       prioHigh:'🔴 Alta',prioMed:'🟡 Media',prioLow:'🟢 Baja',
-      shopTitle:'🏪 Tienda Focus-Tap',shopCoinsWord:'monedas',
+      shopTitle:'🏪 Tienda Pandy-Tap',shopCoinsWord:'monedas',
       shopEarnTip:'Ganas monedas por tramos de estudio cada día: <strong>1ª moneda a los 30 min</strong>, <strong>2ª a los 90 min</strong> y <strong>3ª a los 150 min</strong>. Hasta 3 monedas al día. Las monedas se guardan en tu cuenta y nunca caducan.',
       shopSecPalettes:'🎨 Paletas de color',shopSecEffects:'✨ Efectos de tarjeta',shopSecSounds:'🔔 Sonidos premium',
       shopBadgeActive:'Activo',shopBadgeOwned:'Tuyo',shopFree:'Gratis',shopListen:'Escuchar',shopEffectStandard:'Estándar',
@@ -2762,7 +2762,7 @@ const T={
       notesSaved:'✓ Saved',notesSaving:'...',confirmClearNotes:'Clear all notes?',
       settingsTitle:'⚙️ Settings',bgThemeLbl:'🖼 Background theme',bgUpload:'Upload your own image',bgUploadLocked:'Unlocks at 50 days',bgReset:'↺ Reset',
       bgVideoUpload:'Upload your own video',bgVideoUploadLocked:'Unlocks at 100 days',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Help us improve Focus-Tap with your anonymous feedback. Takes only 2 minutes.',feedbackBtn:'📝 Open form',
+      feedbackLbl:'💬 Feedback',feedbackDesc:'Help us improve Pandy-Tap with your anonymous feedback. Takes only 2 minutes.',feedbackBtn:'📝 Open form',
       accountTitle:'👤 Account · Sync',accountDesc:'Create a free account to store your streak and score in the cloud and see them from any device.',
       accEmailPh:'Email',accPassPh:'Password (6+ chars)',accRegister:'✨ Create account',accLogin:'🔑 Log in',accLoggedAs:'✅ Logged in as:',accLogout:'🚪 Log out',
       langTitle:'🌐 Language',socialTitle:'📣 Follow us',breakFinished:'🔔 Break finished!',stopAlarmBtn:'⏹ Stop alarm',
@@ -2785,7 +2785,7 @@ const T={
       errEmailInUse:'That email already has an account. Try logging in.',errInvalidEmail:'Invalid email.',errWeakPass:'Password must be 6+ characters.',errBadCreds:'Incorrect email or password.',errGeneric:'Error: ',
       cloudSynced:'☁️ Data synced from the cloud',cloudNewAccount:'☁️ New account — starting fresh',cloudSyncErr:'⚠️ Error syncing with the cloud',
       prioHigh:'🔴 High',prioMed:'🟡 Medium',prioLow:'🟢 Low',
-      shopTitle:'🏪 Focus-Tap Shop',shopCoinsWord:'coins',
+      shopTitle:'🏪 Pandy-Tap Shop',shopCoinsWord:'coins',
       shopEarnTip:'You earn coins in daily study tiers: <strong>1st coin at 30 min</strong>, <strong>2nd at 90 min</strong> and <strong>3rd at 150 min</strong>. Up to 3 coins a day. Coins are saved to your account and never expire.',
       shopSecPalettes:'🎨 Color palettes',shopSecEffects:'✨ Card effects',shopSecSounds:'🔔 Premium sounds',
       shopBadgeActive:'Active',shopBadgeOwned:'Owned',shopFree:'Free',shopListen:'Listen',shopEffectStandard:'Standard',
@@ -2808,7 +2808,7 @@ const T={
       notesSaved:'✓ Enregistré',notesSaving:'...',confirmClearNotes:'Effacer toutes les notes ?',
       settingsTitle:'⚙️ Paramètres',bgThemeLbl:'🖼 Thème de fond',bgUpload:'Importer ta propre image',bgUploadLocked:'Se débloque à 50 jours',bgReset:'↺ Réinitialiser',
       bgVideoUpload:'Importer ta propre vidéo',bgVideoUploadLocked:'Se débloque à 100 jours',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Aide-nous à améliorer Focus-Tap avec ton avis anonyme. Ça ne prend que 2 minutes.',feedbackBtn:'📝 Ouvrir le formulaire',
+      feedbackLbl:'💬 Feedback',feedbackDesc:'Aide-nous à améliorer Pandy-Tap avec ton avis anonyme. Ça ne prend que 2 minutes.',feedbackBtn:'📝 Ouvrir le formulaire',
       accountTitle:'👤 Compte · Synchronisation',accountDesc:'Crée un compte gratuit pour sauvegarder ta série et ton score dans le cloud et les voir depuis n\'importe quel appareil.',
       accEmailPh:'Email',accPassPh:'Mot de passe (6+ car.)',accRegister:'✨ Créer un compte',accLogin:'🔑 Se connecter',accLoggedAs:'✅ Connecté en tant que :',accLogout:'🚪 Se déconnecter',
       langTitle:'🌐 Langue',socialTitle:'📣 Suis-nous',breakFinished:'🔔 Pause terminée !',stopAlarmBtn:'⏹ Arrêter l\'alarme',
@@ -2831,7 +2831,7 @@ const T={
       errEmailInUse:'Cet email a déjà un compte. Essaie de te connecter.',errInvalidEmail:'Email invalide.',errWeakPass:'Le mot de passe doit avoir 6+ caractères.',errBadCreds:'Email ou mot de passe incorrect.',errGeneric:'Erreur : ',
       cloudSynced:'☁️ Données synchronisées depuis le cloud',cloudNewAccount:'☁️ Nouveau compte — on repart de zéro',cloudSyncErr:'⚠️ Erreur de synchronisation avec le cloud',
       prioHigh:'🔴 Élevée',prioMed:'🟡 Moyenne',prioLow:'🟢 Basse',
-      shopTitle:'🏪 Boutique Focus-Tap',shopCoinsWord:'pièces',
+      shopTitle:'🏪 Boutique Pandy-Tap',shopCoinsWord:'pièces',
       shopEarnTip:'Tu gagnes des pièces par paliers d\'étude chaque jour : <strong>1ère pièce à 30 min</strong>, <strong>2ème à 90 min</strong> et <strong>3ème à 150 min</strong>. Jusqu\'à 3 pièces par jour. Les pièces sont sauvegardées sur ton compte et n\'expirent jamais.',
       shopSecPalettes:'🎨 Palettes de couleurs',shopSecEffects:'✨ Effets de carte',shopSecSounds:'🔔 Sons premium',
       shopBadgeActive:'Actif',shopBadgeOwned:'À toi',shopFree:'Gratuit',shopListen:'Écouter',shopEffectStandard:'Standard',
@@ -2854,7 +2854,7 @@ const T={
       notesSaved:'✓ Gespeichert',notesSaving:'...',confirmClearNotes:'Alle Notizen löschen?',
       settingsTitle:'⚙️ Einstellungen',bgThemeLbl:'🖼 Hintergrundthema',bgUpload:'Eigenes Bild hochladen',bgUploadLocked:'Wird nach 50 Tagen freigeschaltet',bgReset:'↺ Zurücksetzen',
       bgVideoUpload:'Eigenes Video hochladen',bgVideoUploadLocked:'Wird nach 100 Tagen freigeschaltet',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Hilf uns, Focus-Tap mit deinem anonymen Feedback zu verbessern. Dauert nur 2 Minuten.',feedbackBtn:'📝 Formular öffnen',
+      feedbackLbl:'💬 Feedback',feedbackDesc:'Hilf uns, Pandy-Tap mit deinem anonymen Feedback zu verbessern. Dauert nur 2 Minuten.',feedbackBtn:'📝 Formular öffnen',
       accountTitle:'👤 Konto · Synchronisierung',accountDesc:'Erstelle ein kostenloses Konto, um deinen Streak und Score in der Cloud zu speichern und von jedem Gerät zu sehen.',
       accEmailPh:'E-Mail',accPassPh:'Passwort (mind. 6 Zeichen)',accRegister:'✨ Konto erstellen',accLogin:'🔑 Anmelden',accLoggedAs:'✅ Angemeldet als:',accLogout:'🚪 Abmelden',
       langTitle:'🌐 Sprache',socialTitle:'📣 Folge uns',breakFinished:'🔔 Pause beendet!',stopAlarmBtn:'⏹ Alarm stoppen',
@@ -2877,7 +2877,7 @@ const T={
       errEmailInUse:'Diese E-Mail hat bereits ein Konto. Versuche dich anzumelden.',errInvalidEmail:'Ungültige E-Mail.',errWeakPass:'Das Passwort muss 6+ Zeichen haben.',errBadCreds:'E-Mail oder Passwort falsch.',errGeneric:'Fehler: ',
       cloudSynced:'☁️ Daten aus der Cloud synchronisiert',cloudNewAccount:'☁️ Neues Konto — wir starten bei null',cloudSyncErr:'⚠️ Fehler bei der Cloud-Synchronisierung',
       prioHigh:'🔴 Hoch',prioMed:'🟡 Mittel',prioLow:'🟢 Niedrig',
-      shopTitle:'🏪 Focus-Tap Shop',shopCoinsWord:'Münzen',
+      shopTitle:'🏪 Pandy-Tap Shop',shopCoinsWord:'Münzen',
       shopEarnTip:'Du verdienst Münzen in täglichen Lernstufen: <strong>1. Münze bei 30 Min</strong>, <strong>2. bei 90 Min</strong> und <strong>3. bei 150 Min</strong>. Bis zu 3 Münzen pro Tag. Münzen werden in deinem Konto gespeichert und verfallen nie.',
       shopSecPalettes:'🎨 Farbpaletten',shopSecEffects:'✨ Karteneffekte',shopSecSounds:'🔔 Premium-Sounds',
       shopBadgeActive:'Aktiv',shopBadgeOwned:'Dein',shopFree:'Kostenlos',shopListen:'Anhören',shopEffectStandard:'Standard',
@@ -2900,7 +2900,7 @@ const T={
       notesSaved:'✓ Salvo',notesSaving:'...',confirmClearNotes:'Limpar todas as notas?',
       settingsTitle:'⚙️ Configurações',bgThemeLbl:'🖼 Tema de fundo',bgUpload:'Enviar imagem própria',bgUploadLocked:'Desbloqueia aos 50 dias',bgReset:'↺ Restaurar',
       bgVideoUpload:'Enviar vídeo próprio',bgVideoUploadLocked:'Desbloqueia aos 100 dias',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Ajude-nos a melhorar o Focus-Tap com sua opinião anônima. Leva só 2 minutos.',feedbackBtn:'📝 Abrir formulário',
+      feedbackLbl:'💬 Feedback',feedbackDesc:'Ajude-nos a melhorar o Pandy-Tap com sua opinião anônima. Leva só 2 minutos.',feedbackBtn:'📝 Abrir formulário',
       accountTitle:'👤 Conta · Sincronização',accountDesc:'Crie uma conta gratuita para guardar sua sequência e pontuação na nuvem e vê-las em qualquer dispositivo.',
       accEmailPh:'Email',accPassPh:'Senha (mín. 6)',accRegister:'✨ Criar conta',accLogin:'🔑 Entrar',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Sair',
       langTitle:'🌐 Idioma',socialTitle:'📣 Siga-nos',breakFinished:'🔔 Pausa terminada!',stopAlarmBtn:'⏹ Parar alarme',
@@ -2923,7 +2923,7 @@ const T={
       errEmailInUse:'Esse email já tem uma conta. Tente entrar.',errInvalidEmail:'Email inválido.',errWeakPass:'A senha deve ter 6+ caracteres.',errBadCreds:'Email ou senha incorretos.',errGeneric:'Erro: ',
       cloudSynced:'☁️ Dados sincronizados da nuvem',cloudNewAccount:'☁️ Conta nova — começando do zero',cloudSyncErr:'⚠️ Erro ao sincronizar com a nuvem',
       prioHigh:'🔴 Alta',prioMed:'🟡 Média',prioLow:'🟢 Baixa',
-      shopTitle:'🏪 Loja Focus-Tap',shopCoinsWord:'moedas',
+      shopTitle:'🏪 Loja Pandy-Tap',shopCoinsWord:'moedas',
       shopEarnTip:'Você ganha moedas por níveis de estudo a cada dia: <strong>1ª moeda aos 30 min</strong>, <strong>2ª aos 90 min</strong> e <strong>3ª aos 150 min</strong>. Até 3 moedas por dia. As moedas ficam salvas na sua conta e nunca expiram.',
       shopSecPalettes:'🎨 Paletas de cores',shopSecEffects:'✨ Efeitos de cartão',shopSecSounds:'🔔 Sons premium',
       shopBadgeActive:'Ativo',shopBadgeOwned:'Seu',shopFree:'Grátis',shopListen:'Ouvir',shopEffectStandard:'Padrão',
@@ -2946,7 +2946,7 @@ const T={
       notesSaved:'✓ Salvato',notesSaving:'...',confirmClearNotes:'Cancellare tutte le note?',
       settingsTitle:'⚙️ Impostazioni',bgThemeLbl:'🖼 Tema di sfondo',bgUpload:'Carica una tua immagine',bgUploadLocked:'Si sblocca a 50 giorni',bgReset:'↺ Ripristina',
       bgVideoUpload:'Carica un tuo video',bgVideoUploadLocked:'Si sblocca a 100 giorni',
-      feedbackLbl:'💬 Feedback',feedbackDesc:'Aiutaci a migliorare Focus-Tap con il tuo feedback anonimo. Richiede solo 2 minuti.',feedbackBtn:'📝 Apri modulo',
+      feedbackLbl:'💬 Feedback',feedbackDesc:'Aiutaci a migliorare Pandy-Tap con il tuo feedback anonimo. Richiede solo 2 minuti.',feedbackBtn:'📝 Apri modulo',
       accountTitle:'👤 Account · Sincronizzazione',accountDesc:'Crea un account gratuito per salvare la tua serie e il punteggio nel cloud e vederli da qualsiasi dispositivo.',
       accEmailPh:'Email',accPassPh:'Password (min. 6)',accRegister:'✨ Crea account',accLogin:'🔑 Accedi',accLoggedAs:'✅ Connesso come:',accLogout:'🚪 Esci',
       langTitle:'🌐 Lingua',socialTitle:'📣 Seguici',breakFinished:'🔔 Pausa terminata!',stopAlarmBtn:'⏹ Ferma allarme',
@@ -2969,7 +2969,7 @@ const T={
       errEmailInUse:'Questa email ha già un account. Prova ad accedere.',errInvalidEmail:'Email non valida.',errWeakPass:'La password deve avere 6+ caratteri.',errBadCreds:'Email o password errati.',errGeneric:'Errore: ',
       cloudSynced:'☁️ Dati sincronizzati dal cloud',cloudNewAccount:'☁️ Nuovo account — si parte da zero',cloudSyncErr:'⚠️ Errore di sincronizzazione con il cloud',
       prioHigh:'🔴 Alta',prioMed:'🟡 Media',prioLow:'🟢 Bassa',
-      shopTitle:'🏪 Negozio Focus-Tap',shopCoinsWord:'monete',
+      shopTitle:'🏪 Negozio Pandy-Tap',shopCoinsWord:'monete',
       shopEarnTip:'Guadagni monete per fasce di studio ogni giorno: <strong>1ª moneta a 30 min</strong>, <strong>2ª a 90 min</strong> e <strong>3ª a 150 min</strong>. Fino a 3 monete al giorno. Le monete restano salvate nel tuo account e non scadono mai.',
       shopSecPalettes:'🎨 Palette di colori',shopSecEffects:'✨ Effetti carta',shopSecSounds:'🔔 Suoni premium',
       shopBadgeActive:'Attivo',shopBadgeOwned:'Tuo',shopFree:'Gratis',shopListen:'Ascolta',shopEffectStandard:'Standard',
@@ -3078,7 +3078,7 @@ function setLang(lang,btn){
   // Language panel title
   document.getElementById('txt-lang-title').innerText=t.langTitle;
   document.getElementById('txt-social-title').innerText=t.socialTitle;
-  document.getElementById('txt-footer-copyright').innerHTML=`© <span id="footer-year">${new Date().getFullYear()}</span> Focus-Tap. ${t.footerCopyright}`;
+  document.getElementById('txt-footer-copyright').innerHTML=`© <span id="footer-year">${new Date().getFullYear()}</span> Pandy-Tap. ${t.footerCopyright}`;
   document.getElementById('txt-footer-privacy').innerText=t.footerPrivacy;
   document.getElementById('txt-footer-terms').innerText=t.footerTerms;
   document.getElementById('txt-footer-contact').innerText=t.footerContact;
@@ -3125,7 +3125,7 @@ const CONFETTI_COLORS=['#7986cb','#4db6ac','#f48fb1','#ffcc80','#a5d6a7','#ce93d
 // ══════════════════════════════════════
 const ONBOARDING_I18N={
   es:[
-    {emoji:'🐼',title:'¡Bienvenido a Focus-Tap!',desc:'Tu espacio de estudio con temporizador, música, tareas y mucho más. Te lo enseño en un minuto.'},
+    {emoji:'🐼',title:'¡Bienvenido a Pandy-Tap!',desc:'Tu espacio de estudio con temporizador, música, tareas y mucho más. Te lo enseño en un minuto.'},
     {emoji:'⏱️',title:'Elige tu tiempo y tu modo',desc:'Ajusta los minutos y pulsa Empezar. El Modo Enfoque pasa a pantalla completa y penaliza si cambias de pestaña; el Modo Productividad es más ligero, sin pantalla completa forzada.'},
     {emoji:'☕',title:'Tus descansos, a tu ritmo',desc:'Junto a la racha tienes un temporizador de descanso independiente (5, 10 o 15 min) con su propio aviso al terminar.'},
     {emoji:'✅',title:'Metas de estudio',desc:'Anota tus tareas con su nivel de prioridad (alta/media/baja), márcalas al completarlas y se quedan guardadas para cuando vuelvas.'},
@@ -3135,7 +3135,7 @@ const ONBOARDING_I18N={
     {emoji:'🎨',title:'Hazla tu área de estudio',desc:'Cambia el tema de fondo y el idioma desde el engranaje ⚙️, y crea una cuenta gratis para guardar todo en la nube. A tu gusto.'}
   ],
   en:[
-    {emoji:'🐼',title:'Welcome to Focus-Tap!',desc:'Your study space with a timer, music, tasks and more. Here\'s a quick tour.'},
+    {emoji:'🐼',title:'Welcome to Pandy-Tap!',desc:'Your study space with a timer, music, tasks and more. Here\'s a quick tour.'},
     {emoji:'⏱️',title:'Pick your time and mode',desc:'Set your session length and hit Start. Focus Mode goes fullscreen and penalizes tab-switching; Productivity Mode is lighter, no forced fullscreen.'},
     {emoji:'☕',title:'Breaks, at your own pace',desc:'Next to the streak you\'ll find an independent break timer (5, 10 or 15 min) with its own alarm when it\'s done.'},
     {emoji:'✅',title:'Study goals',desc:'Add tasks with a priority level (high/medium/low), check them off as you go — they stay saved for next time.'},
@@ -3145,7 +3145,7 @@ const ONBOARDING_I18N={
     {emoji:'🎨',title:'Make it your workspace',desc:'Change the background theme and language from the gear ⚙️, and create a free account to save it all in the cloud. However you like it.'}
   ],
   fr:[
-    {emoji:'🐼',title:'Bienvenue sur Focus-Tap !',desc:'Ton espace d\'étude avec minuteur, musique, tâches et bien plus. Petit tour rapide.'},
+    {emoji:'🐼',title:'Bienvenue sur Pandy-Tap !',desc:'Ton espace d\'étude avec minuteur, musique, tâches et bien plus. Petit tour rapide.'},
     {emoji:'⏱️',title:'Choisis ton temps et ton mode',desc:'Règle la durée et appuie sur Démarrer. Le Mode Focus passe en plein écran et pénalise si tu changes d\'onglet ; le Mode Productivité est plus léger, sans plein écran forcé.'},
     {emoji:'☕',title:'Tes pauses, à ton rythme',desc:'À côté de la série, un minuteur de pause indépendant (5, 10 ou 15 min) avec sa propre alarme à la fin.'},
     {emoji:'✅',title:'Objectifs d\'étude',desc:'Ajoute des tâches avec un niveau de priorité (haute/moyenne/basse), coche-les une fois faites — elles restent sauvegardées.'},
@@ -3155,7 +3155,7 @@ const ONBOARDING_I18N={
     {emoji:'🎨',title:'Fais-en ton espace',desc:'Change le thème de fond et la langue depuis l\'engrenage ⚙️, et crée un compte gratuit pour tout sauvegarder dans le cloud. À ta façon.'}
   ],
   de:[
-    {emoji:'🐼',title:'Willkommen bei Focus-Tap!',desc:'Dein Lernraum mit Timer, Musik, Aufgaben und mehr. Eine kurze Tour.'},
+    {emoji:'🐼',title:'Willkommen bei Pandy-Tap!',desc:'Dein Lernraum mit Timer, Musik, Aufgaben und mehr. Eine kurze Tour.'},
     {emoji:'⏱️',title:'Zeit und Modus wählen',desc:'Stelle die Sitzungsdauer ein und drücke Start. Der Fokusmodus geht in den Vollbildmodus und bestraft Tab-Wechsel; der Produktivitätsmodus ist leichter, ohne erzwungenes Vollbild.'},
     {emoji:'☕',title:'Pausen, in deinem Tempo',desc:'Neben dem Streak findest du einen eigenen Pausentimer (5, 10 oder 15 Min) mit eigenem Alarm am Ende.'},
     {emoji:'✅',title:'Lernziele',desc:'Füge Aufgaben mit einer Priorität hinzu (hoch/mittel/niedrig), hake sie ab — sie bleiben gespeichert.'},
@@ -3165,7 +3165,7 @@ const ONBOARDING_I18N={
     {emoji:'🎨',title:'Mach sie zu deinem Arbeitsbereich',desc:'Ändere Hintergrundthema und Sprache über das Zahnrad ⚙️, und erstelle ein kostenloses Konto, um alles in der Cloud zu speichern. Ganz nach deinem Geschmack.'}
   ],
   pt:[
-    {emoji:'🐼',title:'Bem-vindo ao Focus-Tap!',desc:'Seu espaço de estudo com temporizador, música, tarefas e muito mais. Um tour rápido.'},
+    {emoji:'🐼',title:'Bem-vindo ao Pandy-Tap!',desc:'Seu espaço de estudo com temporizador, música, tarefas e muito mais. Um tour rápido.'},
     {emoji:'⏱️',title:'Escolha seu tempo e modo',desc:'Ajuste a duração e toque em Começar. O Modo Foco vai para tela cheia e penaliza trocar de aba; o Modo Produtividade é mais leve, sem tela cheia forçada.'},
     {emoji:'☕',title:'Suas pausas, no seu ritmo',desc:'Ao lado da sequência há um temporizador de pausa independente (5, 10 ou 15 min) com seu próprio aviso ao terminar.'},
     {emoji:'✅',title:'Metas de estudo',desc:'Adicione tarefas com nível de prioridade (alta/média/baixa), marque-as ao concluir — ficam salvas para depois.'},
@@ -3175,7 +3175,7 @@ const ONBOARDING_I18N={
     {emoji:'🎨',title:'Deixe do seu jeito',desc:'Mude o tema de fundo e o idioma na engrenagem ⚙️, e crie uma conta grátis para salvar tudo na nuvem. Do jeito que você quiser.'}
   ],
   it:[
-    {emoji:'🐼',title:'Benvenuto su Focus-Tap!',desc:'Il tuo spazio di studio con timer, musica, attività e altro. Un tour veloce.'},
+    {emoji:'🐼',title:'Benvenuto su Pandy-Tap!',desc:'Il tuo spazio di studio con timer, musica, attività e altro. Un tour veloce.'},
     {emoji:'⏱️',title:'Scegli tempo e modalità',desc:'Imposta la durata e premi Inizia. La Modalità Focus va a schermo intero e penalizza il cambio scheda; la Modalità Produttività è più leggera, senza schermo intero forzato.'},
     {emoji:'☕',title:'Le tue pause, al tuo ritmo',desc:'Accanto alla serie trovi un timer di pausa indipendente (5, 10 o 15 min) con il suo avviso finale.'},
     {emoji:'✅',title:'Obiettivi di studio',desc:'Aggiungi attività con un livello di priorità (alta/media/bassa), spuntale al completarle — restano salvate.'},
