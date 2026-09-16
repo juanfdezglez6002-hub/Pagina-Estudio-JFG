@@ -1787,7 +1787,7 @@ function stopAlarm(){ clearTimeout(alarmLoop); alarmNodes.forEach(n=>{try{n.stop
 
 function fireBreakNotification(){
   if(Notification.permission==='granted') new Notification('🐼 ¡Descanso terminado! — Pandy-Tap',{body:'Es hora de volver al estudio. ¡Tú puedes!',icon:'panda png.png'});
-  document.getElementById('alarm-banner').style.display='block';
+  launchBreakCelebration();
   playAlarm();
 }
 
@@ -2723,6 +2723,7 @@ const T={
       footerCopyright:'Todos los derechos reservados.',footerPrivacy:'Política de Privacidad',footerTerms:'Términos de Uso',footerContact:'Contacto',
       libModalTitle:'🎵 Biblioteca de Música',libEmpty:'← Selecciona una categoría',libChooseCat:'Elige una categoría',libTracksWord:'pistas',
       alarmModalTitle:'🔔 Sonido de Alarma',alarmForTimerTitle:'Alarma al terminar la sesión',celebDismiss:'¡A por el descanso! ☕',
+      breakCelebDismiss:'¡A seguir estudiando! 📚',
       celebCompleted:'Has completado {mins} minutos de estudio.',
       themeLockTitle:'🔒 Desbloquea con {n} días de racha',themeLockTip:'🔒 "{label}" se desbloquea con {n} días de racha (tienes {have}).',themeLockToast:'🔒 Desbloquea con {n} días de racha',
       bgUploadLockTip:'🔒 Podrás subir una imagen propia al llegar a {n} días de racha consecutivos (llevas {have}).',bgUploadLockToast:'🔒 Necesitas {n} días de racha consecutivos para subir una imagen propia',
@@ -2769,6 +2770,7 @@ const T={
       footerCopyright:'All rights reserved.',footerPrivacy:'Privacy Policy',footerTerms:'Terms of Use',footerContact:'Contact',
       libModalTitle:'🎵 Music Library',libEmpty:'← Select a category',libChooseCat:'Choose a category',libTracksWord:'tracks',
       alarmModalTitle:'🔔 Alarm Sound',alarmForTimerTitle:'Alarm when the session ends',celebDismiss:'Off to break! ☕',
+      breakCelebDismiss:'Back to studying! 📚',
       celebCompleted:'You completed {mins} minutes of study.',
       themeLockTitle:'🔒 Unlocks with {n} days of streak',themeLockTip:'🔒 "{label}" unlocks at {n} days of streak (you have {have}).',themeLockToast:'🔒 Unlocks with {n} days of streak',
       bgUploadLockTip:'🔒 You can upload your own image once you reach {n} consecutive days of streak (you have {have}).',bgUploadLockToast:'🔒 You need {n} consecutive days of streak to upload your own image',
@@ -2815,6 +2817,7 @@ const T={
       footerCopyright:'Tous droits réservés.',footerPrivacy:'Politique de Confidentialité',footerTerms:'Conditions d\'Utilisation',footerContact:'Contact',
       libModalTitle:'🎵 Bibliothèque musicale',libEmpty:'← Sélectionne une catégorie',libChooseCat:'Choisis une catégorie',libTracksWord:'pistes',
       alarmModalTitle:'🔔 Son d\'alarme',alarmForTimerTitle:'Alarme à la fin de la session',celebDismiss:'À la pause ! ☕',
+      breakCelebDismiss:'Retour à l\'étude ! 📚',
       celebCompleted:'Tu as terminé {mins} minutes d\'étude.',
       themeLockTitle:'🔒 Se débloque avec {n} jours de série',themeLockTip:'🔒 « {label} » se débloque à {n} jours de série (tu en as {have}).',themeLockToast:'🔒 Se débloque avec {n} jours de série',
       bgUploadLockTip:'🔒 Tu pourras importer ta propre image en atteignant {n} jours de série consécutifs (tu en as {have}).',bgUploadLockToast:'🔒 Il te faut {n} jours de série consécutifs pour importer ta propre image',
@@ -2861,6 +2864,7 @@ const T={
       footerCopyright:'Alle Rechte vorbehalten.',footerPrivacy:'Datenschutzerklärung',footerTerms:'Nutzungsbedingungen',footerContact:'Kontakt',
       libModalTitle:'🎵 Musikbibliothek',libEmpty:'← Wähle eine Kategorie',libChooseCat:'Wähle eine Kategorie',libTracksWord:'Titel',
       alarmModalTitle:'🔔 Alarmton',alarmForTimerTitle:'Alarm, wenn die Sitzung endet',celebDismiss:'Ab in die Pause! ☕',
+      breakCelebDismiss:'Zurück zum Lernen! 📚',
       celebCompleted:'Du hast {mins} Minuten gelernt.',
       themeLockTitle:'🔒 Freischaltung bei {n} Tagen Streak',themeLockTip:'🔒 „{label}" wird bei {n} Tagen Streak freigeschaltet (du hast {have}).',themeLockToast:'🔒 Freischaltung bei {n} Tagen Streak',
       bgUploadLockTip:'🔒 Du kannst ein eigenes Bild hochladen, sobald du {n} Tage in Folge erreichst (du hast {have}).',bgUploadLockToast:'🔒 Du brauchst {n} Tage Streak in Folge, um ein eigenes Bild hochzuladen',
@@ -2907,6 +2911,7 @@ const T={
       footerCopyright:'Todos os direitos reservados.',footerPrivacy:'Política de Privacidade',footerTerms:'Termos de Uso',footerContact:'Contato',
       libModalTitle:'🎵 Biblioteca de Música',libEmpty:'← Selecione uma categoria',libChooseCat:'Escolha uma categoria',libTracksWord:'faixas',
       alarmModalTitle:'🔔 Som do Alarme',alarmForTimerTitle:'Alarme ao terminar a sessão',celebDismiss:'Vamos à pausa! ☕',
+      breakCelebDismiss:'De volta aos estudos! 📚',
       celebCompleted:'Você completou {mins} minutos de estudo.',
       themeLockTitle:'🔒 Desbloqueia com {n} dias de sequência',themeLockTip:'🔒 "{label}" desbloqueia com {n} dias de sequência (você tem {have}).',themeLockToast:'🔒 Desbloqueia com {n} dias de sequência',
       bgUploadLockTip:'🔒 Você poderá enviar uma imagem própria ao atingir {n} dias seguidos de sequência (você tem {have}).',bgUploadLockToast:'🔒 Você precisa de {n} dias seguidos de sequência para enviar uma imagem própria',
@@ -2953,6 +2958,7 @@ const T={
       footerCopyright:'Tutti i diritti riservati.',footerPrivacy:'Informativa sulla Privacy',footerTerms:'Termini di Utilizzo',footerContact:'Contatto',
       libModalTitle:'🎵 Libreria Musicale',libEmpty:'← Seleziona una categoria',libChooseCat:'Scegli una categoria',libTracksWord:'brani',
       alarmModalTitle:'🔔 Suono Sveglia',alarmForTimerTitle:'Allarme al termine della sessione',celebDismiss:'Via alla pausa! ☕',
+      breakCelebDismiss:'Torna a studiare! 📚',
       celebCompleted:'Hai completato {mins} minuti di studio.',
       themeLockTitle:'🔒 Si sblocca con {n} giorni di serie',themeLockTip:'🔒 "{label}" si sblocca a {n} giorni di serie (ne hai {have}).',themeLockToast:'🔒 Si sblocca con {n} giorni di serie',
       bgUploadLockTip:'🔒 Potrai caricare una tua immagine raggiungendo {n} giorni consecutivi di serie (ne hai {have}).',bgUploadLockToast:'🔒 Ti servono {n} giorni consecutivi di serie per caricare una tua immagine',
@@ -3246,11 +3252,54 @@ const CELEB_MSGS_I18N={
       ['Ce l\'hai fatta! 🏆','Ogni sessione ti avvicina al tuo obiettivo. Sono fiero di te!'],
       ['Panda felice! 🐼','Lo sforzo costante paga sempre. Goditi la pausa!']],
 };
+
+// Mensajes de la celebración al TERMINAR UN DESCANSO — misma animación (confeti +
+// tarjeta), pero mensaje distinto, orientado a volver al estudio en vez de a descansar.
+const BREAK_CELEB_MSGS_I18N={
+  es:[['¡Descanso Completado! ☕','Has recargado energía.<br>¡Vuelve al estudio con todo! 🐼💪'],
+      ['¡A por más! 🚀','Tu descanso ha terminado. ¡Es hora de retomar el ritmo!'],
+      ['¡Recargado! ⚡','Pilas al 100%. ¡Sigamos avanzando!'],
+      ['¡Panda Descansado! 🐼','El descanso también forma parte del éxito. ¡Ahora a por todas!']],
+  en:[['Break Complete! ☕','You\'ve recharged.<br>Back to studying with full energy! 🐼💪'],
+      ['Let\'s go again! 🚀','Your break is over. Time to get back in the zone!'],
+      ['Recharged! ⚡','Batteries at 100%. Let\'s keep going!'],
+      ['Rested Panda! 🐼','Rest is part of success too. Now let\'s give it all!']],
+  fr:[['Pause terminée ! ☕','Tu as rechargé tes batteries.<br>Retour à l\'étude avec toute ton énergie ! 🐼💪'],
+      ['On repart ! 🚀','Ta pause est finie. Il est temps de reprendre le rythme !'],
+      ['Rechargé ! ⚡','Batteries à 100%. Continuons d\'avancer !'],
+      ['Panda reposé ! 🐼','Le repos fait aussi partie du succès. Maintenant, à fond !']],
+  de:[['Pause beendet! ☕','Du hast neue Energie getankt.<br>Zurück zum Lernen mit voller Kraft! 🐼💪'],
+      ['Auf geht\'s! 🚀','Deine Pause ist vorbei. Zeit, wieder loszulegen!'],
+      ['Aufgeladen! ⚡','Akkus bei 100%. Weiter geht\'s!'],
+      ['Ausgeruhter Panda! 🐼','Erholung gehört auch zum Erfolg dazu. Jetzt geben wir alles!']],
+  pt:[['Pausa concluída! ☕','Você recarregou as energias.<br>De volta aos estudos com tudo! 🐼💪'],
+      ['Vamos de novo! 🚀','Sua pausa acabou. Hora de retomar o ritmo!'],
+      ['Recarregado! ⚡','Pilhas a 100%. Vamos continuar!'],
+      ['Panda descansado! 🐼','Descansar também faz parte do sucesso. Agora com tudo!']],
+  it:[['Pausa completata! ☕','Hai ricaricato le energie.<br>Torna a studiare con tutta la carica! 🐼💪'],
+      ['Si riparte! 🚀','La tua pausa è finita. È ora di ritrovare il ritmo!'],
+      ['Ricaricato! ⚡','Batterie al 100%. Continuiamo così!'],
+      ['Panda riposato! 🐼','Anche il riposo fa parte del successo. Ora diamoci dentro!']],
+};
+
 function launchCelebration(mins){
   const list=CELEB_MSGS_I18N[currentLang]||CELEB_MSGS_I18N.es;
   const[title,sub]=list[Math.floor(Math.random()*list.length)];
   document.getElementById('celeb-title').innerText=title;
   document.getElementById('celeb-sub').innerText=`${tr('celebCompleted').replace('{mins}',mins)}\n${sub}`;
+  document.getElementById('txt-celeb-dismiss').innerText=tr('celebDismiss');
+  document.getElementById('celebration').classList.add('show');
+  spawnConfetti();
+}
+
+// Misma animación que launchCelebration (confeti + tarjeta), pero con el mensaje
+// y el texto del botón adaptados a "fin del descanso" en vez de "fin de sesión".
+function launchBreakCelebration(){
+  const list=BREAK_CELEB_MSGS_I18N[currentLang]||BREAK_CELEB_MSGS_I18N.es;
+  const[title,sub]=list[Math.floor(Math.random()*list.length)];
+  document.getElementById('celeb-title').innerText=title;
+  document.getElementById('celeb-sub').innerHTML=sub;
+  document.getElementById('txt-celeb-dismiss').innerText=tr('breakCelebDismiss');
   document.getElementById('celebration').classList.add('show');
   spawnConfetti();
 }
