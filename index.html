@@ -1682,13 +1682,38 @@ function resetBreak(){ clearInterval(breakInterval); breakRunning=false; breakLe
 // ══════════════════════════════════════
 //  NOTIFICATIONS + ALARM
 // ══════════════════════════════════════
+// El aviso DEL NAVEGADOR (el que salta aunque estés en otra pestaña) se puede
+// encender y apagar cuando quieras. El aviso DENTRO de la página (la tarjeta de
+// celebración + la alarma) sale siempre, independientemente de esto.
+let desktopNotifEnabled=localStorage.getItem('ft-desktop-notif')!=='0';
+
+function updateNotifBtn(){
+  const pb=document.getElementById('perm-btn'); if(!pb) return;
+  pb.disabled=false;
+  if(Notification.permission!=='granted') pb.innerText=tr('perm');           // aún sin permiso: pedirlo
+  else pb.innerText=desktopNotifEnabled?tr('permok'):tr('permoff');          // con permiso: activados / desactivados
+}
+
 function requestNotifPermission(){
+  if(Notification.permission==='granted'){
+    // Ya hay permiso → este botón simplemente enciende o apaga el aviso del navegador
+    desktopNotifEnabled=!desktopNotifEnabled;
+    localStorage.setItem('ft-desktop-notif',desktopNotifEnabled?'1':'0');
+    updateNotifBtn();
+    showToast(desktopNotifEnabled?tr('notifEnabled'):tr('notifTurnedOff'));
+    return;
+  }
   Notification.requestPermission().then(p=>{
-    if(p==='granted'){ document.getElementById('perm-btn').innerText='✅ Avisos activos'; document.getElementById('perm-btn').disabled=true; showToast(tr('notifEnabled')); }
-    else showToast(tr('notifDenied'));
+    if(p==='granted'){
+      desktopNotifEnabled=true;
+      localStorage.setItem('ft-desktop-notif','1');
+      updateNotifBtn();
+      showToast(tr('notifEnabled'));
+    }
+    else { updateNotifBtn(); showToast(tr('notifDenied')); }
   });
 }
-if(Notification.permission==='granted'){ document.getElementById('perm-btn').innerText='✅ Avisos activos'; document.getElementById('perm-btn').disabled=true; }
+updateNotifBtn();
 
 // Alarm modal
 function buildAlarmModal(){
@@ -1786,7 +1811,10 @@ function playAlarm(){
 function stopAlarm(){ clearTimeout(alarmLoop); alarmNodes.forEach(n=>{try{n.stop();}catch(e){}}); alarmNodes=[]; if(alarmCtx){alarmCtx.close();alarmCtx=null;} document.getElementById('alarm-banner').style.display='none'; }
 
 function fireBreakNotification(){
-  if(Notification.permission==='granted') new Notification('🐼 ¡Descanso terminado! — Pandy-Tap',{body:'Es hora de volver al estudio. ¡Tú puedes!',icon:'panda png.png'});
+  // Aviso del navegador: solo si hay permiso Y el usuario lo tiene activado. El texto
+  // se toma de la tabla de idiomas, así que sale en el idioma elegido en la página.
+  if(desktopNotifEnabled && Notification.permission==='granted')
+    new Notification(tr('notifBreakTitle'),{body:tr('notifBreakBody'),icon:'panda png.png'});
   launchBreakCelebration();
   playAlarm();
 }
@@ -2707,7 +2735,8 @@ const T={
       score:'Puntuación Hoy',scoredesc:'Completa sesiones y tareas<br>para subir tu puntuación',
       streak:'Racha Semanal',streakcta:'¡Estudia hoy para mantener tu racha! 🔥',
       brk:'☕ Descanso Activo',brklbl:'Tiempo de descanso',brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reset',
-      notif:'Notificación al terminar',perm:'🔔 Activar avisos',permok:'✅ Avisos activos',
+      notif:'Notificación al terminar',perm:'🔔 Activar avisos',permok:'✅ Avisos activos (pulsa para desactivar)',permoff:'🔕 Avisos desactivados (pulsa para activar)',
+      notifTurnedOff:'🔕 Avisos del navegador desactivados',notifBreakTitle:'🐼 ¡Descanso terminado! — Pandy-Tap',notifBreakBody:'Es hora de volver al estudio. ¡Tú puedes!',
       alarm:'Sonido de alarma',alarmbrowse:'Cambiar sonido',
       copy:'📋 Copiar',save:'⬇ Guardar .txt',clear:'🗑 Limpiar',
       smin:'min',seslbl:'Sesión de',remaining:'restante',
@@ -2754,7 +2783,8 @@ const T={
       score:'Today\'s Score',scoredesc:'Complete sessions and tasks<br>to raise your score',
       streak:'Weekly Streak',streakcta:'Study today to keep your streak! 🔥',
       brk:'☕ Active Break',brklbl:'Break time',brkstart:'▶ Start',brkpause:'⏸ Pause',brkreset:'↺ Reset',
-      notif:'Notify when done',perm:'🔔 Enable alerts',permok:'✅ Alerts active',
+      notif:'Notify when done',perm:'🔔 Enable alerts',permok:'✅ Alerts on (tap to turn off)',permoff:'🔕 Alerts off (tap to turn on)',
+      notifTurnedOff:'🔕 Browser alerts turned off',notifBreakTitle:'🐼 Break finished! — Pandy-Tap',notifBreakBody:'Time to get back to studying. You\'ve got this!',
       alarm:'Alarm sound',alarmbrowse:'Change sound',
       copy:'📋 Copy',save:'⬇ Save .txt',clear:'🗑 Clear',
       smin:'min',seslbl:'Session of',remaining:'remaining',
@@ -2801,7 +2831,8 @@ const T={
       score:'Score du jour',scoredesc:'Complétez sessions et tâches<br>pour augmenter votre score',
       streak:'Série hebdomadaire',streakcta:'Étudiez aujourd\'hui pour garder la série ! 🔥',
       brk:'☕ Pause active',brklbl:'Temps de pause',brkstart:'▶ Démarrer',brkpause:'⏸ Pause',brkreset:'↺ Réinitialiser',
-      notif:'Notifier à la fin',perm:'🔔 Activer alertes',permok:'✅ Alertes actives',
+      notif:'Notifier à la fin',perm:'🔔 Activer alertes',permok:'✅ Alertes activées (appuie pour désactiver)',permoff:'🔕 Alertes désactivées (appuie pour activer)',
+      notifTurnedOff:'🔕 Alertes du navigateur désactivées',notifBreakTitle:'🐼 Pause terminée ! — Pandy-Tap',notifBreakBody:'Il est temps de revenir à l\'étude. Tu peux le faire !',
       alarm:'Son d\'alarme',alarmbrowse:'Changer le son',
       copy:'📋 Copier',save:'⬇ Sauvegarder .txt',clear:'🗑 Effacer',
       smin:'min',seslbl:'Session de',remaining:'restant',
@@ -2848,7 +2879,8 @@ const T={
       score:'Heutige Punkte',scoredesc:'Schließe Sitzungen und Aufgaben ab<br>um deinen Score zu steigern',
       streak:'Wöchentlicher Streak',streakcta:'Lerne heute, um deinen Streak zu halten! 🔥',
       brk:'☕ Aktive Pause',brklbl:'Pausenzeit',brkstart:'▶ Starten',brkpause:'⏸ Pause',brkreset:'↺ Zurücksetzen',
-      notif:'Benachrichtigung am Ende',perm:'🔔 Benachr. aktivieren',permok:'✅ Benachr. aktiv',
+      notif:'Benachrichtigung am Ende',perm:'🔔 Benachr. aktivieren',permok:'✅ Benachr. aktiv (zum Deaktivieren tippen)',permoff:'🔕 Benachr. aus (zum Aktivieren tippen)',
+      notifTurnedOff:'🔕 Browser-Benachrichtigungen deaktiviert',notifBreakTitle:'🐼 Pause beendet! — Pandy-Tap',notifBreakBody:'Zeit, zum Lernen zurückzukehren. Du schaffst das!',
       alarm:'Alarmton',alarmbrowse:'Ton ändern',
       copy:'📋 Kopieren',save:'⬇ Speichern .txt',clear:'🗑 Löschen',
       smin:'Min',seslbl:'Sitzung von',remaining:'verbleibend',
@@ -2895,7 +2927,8 @@ const T={
       score:'Pontuação Hoje',scoredesc:'Complete sessões e tarefas<br>para aumentar sua pontuação',
       streak:'Sequência Semanal',streakcta:'Estude hoje para manter sua sequência! 🔥',
       brk:'☕ Pausa Ativa',brklbl:'Tempo de pausa',brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reiniciar',
-      notif:'Notificar ao terminar',perm:'🔔 Ativar avisos',permok:'✅ Avisos ativos',
+      notif:'Notificar ao terminar',perm:'🔔 Ativar avisos',permok:'✅ Avisos ativos (toque para desativar)',permoff:'🔕 Avisos desativados (toque para ativar)',
+      notifTurnedOff:'🔕 Avisos do navegador desativados',notifBreakTitle:'🐼 Pausa terminada! — Pandy-Tap',notifBreakBody:'Hora de voltar a estudar. Você consegue!',
       alarm:'Som do alarme',alarmbrowse:'Mudar som',
       copy:'📋 Copiar',save:'⬇ Salvar .txt',clear:'🗑 Limpar',
       smin:'min',seslbl:'Sessão de',remaining:'restante',
@@ -2942,7 +2975,8 @@ const T={
       score:'Punteggio Oggi',scoredesc:'Completa sessioni e attività<br>per aumentare il tuo punteggio',
       streak:'Serie Settimanale',streakcta:'Studia oggi per mantenere la serie! 🔥',
       brk:'☕ Pausa Attiva',brklbl:'Tempo di pausa',brkstart:'▶ Inizia',brkpause:'⏸ Pausa',brkreset:'↺ Reimposta',
-      notif:'Notifica alla fine',perm:'🔔 Attiva avvisi',permok:'✅ Avvisi attivi',
+      notif:'Notifica alla fine',perm:'🔔 Attiva avvisi',permok:'✅ Avvisi attivi (tocca per disattivare)',permoff:'🔕 Avvisi disattivati (tocca per attivare)',
+      notifTurnedOff:'🔕 Avvisi del browser disattivati',notifBreakTitle:'🐼 Pausa terminata! — Pandy-Tap',notifBreakBody:'È ora di tornare a studiare. Ce la puoi fare!',
       alarm:'Suono sveglia',alarmbrowse:'Cambia suono',
       copy:'📋 Copia',save:'⬇ Salva .txt',clear:'🗑 Cancella',
       smin:'min',seslbl:'Sessione di',remaining:'rimanente',
@@ -3032,8 +3066,7 @@ function setLang(lang,btn){
   const bs=document.getElementById('break-start');
   bs.innerText=breakRunning?t.brkpause:t.brkstart;
   document.querySelector('[onclick="resetBreak()"]').innerText=t.brkreset;
-  const pb=document.getElementById('perm-btn');
-  if(!pb.disabled) pb.innerText=t.perm; else pb.innerText=t.permok;
+  updateNotifBtn();
   document.getElementById('txt-notif-lbl').innerText=t.notif;
   document.getElementById('txt-alarmsound-lbl').innerText=t.alarm;
   document.querySelector('.btn-alarm-browse').innerHTML=`<span>🔔</span> ${t.alarmbrowse} <span class="lib-arrow">›</span>`;
