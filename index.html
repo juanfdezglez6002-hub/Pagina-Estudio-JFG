@@ -1713,7 +1713,6 @@ function requestNotifPermission(){
     else { updateNotifBtn(); showToast(tr('notifDenied')); }
   });
 }
-updateNotifBtn();
 
 // Alarm modal
 function buildAlarmModal(){
@@ -3541,6 +3540,7 @@ function saveCloudData(){
 //  INIT
 // ══════════════════════════════════════
 updateClock(); updateStats(); buildStreak(); renderTasks(); updateScore(); buildAccordion();
+updateNotifBtn();  // texto del botón de avisos, ahora que tr()/T ya existen
 reconcileStreak(); // corrige la racha mostrada si ya se rompió, sin esperar a la próxima sesión
 checkPermanentUnlocks();
 buildThemeSwatches();
