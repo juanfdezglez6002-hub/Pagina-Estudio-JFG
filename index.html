@@ -6,8 +6,6 @@
 <title>Pandy-Tap | Tu Espacio de Estudio</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <link rel="icon" href="panda png.png" type="image/png">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4393965707962828"
-     crossorigin="anonymous"></script>
 <style>
 :root {
   --glass: rgba(255,255,255,0.6);
@@ -565,10 +563,6 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
   50%{ transform:translateY(50vh) translateX(8px) rotate(1deg); }
   100%{ transform:translateY(112vh) translateX(-6px) rotate(-1deg); }
 }
-@keyframes acc-rain-fall{
-  from{ transform:translateY(-10vh) translateX(0); }
-  to{ transform:translateY(110vh) translateX(-30px); }
-}
 </style>
 </head>
 <body>
@@ -989,6 +983,8 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <footer id="site-footer" style="text-align:center;padding:26px 16px 34px;color:var(--text2);font-size:0.72rem;line-height:2;position:relative;z-index:1;">
   <div id="txt-footer-copyright">© <span id="footer-year">2026</span> Pandy-Tap. Todos los derechos reservados.</div>
   <div>
+    <a href="about.html" id="txt-footer-about" style="color:var(--text2);text-decoration:underline;">Sobre Pandy-Tap</a>
+    &nbsp;·&nbsp;
     <a href="privacy.html" id="txt-footer-privacy" style="color:var(--text2);text-decoration:underline;">Política de Privacidad</a>
     &nbsp;·&nbsp;
     <a href="terms.html" id="txt-footer-terms" style="color:var(--text2);text-decoration:underline;">Términos de Uso</a>
@@ -1124,26 +1120,8 @@ const PLAYLISTS = {
     label:'Lofi', emoji:'🎹',
     bg:'linear-gradient(135deg,#c5cae9,#9fa8da)',
     tracks:[
-      {name:'Lofi Chill Vlog Beats',       artist:'alex-morgan',url:'lofi1.mp3',  dur:145},      
-      {name:'Lofi Restaurant',       artist:'alex-morgan',url:'lofi2.mp3',  dur:127},      
-      {name:'Lofi',       artist:'Sub_Clair',url:'lofi3.mp3',  dur:214},     
-      {name:'Lofi Cocktail Bar',       artist:'alex-morgan',url:'lofi4.mp3',  dur:121},   
-      {name:'Lofi Coffee Shop',       artist:'alex-morgan',url:'lofi5.mp3',  dur:114},         
-      {name:'Lofi Sunny Cafe',       artist:'alex-morgan',url:'lofi6.mp3',  dur:124},   
-      {name:'Lofi Study Session',       artist:'alex-morgan',url:'lofi7.mp3',  dur:131},    
-      {name:'Lofi Relaxing',       artist:'VelarioMusic',url:'lofi8.mp3',  dur:145},        
-      {name:'Lofi Calm',       artist:'VelarioMusic',url:'lofi9.mp3',  dur:142},        
-      {name:'Lofi — Worn Keys',       artist:'Ornave',url:'lofi10.mp3',  dur:112},  
-      {name:'Lofi Lounge',       artist:'ZephiraMusic',url:'lofi11.mp3',  dur:203},       
-      {name:'Lofi Study',       artist:'ZephiraMusic',url:'lofi12.mp3',  dur:122},  
-      {name:'Night Lofi',       artist:'MarloweMusic',url:'lofi13.mp3',  dur:133},        
-      {name:'Lofi Background',       artist:'VelarioMusic',url:'lofi14.mp3',  dur:93},          
-      {name:'Lofi Midnight Club',       artist:'alex-morgan',url:'lofi15.mp3',  dur:137},       
-      {name:'Lofi Piano',       artist:'ZephiraMusic',url:'lofi16.mp3',  dur:141},       
-      {name:'Lofi Study Rainy Night',       artist:'alex-morgan',url:'lofi17.mp3',  dur:143},        
-      {name:'Lofi — Open Window',       artist:'Ornave',url:'lofi18.mp3',  dur:122},         
-      {name:'Study Lofi Music',       artist:'alex-morgan',url:'lofi19.mp3',  dur:174},      
-      {name:'Lofi - Lofi Girl - Lofi Music 2',       artist:'MondaMusic',url:'lofi20.mp3',  dur:161},
+      {name:'Lofi Dream',      artist:'Lo-Fi Vibes',   url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',  dur:206},
+      {name:'Midnight Study',  artist:'Chill Beats',   url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',  dur:234},
     ]
   },
   nature:{
@@ -1202,52 +1180,16 @@ const PLAYLISTS = {
     label:'Mix', emoji:'🎲​',
     bg:'linear-gradient(135deg,#f8bbd0,#f48fb1)',
     tracks:[
-      {name:'Summer Fun',       artist:'vibemode',url:'mix1.mp3',  dur:73},      
-      {name:'Intro',       artist:'alex-morgan',url:'mix2.mp3',  dur:113},      
-      {name:'Friend Story - Not Just Friends',       artist:'vibemode',url:'mix3.mp3',  dur:99},         
-      {name:'Positive Energy',       artist:'AtlasAudio',url:'mix4.mp3',  dur:177},           
-      {name:'Pop - Barcelona',       artist:'vibemode',url:'mix5.mp3',  dur:92},       
-      {name:'Piano Background Gentle Study Flow',       artist:'alex-morgan',url:'mix6.mp3',  dur:147},         
-      {name:'Future Bass - Sneakers',       artist:'vibemode',url:'mix7.mp3',  dur:176},        
-      {name:'Funk Pop Groove Bounce Glitch',       artist:'u_fqkekalnfb',url:'mix8.mp3',  dur:120},            
-      {name:'Vlog - Vlog Intro',       artist:'prettyjohn1',url:'mix9.mp3',  dur:90},        
-      {name:'Elegance',       artist:'AtlasAudio',url:'mix10.mp3',  dur:105},           
-      {name:'Relaxing Guitar',       artist:'AtlasAudio',url:'mix11.mp3',  dur:139},        
-      {name:'Background - Background Music',       artist:'alex-morgan',url:'mix12.mp3',  dur:98},        
-      {name:'Rest',       artist:'AtlasAudio',url:'mix13.mp3',  dur:102},         
-      {name:'Lofi Study',       artist:'The_Mountain',url:'mix14.mp3',  dur:126},       
-      {name:'Smooth Jazz Coffee Shop',       artist:'alex-morgan',url:'mix15.mp3',  dur:180},       
-      {name:'Motivation Upbeat (Fun Day)',       artist:'BombinSound',url:'mix16.mp3',  dur:84},          
-      {name:'Motivation - Motivation Music',       artist:'AtlasAudio',url:'mix17.mp3',  dur:98},       
-      {name:'Samba Jazz Sunny Cafe',       artist:'alex-morgan',url:'mix18.mp3',  dur:87},          
-      {name:'Chillout - Chillout Music',       artist:'The_Mountain',url:'mix19.mp3',  dur:149},         
-      {name:'Waiting Room Calm Hold Loop',       artist:'alex-morgan',url:'mix20.mp3',  dur:127},
+      {name:'Moonlight Study', artist:'Classical Essentials',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3',dur:245},
+      {name:'Piano Afternoon', artist:'Solo Piano',    url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',  dur:230},
     ]
   },
   jazz:{
     label:'Jazz', emoji:'🎷',
     bg:'linear-gradient(135deg,#b39ddb,#9575cd)',
     tracks:[
-      {name:'Jazz',       artist:'AtlasAudio',url:'jazz1.mp3',  dur:140},      
-      {name:'Jazz Lounge Relaxing Background Music',       artist:'SigmaMusicArt',url:'jazz2.mp3',  dur:100},         
-      {name:'Jazz Cafe',       artist:'Waveloom',url:'jazz3.mp3',  dur:196},        
-      {name:'Jazz Background Music',       artist:'Tunetank',url:'jazz4.mp3',  dur:121},         
-      {name:'Sunset Chill Jazzsmooth jazz',       artist:'adiiswanto',url:'jazz5.mp3',  dur:265},         
-      {name:'Jazz Ambient',       artist:'Waveloom',url:'jazz6.mp3',  dur:125},          
-      {name:'No Copyright Jazz Music',       artist:'Waveloom',url:'jazz7.mp3',  dur:209},         
-      {name:'Jazz Saxophone',       artist:'Waveloom',url:'jazz8.mp3',  dur:170},        
-      {name:'Relaxing Smooth Jazz Music',       artist:'adiiswanto',url:'jazz9.mp3',  dur:265},      
-      {name:'Jazz Music',       artist:'LiteSaturation',url:'jazz10.mp3',  dur:170},         
-      {name:'Jazz Lounge Elevator Music',       artist:'HitsLab',url:'jazz11.mp3',  dur:135},      
-      {name:'A Jazz Music',       artist:'PulseBox',url:'jazz12.mp3',  dur:148},       
-      {name:'Dancing in Smoke',       artist:'mcanden',url:'jazz13.mp3',  dur:161},       
-      {name:'Smooth Jazz',       artist:'LiteSaturation',url:'jazz14.mp3',  dur:141},        
-      {name:'Music Free Jazz',       artist:'OceanFrameMusic',url:'jazz15.mp3',  dur:129},        
-      {name:'Music Jazz',       artist:'OceanFrameMusic',url:'jazz16.mp3',  dur:135},       
-      {name:'Jazz Lounge Elevator Music',       artist:'MiroMaxMusic',url:'jazz17.mp3',  dur:163},      
-      {name:'Music Free Jazz',       artist:'LiteSaturation',url:'jazz18.mp3',  dur:200},         
-      {name:'FREE Jazz guitar vibe - Twilight Reverb',       artist:'Free_Audio_Library',url:'jazz19.mp3',  dur:173},          
-      {name:'Dreamy Jazz - Slow Background Jazz Music - Piano and Seattle Strings',       artist:'JuliusH',url:'jazz20.mp3',  dur:187},
+      {name:'Smooth Jazz',     artist:'Jazz Cafe',     url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3',  dur:218},
+      {name:'Evening Keys',    artist:'Quartet Session',url:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3',dur:203},
     ]
   }
 };
@@ -1738,37 +1680,13 @@ function resetBreak(){ clearInterval(breakInterval); breakRunning=false; breakLe
 // ══════════════════════════════════════
 //  NOTIFICATIONS + ALARM
 // ══════════════════════════════════════
-// El aviso DEL NAVEGADOR (el que salta aunque estés en otra pestaña) se puede
-// encender y apagar cuando quieras. El aviso DENTRO de la página (la tarjeta de
-// celebración + la alarma) sale siempre, independientemente de esto.
-let desktopNotifEnabled=localStorage.getItem('ft-desktop-notif')!=='0';
-
-function updateNotifBtn(){
-  const pb=document.getElementById('perm-btn'); if(!pb) return;
-  pb.disabled=false;
-  if(Notification.permission!=='granted') pb.innerText=tr('perm');           // aún sin permiso: pedirlo
-  else pb.innerText=desktopNotifEnabled?tr('permok'):tr('permoff');          // con permiso: activados / desactivados
-}
-
 function requestNotifPermission(){
-  if(Notification.permission==='granted'){
-    // Ya hay permiso → este botón simplemente enciende o apaga el aviso del navegador
-    desktopNotifEnabled=!desktopNotifEnabled;
-    localStorage.setItem('ft-desktop-notif',desktopNotifEnabled?'1':'0');
-    updateNotifBtn();
-    showToast(desktopNotifEnabled?tr('notifEnabled'):tr('notifTurnedOff'));
-    return;
-  }
   Notification.requestPermission().then(p=>{
-    if(p==='granted'){
-      desktopNotifEnabled=true;
-      localStorage.setItem('ft-desktop-notif','1');
-      updateNotifBtn();
-      showToast(tr('notifEnabled'));
-    }
-    else { updateNotifBtn(); showToast(tr('notifDenied')); }
+    if(p==='granted'){ document.getElementById('perm-btn').innerText='✅ Avisos activos'; document.getElementById('perm-btn').disabled=true; showToast(tr('notifEnabled')); }
+    else showToast(tr('notifDenied'));
   });
 }
+if(Notification.permission==='granted'){ document.getElementById('perm-btn').innerText='✅ Avisos activos'; document.getElementById('perm-btn').disabled=true; }
 
 // Alarm modal
 function buildAlarmModal(){
@@ -1866,10 +1784,7 @@ function playAlarm(){
 function stopAlarm(){ clearTimeout(alarmLoop); alarmNodes.forEach(n=>{try{n.stop();}catch(e){}}); alarmNodes=[]; if(alarmCtx){alarmCtx.close();alarmCtx=null;} document.getElementById('alarm-banner').style.display='none'; }
 
 function fireBreakNotification(){
-  // Aviso del navegador: solo si hay permiso Y el usuario lo tiene activado. El texto
-  // se toma de la tabla de idiomas, así que sale en el idioma elegido en la página.
-  if(desktopNotifEnabled && Notification.permission==='granted')
-    new Notification(tr('notifBreakTitle'),{body:tr('notifBreakBody'),icon:'panda png.png'});
+  if(Notification.permission==='granted') new Notification('🐼 ¡Descanso terminado! — Pandy-Tap',{body:'Es hora de volver al estudio. ¡Tú puedes!',icon:'panda png.png'});
   launchBreakCelebration();
   playAlarm();
 }
@@ -2790,8 +2705,7 @@ const T={
       score:'Puntuación Hoy',scoredesc:'Completa sesiones y tareas<br>para subir tu puntuación',
       streak:'Racha Semanal',streakcta:'¡Estudia hoy para mantener tu racha! 🔥',
       brk:'☕ Descanso Activo',brklbl:'Tiempo de descanso',brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reset',
-      notif:'Notificación al terminar',perm:'🔔 Activar avisos',permok:'✅ Avisos activos (pulsa para desactivar)',permoff:'🔕 Avisos desactivados (pulsa para activar)',
-      notifTurnedOff:'🔕 Avisos del navegador desactivados',notifBreakTitle:'🐼 ¡Descanso terminado! — Pandy-Tap',notifBreakBody:'Es hora de volver al estudio. ¡Tú puedes!',
+      notif:'Notificación al terminar',perm:'🔔 Activar avisos',permok:'✅ Avisos activos',
       alarm:'Sonido de alarma',alarmbrowse:'Cambiar sonido',
       copy:'📋 Copiar',save:'⬇ Guardar .txt',clear:'🗑 Limpiar',
       smin:'min',seslbl:'Sesión de',remaining:'restante',
@@ -2804,7 +2718,7 @@ const T={
       accountTitle:'👤 Cuenta · Sincronización',accountDesc:'Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.',
       accEmailPh:'Email',accPassPh:'Contraseña (mín. 6)',accRegister:'✨ Crear cuenta',accLogin:'🔑 Iniciar sesión',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Cerrar sesión',
       langTitle:'🌐 Idioma',socialTitle:'📣 Síguenos',breakFinished:'🔔 ¡Descanso terminado!',stopAlarmBtn:'⏹ Parar alarma',
-      footerCopyright:'Todos los derechos reservados.',footerPrivacy:'Política de Privacidad',footerTerms:'Términos de Uso',footerContact:'Contacto',
+      footerCopyright:'Todos los derechos reservados.',footerAbout:'Sobre Pandy-Tap',footerPrivacy:'Política de Privacidad',footerTerms:'Términos de Uso',footerContact:'Contacto',
       libModalTitle:'🎵 Biblioteca de Música',libEmpty:'← Selecciona una categoría',libChooseCat:'Elige una categoría',libTracksWord:'pistas',
       alarmModalTitle:'🔔 Sonido de Alarma',alarmForTimerTitle:'Alarma al terminar la sesión',celebDismiss:'¡A por el descanso! ☕',
       breakCelebDismiss:'¡A seguir estudiando! 📚',
@@ -2838,8 +2752,7 @@ const T={
       score:'Today\'s Score',scoredesc:'Complete sessions and tasks<br>to raise your score',
       streak:'Weekly Streak',streakcta:'Study today to keep your streak! 🔥',
       brk:'☕ Active Break',brklbl:'Break time',brkstart:'▶ Start',brkpause:'⏸ Pause',brkreset:'↺ Reset',
-      notif:'Notify when done',perm:'🔔 Enable alerts',permok:'✅ Alerts on (tap to turn off)',permoff:'🔕 Alerts off (tap to turn on)',
-      notifTurnedOff:'🔕 Browser alerts turned off',notifBreakTitle:'🐼 Break finished! — Pandy-Tap',notifBreakBody:'Time to get back to studying. You\'ve got this!',
+      notif:'Notify when done',perm:'🔔 Enable alerts',permok:'✅ Alerts active',
       alarm:'Alarm sound',alarmbrowse:'Change sound',
       copy:'📋 Copy',save:'⬇ Save .txt',clear:'🗑 Clear',
       smin:'min',seslbl:'Session of',remaining:'remaining',
@@ -2852,7 +2765,7 @@ const T={
       accountTitle:'👤 Account · Sync',accountDesc:'Create a free account to store your streak and score in the cloud and see them from any device.',
       accEmailPh:'Email',accPassPh:'Password (6+ chars)',accRegister:'✨ Create account',accLogin:'🔑 Log in',accLoggedAs:'✅ Logged in as:',accLogout:'🚪 Log out',
       langTitle:'🌐 Language',socialTitle:'📣 Follow us',breakFinished:'🔔 Break finished!',stopAlarmBtn:'⏹ Stop alarm',
-      footerCopyright:'All rights reserved.',footerPrivacy:'Privacy Policy',footerTerms:'Terms of Use',footerContact:'Contact',
+      footerCopyright:'All rights reserved.',footerAbout:'About Pandy-Tap',footerPrivacy:'Privacy Policy',footerTerms:'Terms of Use',footerContact:'Contact',
       libModalTitle:'🎵 Music Library',libEmpty:'← Select a category',libChooseCat:'Choose a category',libTracksWord:'tracks',
       alarmModalTitle:'🔔 Alarm Sound',alarmForTimerTitle:'Alarm when the session ends',celebDismiss:'Off to break! ☕',
       breakCelebDismiss:'Back to studying! 📚',
@@ -2886,8 +2799,7 @@ const T={
       score:'Score du jour',scoredesc:'Complétez sessions et tâches<br>pour augmenter votre score',
       streak:'Série hebdomadaire',streakcta:'Étudiez aujourd\'hui pour garder la série ! 🔥',
       brk:'☕ Pause active',brklbl:'Temps de pause',brkstart:'▶ Démarrer',brkpause:'⏸ Pause',brkreset:'↺ Réinitialiser',
-      notif:'Notifier à la fin',perm:'🔔 Activer alertes',permok:'✅ Alertes activées (appuie pour désactiver)',permoff:'🔕 Alertes désactivées (appuie pour activer)',
-      notifTurnedOff:'🔕 Alertes du navigateur désactivées',notifBreakTitle:'🐼 Pause terminée ! — Pandy-Tap',notifBreakBody:'Il est temps de revenir à l\'étude. Tu peux le faire !',
+      notif:'Notifier à la fin',perm:'🔔 Activer alertes',permok:'✅ Alertes actives',
       alarm:'Son d\'alarme',alarmbrowse:'Changer le son',
       copy:'📋 Copier',save:'⬇ Sauvegarder .txt',clear:'🗑 Effacer',
       smin:'min',seslbl:'Session de',remaining:'restant',
@@ -2900,7 +2812,7 @@ const T={
       accountTitle:'👤 Compte · Synchronisation',accountDesc:'Crée un compte gratuit pour sauvegarder ta série et ton score dans le cloud et les voir depuis n\'importe quel appareil.',
       accEmailPh:'Email',accPassPh:'Mot de passe (6+ car.)',accRegister:'✨ Créer un compte',accLogin:'🔑 Se connecter',accLoggedAs:'✅ Connecté en tant que :',accLogout:'🚪 Se déconnecter',
       langTitle:'🌐 Langue',socialTitle:'📣 Suis-nous',breakFinished:'🔔 Pause terminée !',stopAlarmBtn:'⏹ Arrêter l\'alarme',
-      footerCopyright:'Tous droits réservés.',footerPrivacy:'Politique de Confidentialité',footerTerms:'Conditions d\'Utilisation',footerContact:'Contact',
+      footerCopyright:'Tous droits réservés.',footerAbout:'À propos de Pandy-Tap',footerPrivacy:'Politique de Confidentialité',footerTerms:'Conditions d\'Utilisation',footerContact:'Contact',
       libModalTitle:'🎵 Bibliothèque musicale',libEmpty:'← Sélectionne une catégorie',libChooseCat:'Choisis une catégorie',libTracksWord:'pistes',
       alarmModalTitle:'🔔 Son d\'alarme',alarmForTimerTitle:'Alarme à la fin de la session',celebDismiss:'À la pause ! ☕',
       breakCelebDismiss:'Retour à l\'étude ! 📚',
@@ -2934,8 +2846,7 @@ const T={
       score:'Heutige Punkte',scoredesc:'Schließe Sitzungen und Aufgaben ab<br>um deinen Score zu steigern',
       streak:'Wöchentlicher Streak',streakcta:'Lerne heute, um deinen Streak zu halten! 🔥',
       brk:'☕ Aktive Pause',brklbl:'Pausenzeit',brkstart:'▶ Starten',brkpause:'⏸ Pause',brkreset:'↺ Zurücksetzen',
-      notif:'Benachrichtigung am Ende',perm:'🔔 Benachr. aktivieren',permok:'✅ Benachr. aktiv (zum Deaktivieren tippen)',permoff:'🔕 Benachr. aus (zum Aktivieren tippen)',
-      notifTurnedOff:'🔕 Browser-Benachrichtigungen deaktiviert',notifBreakTitle:'🐼 Pause beendet! — Pandy-Tap',notifBreakBody:'Zeit, zum Lernen zurückzukehren. Du schaffst das!',
+      notif:'Benachrichtigung am Ende',perm:'🔔 Benachr. aktivieren',permok:'✅ Benachr. aktiv',
       alarm:'Alarmton',alarmbrowse:'Ton ändern',
       copy:'📋 Kopieren',save:'⬇ Speichern .txt',clear:'🗑 Löschen',
       smin:'Min',seslbl:'Sitzung von',remaining:'verbleibend',
@@ -2948,7 +2859,7 @@ const T={
       accountTitle:'👤 Konto · Synchronisierung',accountDesc:'Erstelle ein kostenloses Konto, um deinen Streak und Score in der Cloud zu speichern und von jedem Gerät zu sehen.',
       accEmailPh:'E-Mail',accPassPh:'Passwort (mind. 6 Zeichen)',accRegister:'✨ Konto erstellen',accLogin:'🔑 Anmelden',accLoggedAs:'✅ Angemeldet als:',accLogout:'🚪 Abmelden',
       langTitle:'🌐 Sprache',socialTitle:'📣 Folge uns',breakFinished:'🔔 Pause beendet!',stopAlarmBtn:'⏹ Alarm stoppen',
-      footerCopyright:'Alle Rechte vorbehalten.',footerPrivacy:'Datenschutzerklärung',footerTerms:'Nutzungsbedingungen',footerContact:'Kontakt',
+      footerCopyright:'Alle Rechte vorbehalten.',footerAbout:'Über Pandy-Tap',footerPrivacy:'Datenschutzerklärung',footerTerms:'Nutzungsbedingungen',footerContact:'Kontakt',
       libModalTitle:'🎵 Musikbibliothek',libEmpty:'← Wähle eine Kategorie',libChooseCat:'Wähle eine Kategorie',libTracksWord:'Titel',
       alarmModalTitle:'🔔 Alarmton',alarmForTimerTitle:'Alarm, wenn die Sitzung endet',celebDismiss:'Ab in die Pause! ☕',
       breakCelebDismiss:'Zurück zum Lernen! 📚',
@@ -2982,8 +2893,7 @@ const T={
       score:'Pontuação Hoje',scoredesc:'Complete sessões e tarefas<br>para aumentar sua pontuação',
       streak:'Sequência Semanal',streakcta:'Estude hoje para manter sua sequência! 🔥',
       brk:'☕ Pausa Ativa',brklbl:'Tempo de pausa',brkstart:'▶ Iniciar',brkpause:'⏸ Pausar',brkreset:'↺ Reiniciar',
-      notif:'Notificar ao terminar',perm:'🔔 Ativar avisos',permok:'✅ Avisos ativos (toque para desativar)',permoff:'🔕 Avisos desativados (toque para ativar)',
-      notifTurnedOff:'🔕 Avisos do navegador desativados',notifBreakTitle:'🐼 Pausa terminada! — Pandy-Tap',notifBreakBody:'Hora de voltar a estudar. Você consegue!',
+      notif:'Notificar ao terminar',perm:'🔔 Ativar avisos',permok:'✅ Avisos ativos',
       alarm:'Som do alarme',alarmbrowse:'Mudar som',
       copy:'📋 Copiar',save:'⬇ Salvar .txt',clear:'🗑 Limpar',
       smin:'min',seslbl:'Sessão de',remaining:'restante',
@@ -2996,7 +2906,7 @@ const T={
       accountTitle:'👤 Conta · Sincronização',accountDesc:'Crie uma conta gratuita para guardar sua sequência e pontuação na nuvem e vê-las em qualquer dispositivo.',
       accEmailPh:'Email',accPassPh:'Senha (mín. 6)',accRegister:'✨ Criar conta',accLogin:'🔑 Entrar',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Sair',
       langTitle:'🌐 Idioma',socialTitle:'📣 Siga-nos',breakFinished:'🔔 Pausa terminada!',stopAlarmBtn:'⏹ Parar alarme',
-      footerCopyright:'Todos os direitos reservados.',footerPrivacy:'Política de Privacidade',footerTerms:'Termos de Uso',footerContact:'Contato',
+      footerCopyright:'Todos os direitos reservados.',footerAbout:'Sobre o Pandy-Tap',footerPrivacy:'Política de Privacidade',footerTerms:'Termos de Uso',footerContact:'Contato',
       libModalTitle:'🎵 Biblioteca de Música',libEmpty:'← Selecione uma categoria',libChooseCat:'Escolha uma categoria',libTracksWord:'faixas',
       alarmModalTitle:'🔔 Som do Alarme',alarmForTimerTitle:'Alarme ao terminar a sessão',celebDismiss:'Vamos à pausa! ☕',
       breakCelebDismiss:'De volta aos estudos! 📚',
@@ -3007,7 +2917,7 @@ const T={
       imgTooBig:'⚠️ Imagem muito grande',customBgApplied:'🖼 Fundo personalizado aplicado',
       videoTooBig:'⚠️ Vídeo muito grande para salvar',customVideoApplied:'🎬 Vídeo de fundo aplicado (em loop e sem som)',
       modeOff:'Modo desativado',modeDeepOn:'🎯 Modo Foco — Sem distrações!',modeProdOn:'⚡ Modo Produtividade ativado',
-      pausedBreath:'Pausado — Respire fundo',autoPauseWarn:'⚠️ Pausa automática! Volte a estudar',penaltyPrefix:'⏱ Penalidade: +{s}s',
+      pausadoBreath:'Pausado — Respire fundo',autoPauseWarn:'⚠️ Pausa automática! Volte a estudar',penaltyPrefix:'⏱ Penalidade: +{s}s',
       chooseATrack:'Escolha uma música 🎵',notesEmpty:'As notas estão vazias',notesCopied:'📋 Notas copiadas',notesDownloading:'⬇ Baixando notas...',notesDeleted:'🗑 Notas excluídas',
       notifEnabled:'🔔 Notificações ativadas',notifDenied:'⚠️ Permissão negada — apenas o alarme tocará',
       accNeedFirebase:'⚠️ Configure o Firebase primeiro (veja instruções)',accValidation:'Email válido e senha de 6+ caracteres.',
@@ -3030,8 +2940,7 @@ const T={
       score:'Punteggio Oggi',scoredesc:'Completa sessioni e attività<br>per aumentare il tuo punteggio',
       streak:'Serie Settimanale',streakcta:'Studia oggi per mantenere la serie! 🔥',
       brk:'☕ Pausa Attiva',brklbl:'Tempo di pausa',brkstart:'▶ Inizia',brkpause:'⏸ Pausa',brkreset:'↺ Reimposta',
-      notif:'Notifica alla fine',perm:'🔔 Attiva avvisi',permok:'✅ Avvisi attivi (tocca per disattivare)',permoff:'🔕 Avvisi disattivati (tocca per attivare)',
-      notifTurnedOff:'🔕 Avvisi del browser disattivati',notifBreakTitle:'🐼 Pausa terminata! — Pandy-Tap',notifBreakBody:'È ora di tornare a studiare. Ce la puoi fare!',
+      notif:'Notifica alla fine',perm:'🔔 Attiva avvisi',permok:'✅ Avvisi attivi',
       alarm:'Suono sveglia',alarmbrowse:'Cambia suono',
       copy:'📋 Copia',save:'⬇ Salva .txt',clear:'🗑 Cancella',
       smin:'min',seslbl:'Sessione di',remaining:'rimanente',
@@ -3044,7 +2953,7 @@ const T={
       accountTitle:'👤 Account · Sincronizzazione',accountDesc:'Crea un account gratuito per salvare la tua serie e il punteggio nel cloud e vederli da qualsiasi dispositivo.',
       accEmailPh:'Email',accPassPh:'Password (min. 6)',accRegister:'✨ Crea account',accLogin:'🔑 Accedi',accLoggedAs:'✅ Connesso come:',accLogout:'🚪 Esci',
       langTitle:'🌐 Lingua',socialTitle:'📣 Seguici',breakFinished:'🔔 Pausa terminata!',stopAlarmBtn:'⏹ Ferma allarme',
-      footerCopyright:'Tutti i diritti riservati.',footerPrivacy:'Informativa sulla Privacy',footerTerms:'Termini di Utilizzo',footerContact:'Contatto',
+      footerCopyright:'Tutti i diritti riservati.',footerAbout:'Info su Pandy-Tap',footerPrivacy:'Informativa sulla Privacy',footerTerms:'Termini di Utilizzo',footerContact:'Contatto',
       libModalTitle:'🎵 Libreria Musicale',libEmpty:'← Seleziona una categoria',libChooseCat:'Scegli una categoria',libTracksWord:'brani',
       alarmModalTitle:'🔔 Suono Sveglia',alarmForTimerTitle:'Allarme al termine della sessione',celebDismiss:'Via alla pausa! ☕',
       breakCelebDismiss:'Torna a studiare! 📚',
@@ -3121,7 +3030,8 @@ function setLang(lang,btn){
   const bs=document.getElementById('break-start');
   bs.innerText=breakRunning?t.brkpause:t.brkstart;
   document.querySelector('[onclick="resetBreak()"]').innerText=t.brkreset;
-  updateNotifBtn();
+  const pb=document.getElementById('perm-btn');
+  if(!pb.disabled) pb.innerText=t.perm; else pb.innerText=t.permok;
   document.getElementById('txt-notif-lbl').innerText=t.notif;
   document.getElementById('txt-alarmsound-lbl').innerText=t.alarm;
   document.querySelector('.btn-alarm-browse').innerHTML=`<span>🔔</span> ${t.alarmbrowse} <span class="lib-arrow">›</span>`;
@@ -3173,6 +3083,7 @@ function setLang(lang,btn){
   document.getElementById('txt-lang-title').innerText=t.langTitle;
   document.getElementById('txt-social-title').innerText=t.socialTitle;
   document.getElementById('txt-footer-copyright').innerHTML=`© <span id="footer-year">${new Date().getFullYear()}</span> Pandy-Tap. ${t.footerCopyright}`;
+  const footerAboutEl=document.getElementById('txt-footer-about'); if(footerAboutEl) footerAboutEl.innerText=t.footerAbout;
   document.getElementById('txt-footer-privacy').innerText=t.footerPrivacy;
   document.getElementById('txt-footer-terms').innerText=t.footerTerms;
   document.getElementById('txt-footer-contact').innerText=t.footerContact;
@@ -3596,7 +3507,6 @@ function saveCloudData(){
 //  INIT
 // ══════════════════════════════════════
 updateClock(); updateStats(); buildStreak(); renderTasks(); updateScore(); buildAccordion();
-updateNotifBtn();  // texto del botón de avisos, ahora que tr()/T ya existen
 reconcileStreak(); // corrige la racha mostrada si ya se rompió, sin esperar a la próxima sesión
 checkPermanentUnlocks();
 buildThemeSwatches();
