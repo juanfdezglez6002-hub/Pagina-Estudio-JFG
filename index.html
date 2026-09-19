@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pandy-Tap | Tu Espacio de Estudio</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-<link rel="icon" href="panda png.png" type="image/png">
+<link rel="icon" href="panda.png" type="image/png">
 <style>
 :root {
   --glass: rgba(255,255,255,0.6);
@@ -1784,7 +1784,7 @@ function playAlarm(){
 function stopAlarm(){ clearTimeout(alarmLoop); alarmNodes.forEach(n=>{try{n.stop();}catch(e){}}); alarmNodes=[]; if(alarmCtx){alarmCtx.close();alarmCtx=null;} document.getElementById('alarm-banner').style.display='none'; }
 
 function fireBreakNotification(){
-  if(Notification.permission==='granted') new Notification('🐼 ¡Descanso terminado! — Pandy-Tap',{body:'Es hora de volver al estudio. ¡Tú puedes!',icon:'panda png.png'});
+  if(Notification.permission==='granted') new Notification('🐼 ¡Descanso terminado! — Pandy-Tap',{body:'Es hora de volver al estudio. ¡Tú puedes!',icon:'panda.png'});
   launchBreakCelebration();
   playAlarm();
 }
