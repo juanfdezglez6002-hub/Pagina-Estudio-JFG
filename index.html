@@ -683,6 +683,14 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
   </button>
 </header>
 
+<nav aria-label="Navegación del sitio" style="display:flex;gap:14px;align-items:center;justify-content:center;margin:-10px 0 22px;font-family:'Nunito',sans-serif;font-size:0.78rem;font-weight:700;z-index:1;position:relative;">
+  <a href="index.html" id="nav-inicio" style="color:var(--text2);text-decoration:none;opacity:0.75;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">Inicio</a>
+  <span style="color:var(--border2);">|</span>
+  <a href="blog.html" style="color:var(--text2);text-decoration:none;opacity:0.75;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">Blog</a>
+  <span style="color:var(--border2);">|</span>
+  <a href="about.html" id="nav-about" style="color:var(--text2);text-decoration:none;opacity:0.75;transition:opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.75">Sobre Pandy-Tap</a>
+</nav>
+
 <div class="main">
   <div class="left">
     <div class="top-row">
@@ -983,10 +991,6 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
 <footer id="site-footer" style="text-align:center;padding:26px 16px 34px;color:var(--text2);font-size:0.72rem;line-height:2;position:relative;z-index:1;">
   <div id="txt-footer-copyright">© <span id="footer-year">2026</span> Pandy-Tap. Todos los derechos reservados.</div>
   <div>
-    <a href="about.html" id="txt-footer-about" style="color:var(--text2);text-decoration:underline;">Sobre Pandy-Tap</a>
-    &nbsp;·&nbsp;
-    <a href="blog.html" id="txt-footer-blog" style="color:var(--text2);text-decoration:underline;font-weight:800;">Blog</a>
-    &nbsp;·&nbsp;
     <a href="privacy.html" id="txt-footer-privacy" style="color:var(--text2);text-decoration:underline;">Política de Privacidad</a>
     &nbsp;·&nbsp;
     <a href="terms.html" id="txt-footer-terms" style="color:var(--text2);text-decoration:underline;">Términos de Uso</a>
@@ -2774,7 +2778,7 @@ const T={
       accountTitle:'👤 Cuenta · Sincronización',accountDesc:'Crea una cuenta gratis para guardar tu racha y puntuación en la nube y verlas desde cualquier dispositivo.',
       accEmailPh:'Email',accPassPh:'Contraseña (mín. 6)',accRegister:'✨ Crear cuenta',accLogin:'🔑 Iniciar sesión',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Cerrar sesión',
       langTitle:'🌐 Idioma',socialTitle:'📣 Síguenos',breakFinished:'🔔 ¡Descanso terminado!',stopAlarmBtn:'⏹ Parar alarma',
-      footerCopyright:'Todos los derechos reservados.',footerAbout:'Sobre Pandy-Tap',footerPrivacy:'Política de Privacidad',footerTerms:'Términos de Uso',footerContact:'Contacto',
+      footerCopyright:'Todos los derechos reservados.',navHome:'Inicio',footerAbout:'Sobre Pandy-Tap',footerPrivacy:'Política de Privacidad',footerTerms:'Términos de Uso',footerContact:'Contacto',
       libModalTitle:'🎵 Biblioteca de Música',libEmpty:'← Selecciona una categoría',libChooseCat:'Elige una categoría',libTracksWord:'pistas',
       alarmModalTitle:'🔔 Sonido de Alarma',alarmForTimerTitle:'Alarma al terminar la sesión',celebDismiss:'¡A por el descanso! ☕',
       breakCelebDismiss:'¡A seguir estudiando! 📚',
@@ -2821,7 +2825,7 @@ const T={
       accountTitle:'👤 Account · Sync',accountDesc:'Create a free account to store your streak and score in the cloud and see them from any device.',
       accEmailPh:'Email',accPassPh:'Password (6+ chars)',accRegister:'✨ Create account',accLogin:'🔑 Log in',accLoggedAs:'✅ Logged in as:',accLogout:'🚪 Log out',
       langTitle:'🌐 Language',socialTitle:'📣 Follow us',breakFinished:'🔔 Break finished!',stopAlarmBtn:'⏹ Stop alarm',
-      footerCopyright:'All rights reserved.',footerAbout:'About Pandy-Tap',footerPrivacy:'Privacy Policy',footerTerms:'Terms of Use',footerContact:'Contact',
+      footerCopyright:'All rights reserved.',navHome:'Home',footerAbout:'About Pandy-Tap',footerPrivacy:'Privacy Policy',footerTerms:'Terms of Use',footerContact:'Contact',
       libModalTitle:'🎵 Music Library',libEmpty:'← Select a category',libChooseCat:'Choose a category',libTracksWord:'tracks',
       alarmModalTitle:'🔔 Alarm Sound',alarmForTimerTitle:'Alarm when the session ends',celebDismiss:'Off to break! ☕',
       breakCelebDismiss:'Back to studying! 📚',
@@ -2868,7 +2872,7 @@ const T={
       accountTitle:'👤 Compte · Synchronisation',accountDesc:'Crée un compte gratuit pour sauvegarder ta série et ton score dans le cloud et les voir depuis n\'importe quel appareil.',
       accEmailPh:'Email',accPassPh:'Mot de passe (6+ car.)',accRegister:'✨ Créer un compte',accLogin:'🔑 Se connecter',accLoggedAs:'✅ Connecté en tant que :',accLogout:'🚪 Se déconnecter',
       langTitle:'🌐 Langue',socialTitle:'📣 Suis-nous',breakFinished:'🔔 Pause terminée !',stopAlarmBtn:'⏹ Arrêter l\'alarme',
-      footerCopyright:'Tous droits réservés.',footerAbout:'À propos de Pandy-Tap',footerPrivacy:'Politique de Confidentialité',footerTerms:'Conditions d\'Utilisation',footerContact:'Contact',
+      footerCopyright:'Tous droits réservés.',navHome:'Accueil',footerAbout:'À propos de Pandy-Tap',footerPrivacy:'Politique de Confidentialité',footerTerms:'Conditions d\'Utilisation',footerContact:'Contact',
       libModalTitle:'🎵 Bibliothèque musicale',libEmpty:'← Sélectionne une catégorie',libChooseCat:'Choisis une catégorie',libTracksWord:'pistes',
       alarmModalTitle:'🔔 Son d\'alarme',alarmForTimerTitle:'Alarme à la fin de la session',celebDismiss:'À la pause ! ☕',
       breakCelebDismiss:'Retour à l\'étude ! 📚',
@@ -2915,7 +2919,7 @@ const T={
       accountTitle:'👤 Konto · Synchronisierung',accountDesc:'Erstelle ein kostenloses Konto, um deinen Streak und Score in der Cloud zu speichern und von jedem Gerät zu sehen.',
       accEmailPh:'E-Mail',accPassPh:'Passwort (mind. 6 Zeichen)',accRegister:'✨ Konto erstellen',accLogin:'🔑 Anmelden',accLoggedAs:'✅ Angemeldet als:',accLogout:'🚪 Abmelden',
       langTitle:'🌐 Sprache',socialTitle:'📣 Folge uns',breakFinished:'🔔 Pause beendet!',stopAlarmBtn:'⏹ Alarm stoppen',
-      footerCopyright:'Alle Rechte vorbehalten.',footerAbout:'Über Pandy-Tap',footerPrivacy:'Datenschutzerklärung',footerTerms:'Nutzungsbedingungen',footerContact:'Kontakt',
+      footerCopyright:'Alle Rechte vorbehalten.',navHome:'Start',footerAbout:'Über Pandy-Tap',footerPrivacy:'Datenschutzerklärung',footerTerms:'Nutzungsbedingungen',footerContact:'Kontakt',
       libModalTitle:'🎵 Musikbibliothek',libEmpty:'← Wähle eine Kategorie',libChooseCat:'Wähle eine Kategorie',libTracksWord:'Titel',
       alarmModalTitle:'🔔 Alarmton',alarmForTimerTitle:'Alarm, wenn die Sitzung endet',celebDismiss:'Ab in die Pause! ☕',
       breakCelebDismiss:'Zurück zum Lernen! 📚',
@@ -2962,7 +2966,7 @@ const T={
       accountTitle:'👤 Conta · Sincronização',accountDesc:'Crie uma conta gratuita para guardar sua sequência e pontuação na nuvem e vê-las em qualquer dispositivo.',
       accEmailPh:'Email',accPassPh:'Senha (mín. 6)',accRegister:'✨ Criar conta',accLogin:'🔑 Entrar',accLoggedAs:'✅ Conectado como:',accLogout:'🚪 Sair',
       langTitle:'🌐 Idioma',socialTitle:'📣 Siga-nos',breakFinished:'🔔 Pausa terminada!',stopAlarmBtn:'⏹ Parar alarme',
-      footerCopyright:'Todos os direitos reservados.',footerAbout:'Sobre o Pandy-Tap',footerPrivacy:'Política de Privacidade',footerTerms:'Termos de Uso',footerContact:'Contato',
+      footerCopyright:'Todos os direitos reservados.',navHome:'Início',footerAbout:'Sobre o Pandy-Tap',footerPrivacy:'Política de Privacidade',footerTerms:'Termos de Uso',footerContact:'Contato',
       libModalTitle:'🎵 Biblioteca de Música',libEmpty:'← Selecione uma categoria',libChooseCat:'Escolha uma categoria',libTracksWord:'faixas',
       alarmModalTitle:'🔔 Som do Alarme',alarmForTimerTitle:'Alarme ao terminar a sessão',celebDismiss:'Vamos à pausa! ☕',
       breakCelebDismiss:'De volta aos estudos! 📚',
@@ -3009,7 +3013,7 @@ const T={
       accountTitle:'👤 Account · Sincronizzazione',accountDesc:'Crea un account gratuito per salvare la tua serie e il punteggio nel cloud e vederli da qualsiasi dispositivo.',
       accEmailPh:'Email',accPassPh:'Password (min. 6)',accRegister:'✨ Crea account',accLogin:'🔑 Accedi',accLoggedAs:'✅ Connesso come:',accLogout:'🚪 Esci',
       langTitle:'🌐 Lingua',socialTitle:'📣 Seguici',breakFinished:'🔔 Pausa terminata!',stopAlarmBtn:'⏹ Ferma allarme',
-      footerCopyright:'Tutti i diritti riservati.',footerAbout:'Info su Pandy-Tap',footerPrivacy:'Informativa sulla Privacy',footerTerms:'Termini di Utilizzo',footerContact:'Contatto',
+      footerCopyright:'Tutti i diritti riservati.',navHome:'Home',footerAbout:'Info su Pandy-Tap',footerPrivacy:'Informativa sulla Privacy',footerTerms:'Termini di Utilizzo',footerContact:'Contatto',
       libModalTitle:'🎵 Libreria Musicale',libEmpty:'← Seleziona una categoria',libChooseCat:'Scegli una categoria',libTracksWord:'brani',
       alarmModalTitle:'🔔 Suono Sveglia',alarmForTimerTitle:'Allarme al termine della sessione',celebDismiss:'Via alla pausa! ☕',
       breakCelebDismiss:'Torna a studiare! 📚',
@@ -3139,7 +3143,8 @@ function setLang(lang,btn){
   document.getElementById('txt-lang-title').innerText=t.langTitle;
   document.getElementById('txt-social-title').innerText=t.socialTitle;
   document.getElementById('txt-footer-copyright').innerHTML=`© <span id="footer-year">${new Date().getFullYear()}</span> Pandy-Tap. ${t.footerCopyright}`;
-  const footerAboutEl=document.getElementById('txt-footer-about'); if(footerAboutEl) footerAboutEl.innerText=t.footerAbout;
+  const navHomeEl=document.getElementById('nav-inicio'); if(navHomeEl) navHomeEl.innerText=t.navHome;
+  const navAboutEl=document.getElementById('nav-about'); if(navAboutEl) navAboutEl.innerText=t.footerAbout;
   document.getElementById('txt-footer-privacy').innerText=t.footerPrivacy;
   document.getElementById('txt-footer-terms').innerText=t.footerTerms;
   document.getElementById('txt-footer-contact').innerText=t.footerContact;
