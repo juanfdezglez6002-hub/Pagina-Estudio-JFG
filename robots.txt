@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://pandytap.com/sitemap.xml
