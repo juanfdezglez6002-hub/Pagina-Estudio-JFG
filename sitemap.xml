@@ -1,26 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- Página principal -->
   <url>
     <loc>https://pandytap.com/</loc>
-    <lastmod>2026-09-17</lastmod>
-    <changefreq>daily</changefreq>
+    <lastmod>2026-09-27</lastmod>
     <priority>1.0</priority>
   </url>
-
-  <!-- Política de Privacidad -->
+  <url>
+    <loc>https://pandytap.com/about.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://pandytap.com/about-en.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://pandytap.com/blog.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://pandytap.com/blog-tecnica-pomodoro.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pandytap.com/blog-ambiente-estudio.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pandytap.com/blog-mantener-racha-estudio.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pandytap.com/blog-monedas-rachas-temas.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://pandytap.com/blog-sesion-ideal-pandy-tap.html</loc>
+    <lastmod>2026-09-27</lastmod>
+    <priority>0.7</priority>
+  </url>
   <url>
     <loc>https://pandytap.com/privacy.html</loc>
-    <lastmod>2026-09-15</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-09-27</lastmod>
     <priority>0.3</priority>
   </url>
-
-  <!-- Términos de Uso -->
   <url>
     <loc>https://pandytap.com/terms.html</loc>
-    <lastmod>2026-09-15</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-09-27</lastmod>
     <priority>0.3</priority>
   </url>
 </urlset>
