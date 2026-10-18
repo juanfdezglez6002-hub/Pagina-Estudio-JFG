@@ -3619,8 +3619,11 @@ document.getElementById('quote-author').innerText='— '+_q.author;
 document.getElementById('quote-timer').style.setProperty('--quote-dur',QUOTE_INTERVAL/1000+'s');
 startQuoteTimer();
 
-// Onboarding: solo se lanza automáticamente si nunca se ha visto en este navegador
-if(localStorage.getItem('ft-onboarding-seen')!=='1'){
+// Onboarding: autolanzamiento DESACTIVADO temporalmente (AdSense: que los bots vean el contenido real).
+// El tutorial sigue disponible al pulsar el botón ❔ (openOnboarding).
+// Para reactivar el popup automático en la primera visita, cambia a true:
+const ONBOARDING_AUTO_OPEN=false;
+if(ONBOARDING_AUTO_OPEN && localStorage.getItem('ft-onboarding-seen')!=='1'){
   setTimeout(openOnboarding, 500); // pequeño respiro tras el primer pintado
 }
 </script>
