@@ -563,6 +563,51 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
   50%{ transform:translateY(50vh) translateX(8px) rotate(1deg); }
   100%{ transform:translateY(112vh) translateX(-6px) rotate(-1deg); }
 }
+
+/* ── PARTÍCULAS DE ACCESORIOS DE EVENTO (dirigidas por datos: particleSpec) ── */
+.acc-event-particle{position:absolute;line-height:1;user-select:none;will-change:transform;}
+.acc-event-fall{top:-8%;animation:acc-ev-fall linear infinite;}
+.acc-event-rise{bottom:-8%;animation:acc-ev-rise linear infinite;}
+.acc-event-float{animation:acc-ev-float ease-in-out infinite alternate;}
+.acc-event-twinkle{animation:acc-ev-twinkle ease-in-out infinite;}
+@keyframes acc-ev-fall{
+  0%{ transform:translateY(-8vh) translateX(0) rotate(0deg); }
+  50%{ transform:translateY(50vh) translateX(18px) rotate(12deg); }
+  100%{ transform:translateY(112vh) translateX(-14px) rotate(-8deg); }
+}
+@keyframes acc-ev-rise{
+  0%{ transform:translateY(8vh) translateX(0) rotate(0deg); }
+  50%{ transform:translateY(-50vh) translateX(16px) rotate(-10deg); }
+  100%{ transform:translateY(-112vh) translateX(-12px) rotate(8deg); }
+}
+@keyframes acc-ev-float{
+  0%{ transform:translate(0,0) rotate(0deg); }
+  100%{ transform:translate(26px,-32px) rotate(10deg); }
+}
+@keyframes acc-ev-twinkle{
+  0%,100%{ opacity:0.12; transform:scale(0.8); }
+  50%{ opacity:1; transform:scale(1.15); }
+}
+
+/* ── MODO CREADOR (solo visible para el UID del creador) ── */
+#creator-fab{position:fixed;left:14px;bottom:14px;z-index:9998;width:42px;height:42px;border-radius:50%;border:1px solid rgba(0,0,0,0.15);background:#263238;color:#fff;font-size:1.1rem;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,0.3);}
+#creator-panel{display:none;position:fixed;left:14px;bottom:64px;z-index:9998;width:min(380px,calc(100vw - 28px));max-height:72vh;overflow:auto;background:#fff;color:#263238;border:1px solid rgba(0,0,0,0.15);border-radius:14px;padding:14px;box-shadow:0 10px 34px rgba(0,0,0,0.32);font-size:0.78rem;line-height:1.45;}
+#creator-panel .cp-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.9rem;}
+#creator-panel .cp-x{background:none;border:none;font-size:1rem;cursor:pointer;color:#263238;}
+#creator-panel .cp-label{display:block;margin:10px 0 3px;font-weight:700;}
+#creator-panel .cp-input{width:100%;padding:6px 8px;border:1px solid #b0bec5;border-radius:8px;font-size:0.78rem;box-sizing:border-box;}
+#creator-panel .cp-row{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0;}
+#creator-panel .cp-btn{padding:5px 9px;border:1px solid #90a4ae;border-radius:8px;background:#eceff1;color:#263238;font-size:0.74rem;font-weight:600;cursor:pointer;}
+#creator-panel .cp-btn:hover{background:#cfd8dc;}
+#creator-panel .cp-primary{background:#263238;color:#fff;border-color:#263238;margin:6px 0;}
+#creator-panel .cp-note{color:#546e7a;margin:6px 0;}
+#creator-panel .cp-warn{background:#fff3e0;border:1px solid #ffb74d;color:#bf360c;border-radius:8px;padding:6px 8px;margin:6px 0;font-weight:700;}
+#creator-panel .cp-summary{font-weight:800;margin:10px 0 4px;}
+#creator-panel .cp-check{padding:2px 0;border-bottom:1px solid #eceff1;}
+#creator-panel .cp-check span{color:#78909c;font-size:0.7rem;}
+#creator-panel .cp-ok{color:#2e7d32;}
+#creator-panel .cp-ko{color:#c62828;}
+#creator-banner{position:fixed;top:0;left:0;right:0;z-index:9997;background:#ff6f00;color:#fff;text-align:center;font-size:0.74rem;font-weight:800;padding:3px 8px;pointer-events:none;}
 </style>
 </head>
 <body>
@@ -1267,17 +1312,16 @@ const ALARMS = [
   {id:'crystal', icon:'💎', name:'Cristal',         desc:'Arpeggio de cristal ascendente', shopId:'snd-crystal'},
   {id:'gentle',  icon:'🌅', name:'Gentle Wake',    desc:'Despertar suave y progresivo',   shopId:'snd-gentle'},
   {id:'melody',  icon:'🎶', name:'Melodía',          desc:'Escala musical completa',         shopId:'snd-melody'},
-  // Sonido exclusivo de evento — visible/comprable solo mientras el evento esté activo
-  {id:'howl',    icon:'🦇', name:'Aullido',          desc:'Tono descendente y espectral',    shopId:'evt-halloween-snd'},
+  // Los sonidos exclusivos de evento (.mp3) se añaden solos desde EVENTS_CONFIG (registerEventAlarms)
 ];
 
 const ALARMS_I18N = {
-  es:{beep:{name:'Beep clásico',desc:'Dos pitidos cortos + tono largo'},bell:{name:'Campana suave',desc:'Dos tonos calmados y suaves'},pulse:{name:'Pulso digital',desc:'Cuatro pulsos rápidos ascendentes'},chime:{name:'Carillón',desc:'Melodía suave de cuatro notas'},urgent:{name:'Urgente',desc:'Señal de alerta rápida'},crystal:{name:'Cristal',desc:'Arpeggio de cristal ascendente'},gentle:{name:'Gentle Wake',desc:'Despertar suave y progresivo'},melody:{name:'Melodía',desc:'Escala musical completa'},howl:{name:'Aullido',desc:'Tono descendente y espectral'}},
-  en:{beep:{name:'Classic beep',desc:'Two short beeps + long tone'},bell:{name:'Soft bell',desc:'Two calm, gentle tones'},pulse:{name:'Digital pulse',desc:'Four quick rising pulses'},chime:{name:'Chime',desc:'Soft four-note melody'},urgent:{name:'Urgent',desc:'Fast alert signal'},crystal:{name:'Crystal',desc:'Rising crystal arpeggio'},gentle:{name:'Gentle Wake',desc:'Soft progressive wake'},melody:{name:'Melody',desc:'Full musical scale'},howl:{name:'Howl',desc:'Spooky descending tone'}},
-  fr:{beep:{name:'Bip classique',desc:'Deux bips courts + tonalité longue'},bell:{name:'Cloche douce',desc:'Deux tonalités calmes et douces'},pulse:{name:'Pulsation digitale',desc:'Quatre pulsations rapides ascendantes'},chime:{name:'Carillon',desc:'Douce mélodie de quatre notes'},urgent:{name:'Urgent',desc:'Signal d\'alerte rapide'},crystal:{name:'Cristal',desc:'Arpège de cristal ascendant'},gentle:{name:'Réveil doux',desc:'Réveil progressif et doux'},melody:{name:'Mélodie',desc:'Gamme musicale complète'},howl:{name:'Hurlement',desc:'Tonalité descendante et spectrale'}},
-  de:{beep:{name:'Klassischer Piepton',desc:'Zwei kurze Pieptöne + langer Ton'},bell:{name:'Sanfte Glocke',desc:'Zwei ruhige, sanfte Töne'},pulse:{name:'Digitaler Impuls',desc:'Vier schnelle aufsteigende Impulse'},chime:{name:'Glockenspiel',desc:'Sanfte Melodie aus vier Noten'},urgent:{name:'Dringend',desc:'Schnelles Warnsignal'},crystal:{name:'Kristall',desc:'Aufsteigendes Kristall-Arpeggio'},gentle:{name:'Sanftes Erwachen',desc:'Weiches, progressives Erwachen'},melody:{name:'Melodie',desc:'Vollständige Tonleiter'},howl:{name:'Heulen',desc:'Gespenstischer absteigender Ton'}},
-  pt:{beep:{name:'Beep clássico',desc:'Dois bipes curtos + tom longo'},bell:{name:'Sino suave',desc:'Dois tons calmos e suaves'},pulse:{name:'Pulso digital',desc:'Quatro pulsos rápidos ascendentes'},chime:{name:'Carrilhão',desc:'Melodia suave de quatro notas'},urgent:{name:'Urgente',desc:'Sinal de alerta rápido'},crystal:{name:'Cristal',desc:'Arpejo de cristal ascendente'},gentle:{name:'Despertar suave',desc:'Despertar progressivo e suave'},melody:{name:'Melodia',desc:'Escala musical completa'},howl:{name:'Uivo',desc:'Tom descendente e fantasmagórico'}},
-  it:{beep:{name:'Beep classico',desc:'Due bip brevi + tono lungo'},bell:{name:'Campana dolce',desc:'Due toni calmi e delicati'},pulse:{name:'Impulso digitale',desc:'Quattro impulsi rapidi ascendenti'},chime:{name:'Carillon',desc:'Dolce melodia di quattro note'},urgent:{name:'Urgente',desc:'Segnale di allerta rapido'},crystal:{name:'Cristallo',desc:'Arpeggio di cristallo ascendente'},gentle:{name:'Risveglio dolce',desc:'Risveglio progressivo e delicato'},melody:{name:'Melodia',desc:'Scala musicale completa'},howl:{name:'Ululato',desc:'Tono discendente e spettrale'}},
+  es:{beep:{name:'Beep clásico',desc:'Dos pitidos cortos + tono largo'},bell:{name:'Campana suave',desc:'Dos tonos calmados y suaves'},pulse:{name:'Pulso digital',desc:'Cuatro pulsos rápidos ascendentes'},chime:{name:'Carillón',desc:'Melodía suave de cuatro notas'},urgent:{name:'Urgente',desc:'Señal de alerta rápida'},crystal:{name:'Cristal',desc:'Arpeggio de cristal ascendente'},gentle:{name:'Gentle Wake',desc:'Despertar suave y progresivo'},melody:{name:'Melodía',desc:'Escala musical completa'}},
+  en:{beep:{name:'Classic beep',desc:'Two short beeps + long tone'},bell:{name:'Soft bell',desc:'Two calm, gentle tones'},pulse:{name:'Digital pulse',desc:'Four quick rising pulses'},chime:{name:'Chime',desc:'Soft four-note melody'},urgent:{name:'Urgent',desc:'Fast alert signal'},crystal:{name:'Crystal',desc:'Rising crystal arpeggio'},gentle:{name:'Gentle Wake',desc:'Soft progressive wake'},melody:{name:'Melody',desc:'Full musical scale'}},
+  fr:{beep:{name:'Bip classique',desc:'Deux bips courts + tonalité longue'},bell:{name:'Cloche douce',desc:'Deux tonalités calmes et douces'},pulse:{name:'Pulsation digitale',desc:'Quatre pulsations rapides ascendantes'},chime:{name:'Carillon',desc:'Douce mélodie de quatre notes'},urgent:{name:'Urgent',desc:'Signal d\'alerte rapide'},crystal:{name:'Cristal',desc:'Arpège de cristal ascendant'},gentle:{name:'Réveil doux',desc:'Réveil progressif et doux'},melody:{name:'Mélodie',desc:'Gamme musicale complète'}},
+  de:{beep:{name:'Klassischer Piepton',desc:'Zwei kurze Pieptöne + langer Ton'},bell:{name:'Sanfte Glocke',desc:'Zwei ruhige, sanfte Töne'},pulse:{name:'Digitaler Impuls',desc:'Vier schnelle aufsteigende Impulse'},chime:{name:'Glockenspiel',desc:'Sanfte Melodie aus vier Noten'},urgent:{name:'Dringend',desc:'Schnelles Warnsignal'},crystal:{name:'Kristall',desc:'Aufsteigendes Kristall-Arpeggio'},gentle:{name:'Sanftes Erwachen',desc:'Weiches, progressives Erwachen'},melody:{name:'Melodie',desc:'Vollständige Tonleiter'}},
+  pt:{beep:{name:'Beep clássico',desc:'Dois bipes curtos + tom longo'},bell:{name:'Sino suave',desc:'Dois tons calmos e suaves'},pulse:{name:'Pulso digital',desc:'Quatro pulsos rápidos ascendentes'},chime:{name:'Carrilhão',desc:'Melodia suave de quatro notas'},urgent:{name:'Urgente',desc:'Sinal de alerta rápido'},crystal:{name:'Cristal',desc:'Arpejo de cristal ascendente'},gentle:{name:'Despertar suave',desc:'Despertar progressivo e suave'},melody:{name:'Melodia',desc:'Escala musical completa'}},
+  it:{beep:{name:'Beep classico',desc:'Due bip brevi + tono lungo'},bell:{name:'Campana dolce',desc:'Due toni calmi e delicati'},pulse:{name:'Impulso digitale',desc:'Quattro impulsi rapidi ascendenti'},chime:{name:'Carillon',desc:'Dolce melodia di quattro note'},urgent:{name:'Urgente',desc:'Segnale di allerta rapido'},crystal:{name:'Cristallo',desc:'Arpeggio di cristallo ascendente'},gentle:{name:'Risveglio dolce',desc:'Risveglio progressivo e delicato'},melody:{name:'Melodia',desc:'Scala musicale completa'}},
 };
 function alarmMeta(id){
   const table=ALARMS_I18N[currentLang]||ALARMS_I18N.es;
@@ -1349,10 +1393,10 @@ let activeItems=JSON.parse(localStorage.getItem('ft-active-items')||'{"palette":
 let coinEarnedToday=localStorage.getItem('ft-coin-day')===TODAY;
 // Tramos de moneda diaria ya cobrados hoy (índices de COIN_TIERS), persistidos como {date,tiers}
 let coinTiersEarnedToday=(()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.tiers:[]; }catch(e){ return []; } })();
-// Monedas de eventos de temporada (una por evento, ej. {halloween:3}) y sus tramos ya cobrados hoy
+// Monedas de eventos (una por EDICIÓN, ej. {'halloween-2026':3}) y sus tramos ya cobrados hoy
 let eventCoins=JSON.parse(localStorage.getItem('ft-event-coins')||'{}');
 let eventCoinTiersToday=(()=>{ try{ const raw=JSON.parse(localStorage.getItem('ft-event-coin-tiers-day')||'null'); return (raw&&raw.date===TODAY)?raw.data:{}; }catch(e){ return {}; } })();
-// Último año en que se reinició la moneda de cada evento (ej. {halloween:2026})
+// Clave de la edición cuya moneda ya se reinició (ej. {'halloween-2026':'halloween-2026'})
 let eventCoinsResetYear=JSON.parse(localStorage.getItem('ft-event-coins-reset-year')||'{}');
 let alarmCtx=null, alarmNodes=[], alarmLoop=null;
 
@@ -1752,6 +1796,7 @@ if(Notification.permission==='granted'){ document.getElementById('perm-btn').inn
 function buildAlarmModal(){
   const list=document.getElementById('alarm-modal-list'); list.innerHTML='';
   ALARMS.forEach(a=>{
+    if(a.event && !ownedItems.includes(a.shopId)) return; // sonido de evento sin comprar: oculto
     const meta=alarmMeta(a.id);
     const isSel=a.id===selectedAlarm;
     const isPremium=!!a.shopId;
@@ -1841,7 +1886,7 @@ function playAlarm(){
   schedule();
 }
 
-function stopAlarm(){ clearTimeout(alarmLoop); alarmNodes.forEach(n=>{try{n.stop();}catch(e){}}); alarmNodes=[]; if(alarmCtx){alarmCtx.close();alarmCtx=null;} document.getElementById('alarm-banner').style.display='none'; }
+function stopAlarm(){ stopEventAudio(); clearTimeout(alarmLoop); alarmNodes.forEach(n=>{try{n.stop();}catch(e){}}); alarmNodes=[]; if(alarmCtx){alarmCtx.close();alarmCtx=null;} document.getElementById('alarm-banner').style.display='none'; }
 
 function fireBreakNotification(){
   if(Notification.permission==='granted') new Notification('🐼 ¡Descanso terminado! — Pandy-Tap',{body:'Es hora de volver al estudio. ¡Tú puedes!',icon:'panda.png'});
@@ -1912,20 +1957,12 @@ const PREMIUM_ALARM_PATTERNS = {
       g.gain.exponentialRampToValueAtTime(0.001,t+i*0.12+0.35);o.start(t+i*0.12);o.stop(t+i*0.12+0.4);
     });
   },
-  howl:(ctx,t)=>{
-    // Tono descendente y ligeramente vibrante — sonido exclusivo del evento de Halloween
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.connect(g);g.connect(ctx.destination);o.type='sawtooth';
-    o.frequency.setValueAtTime(720,t);
-    o.frequency.exponentialRampToValueAtTime(180,t+1.1);
-    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.16,t+0.08);
-    g.gain.linearRampToValueAtTime(0,t+1.15);
-    o.start(t);o.stop(t+1.2);
-  },
 };
 
 // buildPattern: sonidos gratuitos (buildPatternBase) + sonidos premium (PREMIUM_ALARM_PATTERNS)
 function buildPattern(ctx,type,startAt){
+  const evAlarm=ALARMS.find(a=>a.id===type&&a.audioFile);
+  if(evAlarm) return playEventAudio(evAlarm.audioFile, ctx===alarmCtx); // sonido de evento (.mp3)
   if(PREMIUM_ALARM_PATTERNS[type]){
     PREMIUM_ALARM_PATTERNS[type](ctx,startAt);
     return [{end:startAt+1.5}];
@@ -1970,91 +2007,155 @@ function tryEarnCoin(){
 }
 
 // ══════════════════════════════════════
-//  EVENTOS TEMÁTICOS DE TEMPORADA
-//  Prueba de concepto: Halloween. Fechas repetidas cada año (sin año fijo).
-//  Los objetos comprados son PERMANENTES (van al mismo ownedItems de siempre);
-//  lo único que dura solo el evento es la OPORTUNIDAD de conseguirlos.
+//  EVENTOS TEMÁTICOS Y DE TRANSICIÓN  (todo sale de EVENTS_CONFIG)
+//  - Cada evento se celebra UNA vez: fechas completas YYYY-MM-DD por edición.
+//  - Los objetos comprados son PERMANENTES (van al mismo ownedItems de siempre);
+//    lo único que dura es la OPORTUNIDAD de conseguirlos.
+//  - Cada edición tiene su propia moneda, que se reinicia a 0 al activarse por primera vez.
+//  - kind:'themed'     -> edición con objetos propios (1 paleta + 1 efecto + 1 sonido + 1 accesorio)
+//    kind:'transition' -> ventana sin objetos nuevos que ofrece objetos antiguos (lista "recover")
+//  - approved:false    -> la edición SOLO se ve en el modo creador; los usuarios no la ven
+//                         aunque lleguen las fechas. Pásala a true cuando la hayas probado.
+//  La estructura completa y un ejemplo están en el informe "pandytap-eventos-informe".
+//  Se añaden eventos con la skill pandytap-eventos; no hace falta tocar nada más de este bloque.
 // ══════════════════════════════════════
-const SEASONAL_EVENTS={
-  halloween:{ id:'halloween', emoji:'🎃', startMonth:9, startDay:2, endMonth:9, endDay:3, coinIcon:'🎃' }
+const EVENT_LANGS=['es','en','fr','de','pt','it'];
+const EVENTS_CONFIG={
+  // (vacío a propósito) — la skill pandytap-eventos añade aquí cada evento y sus ediciones.
 };
-// Nombre del evento y de su moneda, traducidos — igual que el resto de la tienda
-const EVENTS_I18N={
-  halloween:{
-    es:{label:'Halloween', coinName:'calabazas'}, en:{label:'Halloween', coinName:'pumpkins'},
-    fr:{label:'Halloween', coinName:'citrouilles'}, de:{label:'Halloween', coinName:'Kürbisse'},
-    pt:{label:'Halloween', coinName:'abóboras'}, it:{label:'Halloween', coinName:'zucche'}
-  }
-};
-function eventMeta(evId){
-  const t=EVENTS_I18N[evId];
-  return (t&&(t[currentLang]||t.es))||{label:evId,coinName:'monedas'};
+
+// ── Modo creador: estado ──
+// UID de tu cuenta de Firebase (Authentication → Usuarios → "UID de usuario").
+// Solo la cuenta con este UID ve el modo creador.
+const CREATOR_UID='klkcRMfqvpMXBalA3R3gaOLHdum2';
+let creatorSandbox=false;   // true = modo prueba aislado (no se guarda nada de la tienda/eventos)
+let creatorSimDate=null;    // 'YYYY-MM-DD' simulada; solo la usan las funciones de eventos
+const SANDBOX_BLOCKED_KEYS=new Set(['ft-coins','ft-owned-items','ft-active-items','ft-event-coins','ft-event-coin-tiers-day','ft-event-coins-reset-year','ft-coin-tiers-day','ft-coin-day','ft-alarm']);
+// En modo prueba, las escrituras de tienda/eventos en localStorage se descartan. La salida del modo
+// prueba recarga la página, que vuelve a leer el estado real intacto.
+(function(){
+  const origSet=Storage.prototype.setItem;
+  Storage.prototype.setItem=function(k,v){
+    if(creatorSandbox && this===window.localStorage && SANDBOX_BLOCKED_KEYS.has(k)) return;
+    return origSet.call(this,k,v);
+  };
+})();
+function eventToday(){ return (creatorSandbox&&creatorSimDate)?creatorSimDate:localDateString(); }
+
+// ── Lectura de EVENTS_CONFIG ──
+function eventEditions(){
+  const out=[];
+  Object.keys(EVENTS_CONFIG).forEach(evId=>{
+    const ev=EVENTS_CONFIG[evId]; if(!ev||!ev.editions) return;
+    Object.keys(ev.editions).forEach(edKey=>{
+      out.push({key:evId+'-'+edKey, evId, edKey, ev, ed:ev.editions[edKey]});
+    });
+  });
+  return out;
 }
-const EVENT_ITEMS={
-  halloween:[
-    { id:'evt-halloween-pal', price:5, preview:'🎃', type:'palette', event:'halloween',
-      vars:{'--accent2':'#ff7518','--mint2':'#7c3aed','--rose':'#ff9d4d'} },
-    { id:'evt-halloween-pal2', price:7, preview:'🌑', type:'palette', event:'halloween',
-      vars:{'--accent2':'#b8460e','--mint2':'#4c1d95','--rose':'#7c2d12'} },
-    { id:'evt-halloween-fx', price:6, preview:'👻', type:'effect', event:'halloween',
-      vars:{'--glass':'rgba(20,10,30,0.78)','--card-radius':'18px','--border':'rgba(255,117,24,0.45)','--shadow':'rgba(124,58,237,0.22)'}, glow:'halloween' },
-    { id:'evt-halloween-fx2', price:6, preview:'🌫️', type:'effect', event:'halloween',
-      vars:{'--glass':'rgba(230,230,235,0.4)','--card-radius':'26px','--border':'rgba(200,200,210,0.5)','--shadow':'rgba(140,140,160,0.2)'}, glow:'fog' },
-    { id:'evt-halloween-snd', price:5, preview:'🐺', type:'sound', event:'halloween', alarmId:'howl' }
-  ]
-};
-// Nombres de los artículos de evento, traducidos (los de la tienda base como "Cherry
-// Blossom" se dejan como nombres de marca sin traducir; estos, al ser descriptivos, sí)
-const EVENT_ITEM_NAMES_I18N={
-  es:{'evt-halloween-pal':'Halloween Fright','evt-halloween-pal2':'Calabaza Nocturna','evt-halloween-fx':'Resplandor Tétrico','evt-halloween-fx2':'Niebla Espectral'},
-  en:{'evt-halloween-pal':'Halloween Fright','evt-halloween-pal2':'Midnight Pumpkin','evt-halloween-fx':'Spooky Glow','evt-halloween-fx2':'Spectral Fog'},
-  fr:{'evt-halloween-pal':'Frayeur d\'Halloween','evt-halloween-pal2':'Citrouille Nocturne','evt-halloween-fx':'Lueur Sinistre','evt-halloween-fx2':'Brume Spectrale'},
-  de:{'evt-halloween-pal':'Halloween-Schrecken','evt-halloween-pal2':'Nächtlicher Kürbis','evt-halloween-fx':'Gruseliger Schein','evt-halloween-fx2':'Geisternebel'},
-  pt:{'evt-halloween-pal':'Pavor de Halloween','evt-halloween-pal2':'Abóbora Noturna','evt-halloween-fx':'Brilho Assustador','evt-halloween-fx2':'Névoa Espectral'},
-  it:{'evt-halloween-pal':'Terrore di Halloween','evt-halloween-pal2':'Zucca Notturna','evt-halloween-fx':'Bagliore Spettrale','evt-halloween-fx2':'Nebbia Spettrale'}
-};
+function eventAllItems(){
+  const out=[];
+  eventEditions().forEach(e=>{
+    (e.ed.items||[]).forEach(it=>{ it.event=e.evId; it.edition=e.key; out.push(it); });
+  });
+  return out;
+}
+function edText(obj){ return (obj&&(obj[currentLang]||obj.es))||''; }
+function eventMeta(e){ return {label:edText(e.ed.name)||e.evId, coinName:edText(e.ed.coin)||'monedas'}; }
+function eventEmoji(e){ return e.ed.emoji||e.ev.defaultEmoji||'🐼'; }
+function eventCoinIcon(e){ return (e.ed.coin&&e.ed.coin.icon)||eventEmoji(e); }
+// Colores del recuadro de la moneda de evento (botón del header y recuadros de la tienda de evento).
+// Cada edición puede llevar su color en coin.color (hex #rrggbb). Sin color, se queda el naranja de siempre.
+function eventColorStyles(e){
+  const hex=e&&e.ed.coin&&e.ed.coin.color;
+  if(!hex||!/^#[0-9a-fA-F]{6}$/.test(hex)){
+    return {
+      btnBg:'rgba(255,138,61,0.15)', btnBorder:'rgba(255,138,61,0.35)', btnText:'#c2410c', btnShadow:'0 3px 10px rgba(255,138,61,0.15)',
+      badgeBg:'linear-gradient(135deg,#ff7518,#c2410c)',
+      chipBg:'rgba(255,138,61,0.15)', chipBorder:'rgba(255,138,61,0.3)', chipText:'#c2410c',
+      tipBg:'linear-gradient(135deg,rgba(255,138,61,0.1),rgba(124,58,237,0.07))', tipBorder:'rgba(255,138,61,0.25)', tipText:'#9a4a0e'
+    };
+  }
+  const r=parseInt(hex.slice(1,3),16), g=parseInt(hex.slice(3,5),16), b=parseInt(hex.slice(5,7),16);
+  const shade=(k)=>`rgb(${Math.round(r*k)},${Math.round(g*k)},${Math.round(b*k)})`;
+  const rgb=`${r},${g},${b}`;
+  return {
+    btnBg:`rgba(${rgb},0.15)`, btnBorder:`rgba(${rgb},0.35)`, btnText:shade(0.7), btnShadow:`0 3px 10px rgba(${rgb},0.15)`,
+    badgeBg:`linear-gradient(135deg,${hex},${shade(0.7)})`,
+    chipBg:`rgba(${rgb},0.15)`, chipBorder:`rgba(${rgb},0.3)`, chipText:shade(0.7),
+    tipBg:`linear-gradient(135deg,rgba(${rgb},0.12),rgba(${rgb},0.04))`, tipBorder:`rgba(${rgb},0.25)`, tipText:shade(0.5)
+  };
+}
+function eventEmojiOf(item){
+  const e=eventEditions().find(x=>x.key===item.edition);
+  return e?eventEmoji(e):'🎉';
+}
 function eventItemName(item){
-  if(item.type==='sound') return alarmMeta(item.alarmId).name; // reutiliza la tabla de sonidos ya traducida
-  const t=EVENT_ITEM_NAMES_I18N[currentLang]||EVENT_ITEM_NAMES_I18N.es;
-  return t[item.id]||EVENT_ITEM_NAMES_I18N.es[item.id]||item.id;
+  if(item.type==='sound') return alarmMeta(item.alarmId).name; // reutiliza la tabla de sonidos (se rellena desde EVENTS_CONFIG)
+  return edText(item.name)||item.id;
 }
 
-function isEventActive(id){
-  const ev=SEASONAL_EVENTS[id]; if(!ev) return false;
-  const now=new Date();
-  const code=(now.getMonth()+1)*100+now.getDate();
-  const start=ev.startMonth*100+ev.startDay, end=ev.endMonth*100+ev.endDay;
-  return start<=end ? (code>=start&&code<=end) : (code>=start||code<=end);
+// Una edición está "viva" si hoy cae dentro de sus fechas Y está aprobada (o estamos en modo creador).
+function isEditionLive(e,dateStr){
+  dateStr=dateStr||eventToday();
+  return (e.ed.approved===true||creatorSandbox) && e.ed.startDate<=dateStr && dateStr<=e.ed.endDate;
 }
-function getActiveEvent(){ return Object.keys(SEASONAL_EVENTS).find(isEventActive)||null; }
+function getActiveEdition(){ return eventEditions().find(e=>isEditionLive(e))||null; }
+
+// Los sonidos de evento (.mp3) se registran en la lista de alarmas y en sus traducciones, leyendo
+// nombre y descripción del propio objeto — así no se escriben dos veces.
+function registerEventAlarms(){
+  eventAllItems().forEach(it=>{
+    if(it.type!=='sound'||!it.alarmId) return;
+    if(!ALARMS.find(a=>a.id===it.alarmId)){
+      // (se usa el texto en español como respaldo: currentLang aún no existe cuando esto se ejecuta al cargar)
+      ALARMS.push({id:it.alarmId, icon:it.preview||'🔔', name:(it.name&&it.name.es)||it.alarmId, desc:(it.desc&&it.desc.es)||'', shopId:it.id, event:it.event, audioFile:it.audioFile});
+    }
+    EVENT_LANGS.forEach(l=>{
+      ALARMS_I18N[l]=ALARMS_I18N[l]||{};
+      if(!ALARMS_I18N[l][it.alarmId]){
+        ALARMS_I18N[l][it.alarmId]={name:(it.name&&(it.name[l]||it.name.es))||it.alarmId, desc:(it.desc&&(it.desc[l]||it.desc.es))||''};
+      }
+    });
+  });
+}
+registerEventAlarms();
+
+// Sonidos de evento: archivos .mp3 (los alojas tú, igual que las playlists). Se reproducen con un
+// elemento Audio; el resto de alarmas (síntesis) no cambia.
+var eventAudioEl=null;
+function playEventAudio(url,keepIfPlaying){
+  try{
+    if(keepIfPlaying && eventAudioEl && !eventAudioEl.paused && !eventAudioEl.ended) return [{end:0.1}];
+    stopEventAudio();
+    eventAudioEl=new Audio(url);
+    eventAudioEl.volume=0.85;
+    const p=eventAudioEl.play(); if(p&&p.catch) p.catch(()=>{});
+  }catch(e){ console.warn('No se pudo reproducir el sonido de evento',e); }
+  return [{end:0.1}];
+}
+function stopEventAudio(){ try{ if(eventAudioEl){ eventAudioEl.pause(); eventAudioEl=null; } }catch(e){} }
 
 // Busca un artículo tanto en el catálogo normal como en los de evento — así, una vez
 // comprado, sigue aplicándose correctamente aunque el evento ya haya terminado.
 function findShopItem(id){
   for(const arr of Object.values(SHOP_CATALOGUE)){ const f=arr.find(i=>i.id===id); if(f) return f; }
-  for(const arr of Object.values(EVENT_ITEMS)){ const f=arr.find(i=>i.id===id); if(f) return f; }
-  return null;
+  return eventAllItems().find(i=>i.id===id)||null;
 }
 // Artículos de evento ya comprados, para mostrarlos también en la sección principal
-// correspondiente (paletas/efectos/sonidos) aunque el evento ya haya terminado.
+// correspondiente aunque el evento ya haya terminado.
 function ownedEventItemsFor(section){
-  const wantType={palettes:'palette',effects:'effect',sounds:'sound'}[section];
-  const out=[];
-  Object.values(EVENT_ITEMS).forEach(arr=>{
-    arr.forEach(item=>{ if(item.type===wantType && ownedItems.includes(item.id)) out.push(item); });
-  });
-  return out;
+  const wantType={palettes:'palette',effects:'effect',sounds:'sound',accessories:'accessory'}[section];
+  return eventAllItems().filter(item=>item.type===wantType && ownedItems.includes(item.id));
 }
 
-// Reinicia la moneda de un evento a 0 cuando detecta que es una EDICIÓN NUEVA (ha
-// cambiado el año desde la última vez que estuvo activo), no cada vez que se recarga
-// la página durante la misma edición — así lo ganado esta semana no se pierde entre
-// sesiones, pero sí se parte de cero cuando el evento vuelve el año siguiente.
-function checkEventCoinReset(evId){
-  const currentYear=new Date().getFullYear();
-  if(eventCoinsResetYear[evId]!==currentYear){
-    eventCoins[evId]=0;
-    eventCoinsResetYear[evId]=currentYear;
+// Reinicia la moneda de una edición a 0 la PRIMERA vez que se activa (no cada vez que se recarga la
+// página durante la misma edición). eventCoinsResetYear conserva su nombre por compatibilidad con
+// lo ya guardado en la nube, pero ahora guarda la clave de edición (ej. "halloween-2026").
+function checkEventCoinReset(key){
+  if(eventCoinsResetYear[key]!==key){
+    eventCoins[key]=0;
+    eventCoinsResetYear[key]=key;
     localStorage.setItem('ft-event-coins',JSON.stringify(eventCoins));
     localStorage.setItem('ft-event-coins-reset-year',JSON.stringify(eventCoinsResetYear));
     saveCloudData();
@@ -2062,17 +2163,20 @@ function checkEventCoinReset(evId){
 }
 
 function applySeasonalUI(){
-  const activeEv=getActiveEvent();
+  const act=getActiveEdition();
   const logo=document.querySelector('.panda-logo');
   const evBtn=document.getElementById('event-coin-display');
-  if(activeEv){
-    checkEventCoinReset(activeEv);
-    const ev=SEASONAL_EVENTS[activeEv], meta=eventMeta(activeEv);
-    if(logo) logo.innerText=ev.emoji;
+  if(act){
+    checkEventCoinReset(act.key);
+    const meta=eventMeta(act);
+    if(logo) logo.innerText=eventEmoji(act);
     if(evBtn){
       evBtn.style.display='flex';
-      document.getElementById('event-coin-badge').innerText=ev.coinIcon;
-      document.getElementById('event-coin-count').innerText=eventCoins[activeEv]||0;
+      const cs=eventColorStyles(act);
+      evBtn.style.background=cs.btnBg; evBtn.style.borderColor=cs.btnBorder; evBtn.style.color=cs.btnText; evBtn.style.boxShadow=cs.btnShadow;
+      document.getElementById('event-coin-badge').style.background=cs.badgeBg;
+      document.getElementById('event-coin-badge').innerText=eventCoinIcon(act);
+      document.getElementById('event-coin-count').innerText=eventCoins[act.key]||0;
       evBtn.title=`${meta.label} — ${meta.coinName}`;
     }
   } else {
@@ -2081,45 +2185,74 @@ function applySeasonalUI(){
   }
 }
 
-function tryEarnEventCoins(){
-  const totalMin=parseInt(localStorage.getItem('ft-totalmin')||'0');
-  Object.keys(SEASONAL_EVENTS).forEach(evId=>{
-    if(!isEventActive(evId)) return;
-    const ev=SEASONAL_EVENTS[evId], meta=eventMeta(evId);
-    const earnedTiers=eventCoinTiersToday[evId]||[];
-    let earned=0;
-    COIN_TIERS.forEach((tier,idx)=>{
-      if(totalMin>=tier.min && !earnedTiers.includes(idx)){ earnedTiers.push(idx); earned++; }
-    });
-    if(earned>0){
-      eventCoins[evId]=(eventCoins[evId]||0)+earned;
-      eventCoinTiersToday[evId]=earnedTiers;
+// Tramos de COIN_TIERS que todavía no se han cobrado hoy (función pura, la usan también las comprobaciones)
+function eventTiersToEarn(totalMin,earnedTiers){
+  const out=[];
+  COIN_TIERS.forEach((tier,idx)=>{ if(totalMin>=tier.min && !earnedTiers.includes(idx)) out.push(idx); });
+  return out;
+}
+function tryEarnEventCoins(minOverride){
+  // minOverride solo se admite en modo creador (para simular estudio sin estudiar de verdad)
+  const totalMin=(creatorSandbox&&typeof minOverride==='number')?minOverride:parseInt(localStorage.getItem('ft-totalmin')||'0');
+  eventEditions().forEach(e=>{
+    if(!isEditionLive(e)) return;
+    checkEventCoinReset(e.key);
+    const meta=eventMeta(e);
+    const earnedTiers=eventCoinTiersToday[e.key]||[];
+    const fresh=eventTiersToEarn(totalMin,earnedTiers);
+    if(fresh.length>0){
+      fresh.forEach(i=>earnedTiers.push(i));
+      eventCoins[e.key]=(eventCoins[e.key]||0)+fresh.length;
+      eventCoinTiersToday[e.key]=earnedTiers;
       localStorage.setItem('ft-event-coins',JSON.stringify(eventCoins));
       localStorage.setItem('ft-event-coin-tiers-day',JSON.stringify({date:TODAY,data:eventCoinTiersToday}));
       applySeasonalUI();
-      showToast(`${ev.coinIcon} +${earned} ${meta.coinName} — ¡evento ${meta.label}!`);
+      showToast(`${eventCoinIcon(e)} +${fresh.length} ${meta.coinName} — ¡evento ${meta.label}!`);
       saveCloudData();
     }
   });
 }
 
-function buyOrActivateEventItem(item, activeEv, balance){
-  const active=item.type==='sound'?false:(item.type==='palette'?activeItems.palette===item.id:activeItems.effect===item.id);
-  if(active) return;
+function eventItemIsActive(item){
+  if(item.type==='palette') return activeItems.palette===item.id;
+  if(item.type==='effect') return activeItems.effect===item.id;
+  if(item.type==='accessory') return activeItems.accessory===item.id;
+  return false; // sonidos: se eligen desde el modal de alarma
+}
+function applyEventItem(item){
+  if(item.type==='palette') applyPalette(item.id);
+  else if(item.type==='effect') applyEffect(item.id);
+  else if(item.type==='accessory') applyAccessory(item.id);
+}
+
+// Objetos que se venden en la tienda de una edición:
+//  - temática: sus propios items que no estén retirados (retired:true los saca de la venta sin borrarlos)
+//  - transición: los objetos antiguos de su lista "recover", con el precio de la transición
+function eventShopItems(e){
+  if(e.ev.kind==='transition'){
+    const all=eventAllItems();
+    return (e.ed.recover||[]).map(r=>{
+      const base=all.find(i=>i.id===r.itemId);
+      return base?Object.assign({},base,{price:r.price}):null;
+    }).filter(Boolean);
+  }
+  return (e.ed.items||[]).filter(item=>!item.retired);
+}
+
+function buyOrActivateEventItem(item, act, balance){
+  if(eventItemIsActive(item)) return;
   const owned=ownedItems.includes(item.id);
   if(owned){
-    if(item.type==='palette') applyPalette(item.id);
-    else if(item.type==='effect') applyEffect(item.id);
-    else showToast(tr('shopSoundAvailable'));
+    if(item.type==='sound') showToast(tr('shopSoundAvailable'));
+    else applyEventItem(item);
     saveCloudData(); buildShop(); return;
   }
   if(balance<item.price){ showToast(tr('shopNeedCoins').replace('{price}',item.price).replace('{coins}',balance)); return; }
-  eventCoins[activeEv]=balance-item.price;
+  eventCoins[act.key]=balance-item.price;
   localStorage.setItem('ft-event-coins',JSON.stringify(eventCoins));
   ownedItems.push(item.id);
   localStorage.setItem('ft-owned-items',JSON.stringify(ownedItems));
-  if(item.type==='palette') applyPalette(item.id);
-  else if(item.type==='effect') applyEffect(item.id);
+  if(item.type!=='sound') applyEventItem(item);
   applySeasonalUI();
   saveCloudData();
   showToast(tr('shopUnlockedToast').replace('{name}',eventItemName(item)));
@@ -2128,34 +2261,272 @@ function buyOrActivateEventItem(item, activeEv, balance){
 
 function buildEventShop(){
   const wrap=document.getElementById('shop-event-wrap');
-  const activeEv=getActiveEvent();
-  if(!activeEv || !EVENT_ITEMS[activeEv]){ wrap.style.display='none'; return; }
+  const act=getActiveEdition();
+  if(!act){ wrap.style.display='none'; return; }
   wrap.style.display='block';
-  const ev=SEASONAL_EVENTS[activeEv], meta=eventMeta(activeEv);
-  const balance=eventCoins[activeEv]||0;
-  document.getElementById('shop-event-title').innerText=`${ev.emoji} ${tr('shopEventPrefix')}: ${meta.label}`;
-  document.getElementById('shop-event-balance-chip').innerHTML=`${ev.coinIcon} ${balance} ${meta.coinName}`;
+  const meta=eventMeta(act), icon=eventCoinIcon(act);
+  const balance=eventCoins[act.key]||0;
+  document.getElementById('shop-event-title').innerText=`${eventEmoji(act)} ${tr('shopEventPrefix')}: ${meta.label}`;
+  document.getElementById('shop-event-balance-chip').innerHTML=`${icon} ${balance} ${meta.coinName}`;
   document.getElementById('shop-event-tip').innerHTML=tr('shopEventTip').replace(/\{coinName\}/g,meta.coinName);
+  const cs=eventColorStyles(act);
+  const chip=document.getElementById('shop-event-balance-chip'), tip=document.getElementById('shop-event-tip');
+  chip.style.background=cs.chipBg; chip.style.borderColor=cs.chipBorder; chip.style.color=cs.chipText;
+  tip.style.background=cs.tipBg; tip.style.borderColor=cs.tipBorder; tip.style.color=cs.tipText;
   const grid=document.getElementById('shop-event-grid'); grid.innerHTML='';
-  // "retired:true" saca el objeto de la venta sin borrarlo — sigue existiendo para quien
-  // ya lo tenga, y tú decides cuándo volver a ponerlo disponible cambiando ese único valor.
-  EVENT_ITEMS[activeEv].filter(item=>!item.retired).forEach(item=>{
+  eventShopItems(act).forEach(item=>{
     const owned=ownedItems.includes(item.id);
-    const active=item.type==='sound'?false:(item.type==='palette'?activeItems.palette===item.id:activeItems.effect===item.id);
+    const active=eventItemIsActive(item);
     const canAfford=balance>=item.price;
     const name=eventItemName(item);
     const div=document.createElement('div');
     div.className='shop-item'+(active?' active-item':owned?' owned':!canAfford?' cant-afford':'');
     let badge=active?`<span class="shop-item-badge badge-active">${tr('shopBadgeActive')}</span>`:owned?`<span class="shop-item-badge badge-owned">${tr('shopBadgeOwned')}</span>`:'';
-    let priceHtml=(owned||active)?'':`<span class="shop-item-price">${ev.coinIcon} ${item.price}</span>`;
+    let priceHtml=(owned||active)?'':`<span class="shop-item-price">${icon} ${item.price}</span>`;
     let previewBtn=item.type==='sound'?`<br><button class="shop-preview-btn" onclick="previewShopSound('${item.alarmId}',event)">▶ ${tr('shopListen')}</button>`:'';
     div.innerHTML=`${badge}<span class="shop-item-preview">${item.preview}</span><div class="shop-item-name">${name}</div>${priceHtml}${previewBtn}`;
     div.onclick=(e)=>{
       if(e.target.classList.contains('shop-preview-btn')) return;
-      buyOrActivateEventItem(item, activeEv, balance);
+      buyOrActivateEventItem(item, act, balance);
     };
     grid.appendChild(div);
   });
+}
+
+// Partículas de un accesorio de evento, dirigidas por datos (campo particleSpec del objeto):
+//   { shape:'🦇', motion:'fall'|'rise'|'float'|'twinkle', count:18, countMobile:10,
+//     size:[18,30] (px), duration:[6,12] (s), opacity:[0.5,0.9] }
+function applyEventAccessory(layer,id){
+  const item=findShopItem(id); if(!item||!item.particleSpec) return;
+  const s=item.particleSpec;
+  const motion=['fall','rise','float','twinkle'].includes(s.motion)?s.motion:'fall';
+  const count=(window.innerWidth<600?(s.countMobile||s.count):s.count)||14;
+  const range=(r,def)=>{ const a=(r&&r[0]!=null)?r[0]:def[0], b=(r&&r[1]!=null)?r[1]:def[1]; return a+Math.random()*(b-a); };
+  for(let i=0;i<count;i++){
+    const d=document.createElement('div');
+    d.className='acc-event-particle acc-event-'+motion;
+    d.textContent=s.shape||'✨';
+    d.style.left=(Math.random()*100)+'vw';
+    if(motion==='float'||motion==='twinkle') d.style.top=(Math.random()*100)+'vh';
+    d.style.fontSize=range(s.size,[16,28]).toFixed(1)+'px';
+    d.style.animationDuration=range(s.duration,[6,12]).toFixed(2)+'s';
+    d.style.animationDelay=(-Math.random()*12).toFixed(2)+'s';
+    d.style.opacity=range(s.opacity,[0.5,0.9]).toFixed(2);
+    layer.appendChild(d);
+  }
+}
+
+// ══════════════════════════════════════
+//  MODO CREADOR (panel oculto, solo para tu cuenta)
+//  Sirve para probar un evento ANTES de su fecha, sin que lo vea nadie y sin ensuciar datos reales.
+//  En modo prueba: no se guarda nada de la tienda/eventos (ni en el dispositivo ni en la nube), se
+//  puede simular una fecha, y al salir la página se recarga con el estado real intacto.
+//  Nota: la comprobación del UID es del lado del cliente; lo que protege los datos es que el modo
+//  prueba nunca persiste nada, así que activarlo no da objetos ni monedas reales a nadie.
+// ══════════════════════════════════════
+let creatorEditionKey=null, creatorActiveSnapshot=null, creatorResultsHtml='', creatorPanelOpen=false;
+function isCreator(){ return !!(currentUser && CREATOR_UID && currentUser.uid===CREATOR_UID); }
+function creatorEsc(s){ return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function creatorAddDays(dateStr,n){ const d=new Date(dateStr+'T00:00:00'); d.setDate(d.getDate()+n); return localDateString(d); }
+function creatorCurrent(){ return eventEditions().find(e=>e.key===creatorEditionKey)||null; }
+
+function initCreatorMode(){
+  const fab=document.getElementById('creator-fab');
+  if(!isCreator()){
+    if(fab) fab.remove();
+    const p=document.getElementById('creator-panel'); if(p) p.remove();
+    const b=document.getElementById('creator-banner'); if(b) b.remove();
+    return;
+  }
+  if(fab) return;
+  const btn=document.createElement('button');
+  btn.id='creator-fab'; btn.title='Modo creador'; btn.innerText='🛠';
+  btn.onclick=toggleCreatorPanel;
+  document.body.appendChild(btn);
+  const panel=document.createElement('div');
+  panel.id='creator-panel';
+  document.body.appendChild(panel);
+  buildCreatorPanel();
+}
+function toggleCreatorPanel(){
+  const p=document.getElementById('creator-panel'); if(!p) return;
+  creatorPanelOpen=!creatorPanelOpen;
+  p.style.display=creatorPanelOpen?'block':'none';
+  if(creatorPanelOpen) buildCreatorPanel();
+}
+function refreshEventUI(){
+  applySeasonalUI(); buildShop(); buildCreatorPanel();
+}
+function enterCreatorSandbox(){
+  creatorSandbox=true;
+  creatorActiveSnapshot=JSON.parse(JSON.stringify(activeItems));
+  let b=document.getElementById('creator-banner');
+  if(!b){ b=document.createElement('div'); b.id='creator-banner'; b.innerText='🛠 MODO PRUEBA — monedas y compras no se guardan'; document.body.appendChild(b); }
+  refreshEventUI();
+}
+function exitCreatorSandbox(){ location.reload(); }
+function creatorPickEdition(k){ creatorEditionKey=k; creatorResultsHtml=''; buildCreatorPanel(); }
+function creatorSetDate(v){ creatorSimDate=v||null; refreshEventUI(); }
+function creatorJump(which){
+  const c=creatorCurrent(); if(!c) return;
+  const map={start:c.ed.startDate, end:c.ed.endDate, before:creatorAddDays(c.ed.startDate,-1), after:creatorAddDays(c.ed.endDate,1), real:null};
+  creatorSetDate(map[which]);
+}
+function creatorSimStudy(min){ tryEarnEventCoins(min); buildCreatorPanel(); }
+function creatorResetTiers(){ eventCoinTiersToday={}; showToast('Tramos de hoy reiniciados (solo prueba)'); }
+function creatorOpenEventShop(){ openShop(true); }
+function creatorPreview(itemId){
+  const item=eventAllItems().find(i=>i.id===itemId); if(!item) return;
+  if(item.type==='sound') playAlarmOnce(item.alarmId);
+  else applyEventItem(item);
+}
+function creatorRestoreLook(){
+  if(creatorActiveSnapshot){ activeItems=JSON.parse(JSON.stringify(creatorActiveSnapshot)); applyActiveItems(); }
+}
+
+function buildCreatorPanel(){
+  const p=document.getElementById('creator-panel'); if(!p) return;
+  const eds=eventEditions();
+  if(!creatorEditionKey||!eds.find(e=>e.key===creatorEditionKey)) creatorEditionKey=eds.length?eds[0].key:null;
+  const cur=creatorCurrent();
+  let h=`<div class="cp-head"><b>🛠 Modo creador</b><button class="cp-x" onclick="toggleCreatorPanel()">✕</button></div>`;
+  if(creatorSandbox){
+    h+=`<div class="cp-warn">MODO PRUEBA activo: monedas y compras NO se guardan.</div>
+        <button class="cp-btn" onclick="exitCreatorSandbox()">Salir del modo prueba (recarga la página)</button>`;
+  } else {
+    h+=`<button class="cp-btn cp-primary" onclick="enterCreatorSandbox()">Entrar en modo prueba</button>
+        <div class="cp-note">Mientras estés en modo prueba no se guarda nada de la tienda ni de los eventos, ni en este dispositivo ni en la nube.</div>`;
+  }
+  if(!eds.length){
+    h+=`<div class="cp-note">No hay ediciones en EVENTS_CONFIG todavía. Créalas con la skill pandytap-eventos.</div>`;
+    p.innerHTML=h; return;
+  }
+  h+=`<label class="cp-label">Edición</label>
+      <select class="cp-input" onchange="creatorPickEdition(this.value)">${eds.map(e=>`<option value="${creatorEsc(e.key)}"${e.key===creatorEditionKey?' selected':''}>${creatorEsc(e.key)} · ${e.ed.approved===true?'aprobada':'SIN aprobar'} · ${creatorEsc(e.ed.startDate)} → ${creatorEsc(e.ed.endDate)}</option>`).join('')}</select>`;
+  if(creatorSandbox){
+    const act=getActiveEdition();
+    h+=`<label class="cp-label">Fecha simulada (solo afecta a los eventos)</label>
+        <input class="cp-input" type="date" value="${creatorSimDate||''}" onchange="creatorSetDate(this.value)">
+        <div class="cp-row">
+          <button class="cp-btn" onclick="creatorJump('before')">Día antes</button>
+          <button class="cp-btn" onclick="creatorJump('start')">Inicio</button>
+          <button class="cp-btn" onclick="creatorJump('end')">Último día</button>
+          <button class="cp-btn" onclick="creatorJump('after')">Día después</button>
+          <button class="cp-btn" onclick="creatorJump('real')">Hoy real</button>
+        </div>
+        <div class="cp-note">Hoy (simulado): <b>${eventToday()}</b> · Evento activo: <b>${act?creatorEsc(act.key):'ninguno'}</b></div>
+        <div class="cp-row">
+          <button class="cp-btn" onclick="creatorSimStudy(30)">Simular 30 min</button>
+          <button class="cp-btn" onclick="creatorSimStudy(90)">90 min</button>
+          <button class="cp-btn" onclick="creatorSimStudy(150)">150 min</button>
+          <button class="cp-btn" onclick="creatorResetTiers()">Reiniciar tramos</button>
+        </div>
+        <div class="cp-row"><button class="cp-btn" onclick="creatorOpenEventShop()">Abrir tienda de evento</button></div>`;
+    const items=cur?(cur.ev.kind==='transition'?eventShopItems(cur):(cur.ed.items||[])):[];
+    if(items.length){
+      h+=`<label class="cp-label">Previsualizar sin comprar</label><div class="cp-row">`+
+        items.map(i=>`<button class="cp-btn" onclick="creatorPreview('${creatorEsc(i.id)}')">${creatorEsc(i.preview||'')} ${creatorEsc(eventItemName(i))}</button>`).join('')+
+        `<button class="cp-btn" onclick="creatorRestoreLook()">↺ Restaurar mi aspecto</button></div>`;
+    }
+  } else {
+    h+=`<div class="cp-note">Entra en modo prueba para simular fechas y previsualizar.</div>`;
+  }
+  h+=`<button class="cp-btn cp-primary" onclick="creatorRunChecks()">Ejecutar comprobaciones</button>
+      <div id="creator-results">${creatorResultsHtml}</div>`;
+  p.innerHTML=h;
+}
+
+// Comprobaciones automáticas: leen EVENTS_CONFIG de forma genérica, así que cubren cualquier evento
+// nuevo sin tocar este código.
+async function runEventChecks(e){
+  const res=[]; const add=(name,ok,detail)=>res.push({name,ok,detail:detail||''});
+  const ed=e.ed, ev=e.ev, isTrans=ev.kind==='transition';
+  const missing=(obj)=>EVENT_LANGS.filter(l=>!obj||typeof obj[l]!=='string'||!obj[l].trim());
+  const dateRe=/^\d{4}-\d{2}-\d{2}$/;
+  // Estructura y fechas
+  add('Tipo de evento válido (themed / transition)', ev.kind==='themed'||ev.kind==='transition', 'kind='+ev.kind);
+  add('Fechas con formato YYYY-MM-DD', dateRe.test(ed.startDate||'')&&dateRe.test(ed.endDate||''), `${ed.startDate} → ${ed.endDate}`);
+  add('La fecha de fin no es anterior a la de inicio', ed.startDate<=ed.endDate);
+  add('Campo approved definido (true/false)', typeof ed.approved==='boolean', 'approved='+ed.approved);
+  // Textos en 6 idiomas
+  let m=missing(ed.name); add('Nombre de la edición en los 6 idiomas', !m.length, m.length?'faltan: '+m.join(', '):'');
+  m=missing(ed.coin); add('Nombre de la moneda en los 6 idiomas', !m.length, m.length?'faltan: '+m.join(', '):'');
+  add('Icono de la moneda definido', !!(ed.coin&&ed.coin.icon));
+  add('Color de la moneda válido (#rrggbb) o sin definir (naranja por defecto)', !ed.coin.color||/^#[0-9a-fA-F]{6}$/.test(ed.coin.color), ed.coin.color||'naranja por defecto');
+  // Objetos
+  const items=ed.items||[];
+  if(isTrans){
+    add('La transición no tiene objetos nuevos', items.length===0, items.length+' objetos');
+    const all=eventAllItems();
+    const bad=(ed.recover||[]).filter(r=>!all.find(i=>i.id===r.itemId)||typeof r.price!=='number');
+    add('Todos los itemId de "recover" existen y tienen precio', (ed.recover||[]).length>0&&!bad.length, bad.length?'revisa: '+bad.map(b=>b.itemId).join(', '):((ed.recover||[]).length+' objetos'));
+  } else {
+    const types=['palette','effect','sound','accessory'];
+    const counts=types.map(t=>items.filter(i=>i.type===t).length);
+    add('Estándar 1+1+1+1 (paleta, efecto, sonido, accesorio)', counts.every(c=>c>=1), types.map((t,i)=>t+':'+counts[i]).join(' · '));
+    items.forEach(it=>{
+      const nm=it.id;
+      m=missing(it.name); add(`${nm}: nombre en los 6 idiomas`, !m.length, m.length?'faltan: '+m.join(', '):'');
+      add(`${nm}: precio y emoji de tarjeta`, typeof it.price==='number'&&it.price>0&&!!it.preview);
+      if(it.type==='palette') add(`${nm}: colores de paleta`, !!(it.vars&&it.vars['--accent2']&&it.vars['--mint2']&&it.vars['--rose']));
+      if(it.type==='effect') add(`${nm}: variables del efecto`, !!(it.vars&&it.vars['--glass']&&it.vars['--border']&&it.vars['--shadow']&&it.vars['--card-radius']));
+      if(it.type==='accessory') add(`${nm}: partículas definidas`, !!it.particleSpec, it.particleSpec?('motion='+(it.particleSpec.motion||'fall')):'falta particleSpec');
+      if(it.type==='sound'){
+        m=missing(it.desc); add(`${nm}: descripción del sonido en los 6 idiomas`, !m.length, m.length?'faltan: '+m.join(', '):'');
+        add(`${nm}: alarma registrada con su .mp3`, !!ALARMS.find(a=>a.id===it.alarmId&&a.shopId===it.id&&a.audioFile===it.audioFile), it.audioFile||'falta audioFile');
+      }
+    });
+    // ids únicos en todo el juego
+    const ids=[]; Object.values(SHOP_CATALOGUE).forEach(arr=>arr.forEach(i=>ids.push(i.id))); eventAllItems().forEach(i=>ids.push(i.id));
+    const dup=ids.filter((x,i)=>ids.indexOf(x)!==i);
+    add('Ids de objeto únicos (también frente a la tienda normal)', !dup.length, dup.length?'repetidos: '+[...new Set(dup)].join(', '):'');
+    // el .mp3 carga
+    for(const it of items.filter(i=>i.type==='sound')){
+      const ok=await new Promise(resolve=>{
+        try{
+          const a=new Audio(); let done=false;
+          const fin=v=>{ if(!done){ done=true; resolve(v); } };
+          a.addEventListener('loadedmetadata',()=>fin(true)); a.addEventListener('error',()=>fin(false));
+          setTimeout(()=>fin(false),7000); a.preload='metadata'; a.src=it.audioFile;
+        }catch(err){ resolve(false); }
+      });
+      add(`${it.id}: el archivo .mp3 carga`, ok, it.audioFile);
+    }
+  }
+  // Activación según fecha (se evalúa en modo creador: ignora approved)
+  const wasSb=creatorSandbox; creatorSandbox=true;
+  const before=creatorAddDays(ed.startDate,-1), after=creatorAddDays(ed.endDate,1);
+  const live=d=>isEditionLive(e,d);
+  add('Se activa el primer y el último día', live(ed.startDate)&&live(ed.endDate), `${ed.startDate} / ${ed.endDate}`);
+  add('Está desactivada el día antes y el día después', !live(before)&&!live(after), `${before} / ${after}`);
+  creatorSandbox=wasSb;
+  add('Usuarios normales: '+(ed.approved===true?'la ven en sus fechas (aprobada)':'NO la ven hasta que pongas approved:true'), true);
+  // Moneda
+  add('Moneda: 3 tramos (30/90/150 min) dan 3 monedas y no se cobran dos veces', eventTiersToEarn(150,[]).length===3 && eventTiersToEarn(150,[0,1,2]).length===0 && eventTiersToEarn(90,[0]).length===1);
+  add('Moneda: solo se gana con la edición activa', !live(before)&&live(ed.startDate));
+  // Aislamiento del modo prueba
+  if(creatorSandbox){
+    const k='ft-owned-items', real=localStorage.getItem(k);
+    localStorage.setItem(k,'["__prueba__"]');
+    const unchanged=localStorage.getItem(k)===real;
+    if(!unchanged && real!==null) localStorage.setItem(k,real);
+    add('Modo prueba: las compras no se guardan en el inventario real', unchanged);
+  } else {
+    add('Modo prueba: aislamiento de compras', false, 'entra en modo prueba y vuelve a ejecutar las comprobaciones');
+  }
+  return res;
+}
+async function creatorRunChecks(){
+  const c=creatorCurrent();
+  const box=document.getElementById('creator-results');
+  if(!c){ if(box) box.innerHTML='<div class="cp-note">No hay edición seleccionada.</div>'; return; }
+  if(box) box.innerHTML='<div class="cp-note">Ejecutando comprobaciones…</div>';
+  const res=await runEventChecks(c);
+  const okN=res.filter(r=>r.ok).length;
+  creatorResultsHtml=`<div class="cp-summary ${okN===res.length?'cp-ok':'cp-ko'}">${okN}/${res.length} correctas</div>`+
+    res.map(r=>`<div class="cp-check ${r.ok?'cp-ok':'cp-ko'}">${r.ok?'✅':'❌'} ${creatorEsc(r.name)}${r.detail?` <span>${creatorEsc(r.detail)}</span>`:''}</div>`).join('')+
+    `<div class="cp-note"><b>Revisión manual:</b> mira la paleta y el efecto en varios temas y con fondo personalizado, escucha el sonido, comprueba que las partículas se ven bien y no estorban, y repasa las traducciones.</div>`;
+  const b=document.getElementById('creator-results'); if(b) b.innerHTML=creatorResultsHtml;
 }
 
 function applyPalette(id){
@@ -2194,7 +2565,7 @@ function applyEffect(id){
   if(item.vars) Object.entries(item.vars).forEach(([k,v])=>root.style.setProperty(k,v));
 
   // Limpiar estilos inyectados de efectos anteriores
-  ['fx-neon-style','fx-frosted-style','fx-halloween-style'].forEach(sid=>{
+  ['fx-neon-style','fx-frosted-style','fx-event-style'].forEach(sid=>{
     const el=document.getElementById(sid); if(el) el.textContent='';
   });
 
@@ -2226,34 +2597,11 @@ function applyEffect(id){
       }`;
   }
 
-  if(id==='evt-halloween-fx'){
-    // Resplandor naranja/morado de temporada
-    let tag=document.getElementById('fx-halloween-style');
-    if(!tag){tag=document.createElement('style');tag.id='fx-halloween-style';document.head.appendChild(tag);}
-    tag.textContent=`
-      .card,.sidebar-card{
-        border:1.5px solid rgba(255,117,24,0.85)!important;
-        box-shadow:
-          0 0 6px rgba(255,117,24,0.7),
-          0 0 18px rgba(124,58,237,0.4),
-          0 0 36px rgba(255,117,24,0.15),
-          inset 0 0 10px rgba(124,58,237,0.1)!important;
-      }`;
-  }
-
-  if(id==='evt-halloween-fx2'){
-    // Niebla real: desenfoque extra + halo difuso, más frío que el resplandor
-    let tag=document.getElementById('fx-halloween-style');
-    if(!tag){tag=document.createElement('style');tag.id='fx-halloween-style';document.head.appendChild(tag);}
-    tag.textContent=`
-      .card,.sidebar-card{
-        backdrop-filter:blur(14px) saturate(0.8)!important;
-        -webkit-backdrop-filter:blur(14px) saturate(0.8)!important;
-        border:1.5px solid rgba(200,200,215,0.55)!important;
-        box-shadow:
-          0 0 30px rgba(180,175,210,0.3),
-          inset 0 0 26px rgba(255,255,255,0.12)!important;
-      }`;
+  if(item.css){
+    // Efectos de evento con CSS propio: se define en el campo "css" del objeto en EVENTS_CONFIG
+    let tag=document.getElementById('fx-event-style');
+    if(!tag){tag=document.createElement('style');tag.id='fx-event-style';document.head.appendChild(tag);}
+    tag.textContent=item.css;
   }
 
   activeItems.effect=id;
@@ -2282,6 +2630,8 @@ function applyAccessory(id){
       d.style.opacity=(0.55+Math.random()*0.35).toFixed(2);
       layer.appendChild(d);
     }
+  } else {
+    applyEventAccessory(layer,id); // accesorios de evento (particleSpec)
   }
   activeItems.accessory=id;
   localStorage.setItem('ft-active-items',JSON.stringify(activeItems));
@@ -2342,7 +2692,7 @@ function buildShopSection(gridId,section,onActivate){
     const div=document.createElement('div');
     div.className='shop-item'+(active?' active-item':owned?' owned':!canAfford?' cant-afford':'');
     let badge=active?`<span class="shop-item-badge badge-active">${tr('shopBadgeActive')}</span>`
-      :owned?(item.event?`<span class="shop-item-badge badge-owned">${SEASONAL_EVENTS[item.event].emoji} ${tr('shopBadgeEvent')}</span>`:`<span class="shop-item-badge badge-owned">${tr('shopBadgeOwned')}</span>`)
+      :owned?(item.event?`<span class="shop-item-badge badge-owned">${eventEmojiOf(item)} ${tr('shopBadgeEvent')}</span>`:`<span class="shop-item-badge badge-owned">${tr('shopBadgeOwned')}</span>`)
       :'';
     // Los artículos de evento no comprados no se muestran aquí (solo en su sección de
     // evento, con su propia moneda) — así que si no está en ownedItems, se omite.
@@ -3396,12 +3746,14 @@ try{
       if(user){
         currentUser=user; cloudSyncEnabled=true; updateAccountUI();
         await loadCloudData(user.uid);
+        initCreatorMode();
       } else {
         currentUser=null; cloudSyncEnabled=false; updateAccountUI();
         // Sin cuenta, se empieza siempre desde cero — nunca se intenta "adivinar" qué había
         // antes de iniciar sesión, porque esa foto solo era fiable dentro de la misma pestaña
         // sin recargar. Fuera de ese caso muy concreto, acababa restaurando datos de la cuenta.
         resetLocalToFreshState();
+        initCreatorMode();
       }
     });
   }
@@ -3529,7 +3881,7 @@ async function loadCloudData(uid){
 }
 
 async function saveCloudDataNow(){
-  if(!cloudSyncEnabled||!currentUser) return;
+  if(!cloudSyncEnabled||!currentUser||creatorSandbox) return;
   try{
     await firebase.firestore().collection('users').doc(currentUser.uid).set({
       date:TODAY,
@@ -3559,7 +3911,7 @@ async function saveCloudDataNow(){
   }catch(e){ console.error(e); }
 }
 function saveCloudData(){
-  if(!cloudSyncEnabled||!currentUser) return;
+  if(!cloudSyncEnabled||!currentUser||creatorSandbox) return;
   clearTimeout(syncTimeout);
   syncTimeout=setTimeout(saveCloudDataNow,800);
 }
