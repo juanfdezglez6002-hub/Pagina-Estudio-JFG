@@ -1962,7 +1962,7 @@ const PREMIUM_ALARM_PATTERNS = {
 // buildPattern: sonidos gratuitos (buildPatternBase) + sonidos premium (PREMIUM_ALARM_PATTERNS)
 function buildPattern(ctx,type,startAt){
   const evAlarm=ALARMS.find(a=>a.id===type&&a.audioFile);
-  if(evAlarm) return playEventAudio(evAlarm.audioFile, ctx===alarmCtx); // sonido de evento (.mp3)
+  if(evAlarm) return playEventAudio(evAlarm.audioFile, ctx===alarmCtx, evAlarm.volume); // sonido de evento (.mp3)
   if(PREMIUM_ALARM_PATTERNS[type]){
     PREMIUM_ALARM_PATTERNS[type](ctx,startAt);
     return [{end:startAt+1.5}];
@@ -2066,6 +2066,7 @@ const EVENTS_CONFIG={
             id: 'evt-hw26-snd', type: 'sound', price: 5, preview: '🐺', retired: false,
             alarmId: 'howl_2026',
             audioFile: 'audio/events/howl_2026.mp3',
+            volume: 0.55,
             name: {
               es: 'Aullido', en: 'Howl', fr: 'Hurlement',
               de: 'Heulen', pt: 'Uivo', it: 'Ululato'
@@ -2081,7 +2082,7 @@ const EVENTS_CONFIG={
               es: 'Murciélagos', en: 'Bats', fr: 'Chauves-souris',
               de: 'Fledermäuse', pt: 'Morcegos', it: 'Pipistrelli'
             },
-            particleSpec: { shape: '🦇', motion: 'float', count: 12, countMobile: 7, size: [18, 30], duration: [6, 12], opacity: [0.5, 0.9] }
+            particleSpec: { shape: '🦇', motion: 'float', count: 20, countMobile: 12, size: [18, 30], duration: [6, 12], opacity: [0.5, 0.9] }
           }
         ]
       }
@@ -2174,7 +2175,7 @@ function registerEventAlarms(){
     if(it.type!=='sound'||!it.alarmId) return;
     if(!ALARMS.find(a=>a.id===it.alarmId)){
       // (se usa el texto en español como respaldo: currentLang aún no existe cuando esto se ejecuta al cargar)
-      ALARMS.push({id:it.alarmId, icon:it.preview||'🔔', name:(it.name&&it.name.es)||it.alarmId, desc:(it.desc&&it.desc.es)||'', shopId:it.id, event:it.event, audioFile:it.audioFile});
+      ALARMS.push({id:it.alarmId, icon:it.preview||'🔔', name:(it.name&&it.name.es)||it.alarmId, desc:(it.desc&&it.desc.es)||'', shopId:it.id, event:it.event, audioFile:it.audioFile, volume:it.volume});
     }
     EVENT_LANGS.forEach(l=>{
       ALARMS_I18N[l]=ALARMS_I18N[l]||{};
@@ -2189,12 +2190,12 @@ registerEventAlarms();
 // Sonidos de evento: archivos .mp3 (los alojas tú, igual que las playlists). Se reproducen con un
 // elemento Audio; el resto de alarmas (síntesis) no cambia.
 var eventAudioEl=null;
-function playEventAudio(url,keepIfPlaying){
+function playEventAudio(url,keepIfPlaying,volume){
   try{
     if(keepIfPlaying && eventAudioEl && !eventAudioEl.paused && !eventAudioEl.ended) return [{end:0.1}];
     stopEventAudio();
     eventAudioEl=new Audio(url);
-    eventAudioEl.volume=0.85;
+    eventAudioEl.volume=(typeof volume==='number')?volume:0.85;
     const p=eventAudioEl.play(); if(p&&p.catch) p.catch(()=>{});
   }catch(e){ console.warn('No se pudo reproducir el sonido de evento',e); }
   return [{end:0.1}];
