@@ -2021,7 +2021,72 @@ function tryEarnCoin(){
 // ══════════════════════════════════════
 const EVENT_LANGS=['es','en','fr','de','pt','it'];
 const EVENTS_CONFIG={
-  // (vacío a propósito) — la skill pandytap-eventos añade aquí cada evento y sus ediciones.
+  halloween: {
+    id: 'halloween',
+    kind: 'themed',
+    defaultEmoji: '🎃',
+    editions: {
+      '2026': {
+        year: 2026,
+        approved: false,
+        startDate: '2026-10-24',
+        endDate:   '2026-11-05',
+        name: {
+          es: 'Halloween 2026', en: 'Halloween 2026', fr: 'Halloween 2026',
+          de: 'Halloween 2026', pt: 'Halloween 2026', it: 'Halloween 2026'
+        },
+        coin: {
+          icon: '🎃',
+          color: '#ff7518',
+          es: 'calabazas', en: 'pumpkins', fr: 'citrouilles',
+          de: 'Kürbisse', pt: 'abóboras', it: 'zucche'
+        },
+        items: [
+          {
+            id: 'evt-hw26-pal', type: 'palette', price: 5, preview: '🎃', retired: false,
+            name: {
+              es: 'Noche de Brujas', en: 'Witches Night', fr: 'Nuit des Sorcières',
+              de: 'Hexennacht', pt: 'Noite das Bruxas', it: 'Notte delle Streghe'
+            },
+            vars: { '--accent2': '#ff7518', '--mint2': '#7c3aed', '--rose': '#ff9d4d' }
+          },
+          {
+            id: 'evt-hw26-fx', type: 'effect', price: 6, preview: '👻', retired: false,
+            name: {
+              es: 'Resplandor Tétrico', en: 'Spooky Glow', fr: 'Lueur Sinistre',
+              de: 'Schauriges Leuchten', pt: 'Brilho Sinistro', it: 'Bagliore Sinistro'
+            },
+            vars: {
+              '--glass': 'rgba(20,10,30,0.78)', '--card-radius': '18px',
+              '--border': 'rgba(255,117,24,0.45)', '--shadow': 'rgba(124,58,237,0.22)'
+            },
+            css: '.card,.sidebar-card{border:1.5px solid rgba(255,117,24,0.85)!important;box-shadow:0 0 6px rgba(255,117,24,0.7),0 0 18px rgba(124,58,237,0.4)!important;}'
+          },
+          {
+            id: 'evt-hw26-snd', type: 'sound', price: 5, preview: '🐺', retired: false,
+            alarmId: 'howl_2026',
+            audioFile: 'audio/events/howl_2026.mp3',
+            name: {
+              es: 'Aullido', en: 'Howl', fr: 'Hurlement',
+              de: 'Heulen', pt: 'Uivo', it: 'Ululato'
+            },
+            desc: {
+              es: 'Aullido lejano de lobo', en: 'Distant wolf howl', fr: 'Hurlement lointain de loup',
+              de: 'Fernes Wolfsheulen', pt: 'Uivo distante de lobo', it: 'Ululato lontano di lupo'
+            }
+          },
+          {
+            id: 'evt-hw26-acc', type: 'accessory', price: 8, preview: '🦇', retired: false,
+            name: {
+              es: 'Murciélagos', en: 'Bats', fr: 'Chauves-souris',
+              de: 'Fledermäuse', pt: 'Morcegos', it: 'Pipistrelli'
+            },
+            particleSpec: { shape: '🦇', motion: 'float', count: 12, countMobile: 7, size: [18, 30], duration: [6, 12], opacity: [0.5, 0.9] }
+          }
+        ]
+      }
+    }
+  }
 };
 
 // ── Modo creador: estado ──
