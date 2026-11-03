@@ -727,6 +727,11 @@ body.penalized{animation:penalty-flash 0.8s ease-out;}
       <div id="account-logged-in" style="display:none;">
         <div style="font-size:0.78rem;font-weight:700;margin-bottom:3px;" id="txt-logged-as">✅ Conectado como:</div>
         <div style="font-size:0.75rem;color:var(--text2);margin-bottom:10px;word-break:break-all;" id="acc-email-display"></div>
+        <div id="acc-verify-box" style="display:none;background:rgba(255,204,128,0.22);border:1px solid rgba(214,158,46,0.45);border-radius:10px;padding:9px 11px;margin-bottom:11px;">
+          <p id="txt-acc-verify" style="font-size:0.68rem;line-height:1.45;color:var(--text);margin-bottom:7px;"></p>
+          <button id="acc-verify-btn" onclick="resendVerification()" style="width:100%;background:none;border:none;color:var(--accent2);font-family:'Nunito',sans-serif;font-size:0.68rem;font-weight:700;text-decoration:underline;cursor:pointer;padding:0;"></button>
+          <div id="acc-verify-msg" style="font-size:0.66rem;margin-top:6px;color:var(--text2);"></div>
+        </div>
         <button class="btn-tiny" id="txt-logout-btn" onclick="doLogout()" style="width:100%;">🚪 Cerrar sesión</button>
         <button id="del-acc-btn" onclick="delAccStart()" style="width:100%;background:none;border:none;color:var(--text2);font-family:'Nunito',sans-serif;font-size:0.68rem;text-decoration:underline;cursor:pointer;margin-top:12px;padding:0;">🗑️ Eliminar cuenta</button>
         <div id="del-acc-confirm" style="display:none;margin-top:12px;">
@@ -3311,7 +3316,7 @@ const T={
       pausedBreath:'Pausado — Respira profundo',autoPauseWarn:'⚠️ ¡Pausa automática! Vuelve al estudio',penaltyPrefix:'⏱ Penalización: +{s}s',
       chooseATrack:'Elige una canción 🎵',notesEmpty:'Las notas están vacías',notesCopied:'📋 Notas copiadas',notesDownloading:'⬇ Descargando notas...',notesDeleted:'🗑 Notas eliminadas',
       notifEnabled:'🔔 Notificaciones activadas',notifDenied:'⚠️ Permisos denegados — sonará solo la alarma',
-      notifUnsupported:'⚠️ Tu navegador no admite avisos del sistema',taskDone:'Marcar como hecha',taskUndone:'Marcar como pendiente',taskDelete:'Borrar tarea',accNeedAge:'Debes confirmar que tienes 14 años o más y aceptar los términos.',accVerifySent:'Te hemos enviado un email para verificar tu cuenta.',accAgeLabel:'Tengo 14 años o más y acepto los <a href="/terms" target="_blank" rel="noopener">Términos de Uso</a> y la <a href="/privacy" target="_blank" rel="noopener">Política de Privacidad</a>.',socialSoon:'Cuentas en preparación',accNeedFirebase:'⚠️ Configura Firebase primero (ver instrucciones)',accValidation:'Email válido y contraseña de 8 caracteres o más.',
+      notifUnsupported:'⚠️ Tu navegador no admite avisos del sistema',taskDone:'Marcar como hecha',taskUndone:'Marcar como pendiente',taskDelete:'Borrar tarea',accVerifyPending:'Tu correo todavía no está verificado. Puedes usar Pandy-Tap igual, pero sin verificarlo no podrás recuperar la contraseña si la olvidas.',accVerifyResend:'Reenviar el correo de verificación',accVerifyWait:'Espera un minuto antes de volver a pedirlo.',accNeedAge:'Debes confirmar que tienes 14 años o más y aceptar los términos.',accVerifySent:'Te hemos enviado un email para verificar tu cuenta.',accAgeLabel:'Tengo 14 años o más y acepto los <a href="/terms" target="_blank" rel="noopener">Términos de Uso</a> y la <a href="/privacy" target="_blank" rel="noopener">Política de Privacidad</a>.',socialSoon:'Cuentas en preparación',accNeedFirebase:'⚠️ Configura Firebase primero (ver instrucciones)',accValidation:'Email válido y contraseña de 8 caracteres o más.',
       accCreated:'✅ Cuenta creada y sesión iniciada',accLoggedInToast:'✅ Sesión iniciada',accLoggedOutToast:'👋 Sesión cerrada',
       accForgotBtn:'¿Olvidaste tu contraseña?',accForgotNeedEmail:'Escribe tu email arriba y pulsa de nuevo.',accForgotSent:'✅ Te hemos enviado un email para restablecer tu contraseña.',
       errEmailInUse:'Ese email ya tiene una cuenta. Prueba a iniciar sesión.',errInvalidEmail:'Email no válido.',errWeakPass:'La contraseña debe tener 6+ caracteres.',errBadCreds:'Email o contraseña incorrectos.',errGeneric:'Error: ',
@@ -3358,7 +3363,7 @@ const T={
       pausedBreath:'Paused — Take a deep breath',autoPauseWarn:'⚠️ Auto-pause! Get back to studying',penaltyPrefix:'⏱ Penalty: +{s}s',
       chooseATrack:'Choose a song 🎵',notesEmpty:'Your notes are empty',notesCopied:'📋 Notes copied',notesDownloading:'⬇ Downloading notes...',notesDeleted:'🗑 Notes deleted',
       notifEnabled:'🔔 Notifications enabled',notifDenied:'⚠️ Permission denied — only the alarm will sound',
-      notifUnsupported:'⚠️ Your browser does not support system notifications',taskDone:'Mark as done',taskUndone:'Mark as pending',taskDelete:'Delete task',accNeedAge:'You must confirm that you are 14 or older and accept the terms.',accVerifySent:'We have sent you an email to verify your account.',accAgeLabel:'I am 14 or older and I accept the <a href="/terms" target="_blank" rel="noopener">Terms of Use</a> and the <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>.',socialSoon:'Accounts coming soon',accNeedFirebase:'⚠️ Set up Firebase first (see instructions)',accValidation:'Valid email and a password of 8 characters or more.',
+      notifUnsupported:'⚠️ Your browser does not support system notifications',taskDone:'Mark as done',taskUndone:'Mark as pending',taskDelete:'Delete task',accVerifyPending:'Your email is not verified yet. You can keep using Pandy-Tap, but without verifying it you will not be able to recover your password if you forget it.',accVerifyResend:'Resend the verification email',accVerifyWait:'Please wait a minute before asking again.',accNeedAge:'You must confirm that you are 14 or older and accept the terms.',accVerifySent:'We have sent you an email to verify your account.',accAgeLabel:'I am 14 or older and I accept the <a href="/terms" target="_blank" rel="noopener">Terms of Use</a> and the <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>.',socialSoon:'Accounts coming soon',accNeedFirebase:'⚠️ Set up Firebase first (see instructions)',accValidation:'Valid email and a password of 8 characters or more.',
       accCreated:'✅ Account created and logged in',accLoggedInToast:'✅ Logged in',accLoggedOutToast:'👋 Logged out',
       accForgotBtn:'Forgot your password?',accForgotNeedEmail:'Type your email above and try again.',accForgotSent:'✅ We\'ve sent you an email to reset your password.',
       errEmailInUse:'That email already has an account. Try logging in.',errInvalidEmail:'Invalid email.',errWeakPass:'Password must be 6+ characters.',errBadCreds:'Incorrect email or password.',errGeneric:'Error: ',
@@ -3405,7 +3410,7 @@ const T={
       pausedBreath:'En pause — Respire profondément',autoPauseWarn:'⚠️ Pause automatique ! Reviens étudier',penaltyPrefix:'⏱ Pénalité : +{s}s',
       chooseATrack:'Choisis une chanson 🎵',notesEmpty:'Les notes sont vides',notesCopied:'📋 Notes copiées',notesDownloading:'⬇ Téléchargement des notes...',notesDeleted:'🗑 Notes supprimées',
       notifEnabled:'🔔 Notifications activées',notifDenied:'⚠️ Permission refusée — seule l\'alarme sonnera',
-      notifUnsupported:'⚠️ Votre navigateur ne prend pas en charge les notifications',taskDone:'Marquer comme faite',taskUndone:'Marquer comme à faire',taskDelete:'Supprimer la tâche',accNeedAge:'Vous devez confirmer que vous avez 14 ans ou plus et accepter les conditions.',accVerifySent:'Nous vous avons envoyé un email pour vérifier votre compte.',accAgeLabel:'J\'ai 14 ans ou plus et j\'accepte les <a href="/terms" target="_blank" rel="noopener">Conditions d\'Utilisation</a> et la <a href="/privacy" target="_blank" rel="noopener">Politique de Confidentialité</a>.',socialSoon:'Comptes bientôt disponibles',accNeedFirebase:'⚠️ Configure d\'abord Firebase (voir instructions)',accValidation:'Email valide et mot de passe de 8 caractères ou plus.',
+      notifUnsupported:'⚠️ Votre navigateur ne prend pas en charge les notifications',taskDone:'Marquer comme faite',taskUndone:'Marquer comme à faire',taskDelete:'Supprimer la tâche',accVerifyPending:'Votre email n\'est pas encore vérifié. Vous pouvez continuer à utiliser Pandy-Tap, mais sans le vérifier vous ne pourrez pas récupérer votre mot de passe si vous l\'oubliez.',accVerifyResend:'Renvoyer l\'email de vérification',accVerifyWait:'Attendez une minute avant de redemander.',accNeedAge:'Vous devez confirmer que vous avez 14 ans ou plus et accepter les conditions.',accVerifySent:'Nous vous avons envoyé un email pour vérifier votre compte.',accAgeLabel:'J\'ai 14 ans ou plus et j\'accepte les <a href="/terms" target="_blank" rel="noopener">Conditions d\'Utilisation</a> et la <a href="/privacy" target="_blank" rel="noopener">Politique de Confidentialité</a>.',socialSoon:'Comptes bientôt disponibles',accNeedFirebase:'⚠️ Configure d\'abord Firebase (voir instructions)',accValidation:'Email valide et mot de passe de 8 caractères ou plus.',
       accCreated:'✅ Compte créé et connecté',accLoggedInToast:'✅ Connecté',accLoggedOutToast:'👋 Déconnecté',
       accForgotBtn:'Mot de passe oublié ?',accForgotNeedEmail:'Écris ton email ci-dessus et réessaie.',accForgotSent:'✅ Nous t\'avons envoyé un email pour réinitialiser ton mot de passe.',
       errEmailInUse:'Cet email a déjà un compte. Essaie de te connecter.',errInvalidEmail:'Email invalide.',errWeakPass:'Le mot de passe doit avoir 6+ caractères.',errBadCreds:'Email ou mot de passe incorrect.',errGeneric:'Erreur : ',
@@ -3452,7 +3457,7 @@ const T={
       pausedBreath:'Pausiert — Tief durchatmen',autoPauseWarn:'⚠️ Auto-Pause! Zurück zum Lernen',penaltyPrefix:'⏱ Strafe: +{s}s',
       chooseATrack:'Wähle einen Song 🎵',notesEmpty:'Die Notizen sind leer',notesCopied:'📋 Notizen kopiert',notesDownloading:'⬇ Notizen werden heruntergeladen...',notesDeleted:'🗑 Notizen gelöscht',
       notifEnabled:'🔔 Benachrichtigungen aktiviert',notifDenied:'⚠️ Berechtigung verweigert — nur der Alarm ertönt',
-      notifUnsupported:'⚠️ Dein Browser unterstützt keine Systembenachrichtigungen',taskDone:'Als erledigt markieren',taskUndone:'Als offen markieren',taskDelete:'Aufgabe löschen',accNeedAge:'Du musst bestätigen, dass du 14 Jahre oder älter bist, und die Bedingungen akzeptieren.',accVerifySent:'Wir haben dir eine E-Mail zur Bestätigung deines Kontos geschickt.',accAgeLabel:'Ich bin 14 Jahre oder älter und akzeptiere die <a href="/terms" target="_blank" rel="noopener">Nutzungsbedingungen</a> und die <a href="/privacy" target="_blank" rel="noopener">Datenschutzerklärung</a>.',socialSoon:'Konten in Vorbereitung',accNeedFirebase:'⚠️ Firebase zuerst einrichten (siehe Anleitung)',accValidation:'Gültige E-Mail und Passwort mit 8 oder mehr Zeichen.',
+      notifUnsupported:'⚠️ Dein Browser unterstützt keine Systembenachrichtigungen',taskDone:'Als erledigt markieren',taskUndone:'Als offen markieren',taskDelete:'Aufgabe löschen',accVerifyPending:'Deine E-Mail ist noch nicht bestätigt. Du kannst Pandy-Tap weiter nutzen, aber ohne Bestätigung kannst du dein Passwort nicht zurücksetzen, wenn du es vergisst.',accVerifyResend:'Bestätigungs-E-Mail erneut senden',accVerifyWait:'Warte eine Minute, bevor du es erneut versuchst.',accNeedAge:'Du musst bestätigen, dass du 14 Jahre oder älter bist, und die Bedingungen akzeptieren.',accVerifySent:'Wir haben dir eine E-Mail zur Bestätigung deines Kontos geschickt.',accAgeLabel:'Ich bin 14 Jahre oder älter und akzeptiere die <a href="/terms" target="_blank" rel="noopener">Nutzungsbedingungen</a> und die <a href="/privacy" target="_blank" rel="noopener">Datenschutzerklärung</a>.',socialSoon:'Konten in Vorbereitung',accNeedFirebase:'⚠️ Firebase zuerst einrichten (siehe Anleitung)',accValidation:'Gültige E-Mail und Passwort mit 8 oder mehr Zeichen.',
       accCreated:'✅ Konto erstellt und angemeldet',accLoggedInToast:'✅ Angemeldet',accLoggedOutToast:'👋 Abgemeldet',
       accForgotBtn:'Passwort vergessen?',accForgotNeedEmail:'Gib oben deine E-Mail ein und versuche es erneut.',accForgotSent:'✅ Wir haben dir eine E-Mail zum Zurücksetzen deines Passworts geschickt.',
       errEmailInUse:'Diese E-Mail hat bereits ein Konto. Versuche dich anzumelden.',errInvalidEmail:'Ungültige E-Mail.',errWeakPass:'Das Passwort muss 6+ Zeichen haben.',errBadCreds:'E-Mail oder Passwort falsch.',errGeneric:'Fehler: ',
@@ -3499,7 +3504,7 @@ const T={
       pausedBreath:'Pausado — Respire fundo',autoPauseWarn:'⚠️ Pausa automática! Volte a estudar',penaltyPrefix:'⏱ Penalidade: +{s}s',
       chooseATrack:'Escolha uma música 🎵',notesEmpty:'As notas estão vazias',notesCopied:'📋 Notas copiadas',notesDownloading:'⬇ Baixando notas...',notesDeleted:'🗑 Notas excluídas',
       notifEnabled:'🔔 Notificações ativadas',notifDenied:'⚠️ Permissão negada — apenas o alarme tocará',
-      notifUnsupported:'⚠️ O seu navegador não suporta notificações do sistema',taskDone:'Marcar como feita',taskUndone:'Marcar como pendente',taskDelete:'Apagar tarefa',accNeedAge:'Tens de confirmar que tens 14 anos ou mais e aceitar os termos.',accVerifySent:'Enviámos-te um email para verificar a tua conta.',accAgeLabel:'Tenho 14 anos ou mais e aceito os <a href="/terms" target="_blank" rel="noopener">Termos de Uso</a> e a <a href="/privacy" target="_blank" rel="noopener">Política de Privacidade</a>.',socialSoon:'Contas em preparação',accNeedFirebase:'⚠️ Configure o Firebase primeiro (veja instruções)',accValidation:'Email válido e senha de 8 caracteres ou mais.',
+      notifUnsupported:'⚠️ O seu navegador não suporta notificações do sistema',taskDone:'Marcar como feita',taskUndone:'Marcar como pendente',taskDelete:'Apagar tarefa',accVerifyPending:'O teu email ainda não está verificado. Podes continuar a usar o Pandy-Tap, mas sem o verificares não poderás recuperar a palavra-passe se a esqueceres.',accVerifyResend:'Reenviar o email de verificação',accVerifyWait:'Espera um minuto antes de pedires outra vez.',accNeedAge:'Tens de confirmar que tens 14 anos ou mais e aceitar os termos.',accVerifySent:'Enviámos-te um email para verificar a tua conta.',accAgeLabel:'Tenho 14 anos ou mais e aceito os <a href="/terms" target="_blank" rel="noopener">Termos de Uso</a> e a <a href="/privacy" target="_blank" rel="noopener">Política de Privacidade</a>.',socialSoon:'Contas em preparação',accNeedFirebase:'⚠️ Configure o Firebase primeiro (veja instruções)',accValidation:'Email válido e senha de 8 caracteres ou mais.',
       accCreated:'✅ Conta criada e sessão iniciada',accLoggedInToast:'✅ Sessão iniciada',accLoggedOutToast:'👋 Sessão encerrada',
       accForgotBtn:'Esqueceu sua senha?',accForgotNeedEmail:'Digite seu email acima e tente de novo.',accForgotSent:'✅ Enviamos um email para redefinir sua senha.',
       errEmailInUse:'Esse email já tem uma conta. Tente entrar.',errInvalidEmail:'Email inválido.',errWeakPass:'A senha deve ter 6+ caracteres.',errBadCreds:'Email ou senha incorretos.',errGeneric:'Erro: ',
@@ -3546,7 +3551,7 @@ const T={
       pausedBreath:'In pausa — Fai un respiro profondo',autoPauseWarn:'⚠️ Pausa automatica! Torna a studiare',penaltyPrefix:'⏱ Penalità: +{s}s',
       chooseATrack:'Scegli una canzone 🎵',notesEmpty:'Le note sono vuote',notesCopied:'📋 Note copiate',notesDownloading:'⬇ Scaricamento note...',notesDeleted:'🗑 Note eliminate',
       notifEnabled:'🔔 Notifiche attivate',notifDenied:'⚠️ Permesso negato — suonerà solo la sveglia',
-      notifUnsupported:'⚠️ Il tuo browser non supporta le notifiche di sistema',taskDone:'Segna come fatta',taskUndone:'Segna come da fare',taskDelete:'Elimina attività',accNeedAge:'Devi confermare di avere 14 anni o più e accettare i termini.',accVerifySent:'Ti abbiamo inviato un\'email per verificare il tuo account.',accAgeLabel:'Ho 14 anni o più e accetto i <a href="/terms" target="_blank" rel="noopener">Termini di Utilizzo</a> e l\'<a href="/privacy" target="_blank" rel="noopener">Informativa sulla Privacy</a>.',socialSoon:'Account in preparazione',accNeedFirebase:'⚠️ Configura prima Firebase (vedi istruzioni)',accValidation:'Email valida e password di 8 caratteri o più.',
+      notifUnsupported:'⚠️ Il tuo browser non supporta le notifiche di sistema',taskDone:'Segna come fatta',taskUndone:'Segna come da fare',taskDelete:'Elimina attività',accVerifyPending:'La tua email non è ancora verificata. Puoi continuare a usare Pandy-Tap, ma senza verificarla non potrai recuperare la password se la dimentichi.',accVerifyResend:'Invia di nuovo l\'email di verifica',accVerifyWait:'Aspetta un minuto prima di richiederlo.',accNeedAge:'Devi confermare di avere 14 anni o più e accettare i termini.',accVerifySent:'Ti abbiamo inviato un\'email per verificare il tuo account.',accAgeLabel:'Ho 14 anni o più e accetto i <a href="/terms" target="_blank" rel="noopener">Termini di Utilizzo</a> e l\'<a href="/privacy" target="_blank" rel="noopener">Informativa sulla Privacy</a>.',socialSoon:'Account in preparazione',accNeedFirebase:'⚠️ Configura prima Firebase (vedi istruzioni)',accValidation:'Email valida e password di 8 caratteri o più.',
       accCreated:'✅ Account creato e connesso',accLoggedInToast:'✅ Connesso',accLoggedOutToast:'👋 Disconnesso',
       accForgotBtn:'Password dimenticata?',accForgotNeedEmail:'Scrivi la tua email sopra e riprova.',accForgotSent:'✅ Ti abbiamo inviato un\'email per reimpostare la password.',
       errEmailInUse:'Questa email ha già un account. Prova ad accedere.',errInvalidEmail:'Email non valida.',errWeakPass:'La password deve avere 6+ caratteri.',errBadCreds:'Email o password errati.',errGeneric:'Errore: ',
@@ -3663,6 +3668,7 @@ function setLang(lang,btn){
   document.getElementById('txt-social-title').innerText=t.socialTitle;
   const socSoon=document.getElementById('txt-social-soon'); if(socSoon) socSoon.innerText=t.socialSoon;
   const ageLbl=document.getElementById('txt-acc-age-label'); if(ageLbl) ageLbl.innerHTML=t.accAgeLabel;
+  if(typeof updateAccountUI==='function') updateAccountUI();
   document.getElementById('txt-footer-copyright').innerHTML=`© <span id="footer-year">${new Date().getFullYear()}</span> Pandy-Tap. ${t.footerCopyright}`;
   const navHomeEl=document.getElementById('nav-inicio'); if(navHomeEl) navHomeEl.innerText=t.navHome;
   const navAboutEl=document.getElementById('nav-about'); if(navAboutEl) navAboutEl.innerText=t.footerAbout;
@@ -3980,10 +3986,39 @@ function updateAccountUI(){
   if(currentUser){
     out.style.display='none'; inEl.style.display='block';
     document.getElementById('acc-email-display').innerText=currentUser.email;
+    const box=document.getElementById('acc-verify-box');
+    if(box){
+      const pend = currentUser.emailVerified===false;
+      box.style.display = pend ? 'block' : 'none';
+      if(pend){
+        document.getElementById('txt-acc-verify').innerText=tr('accVerifyPending');
+        document.getElementById('acc-verify-btn').innerText=tr('accVerifyResend');
+        document.getElementById('acc-verify-msg').innerText='';
+      }
+    }
   } else {
     out.style.display='block'; inEl.style.display='none';
+    const box=document.getElementById('acc-verify-box'); if(box) box.style.display='none';
   }
 }
+
+let lastVerifySent=0;
+function resendVerification(){
+  const msg=document.getElementById('acc-verify-msg');
+  if(!firebaseReady||!currentUser){ msg.innerText=tr('accNeedFirebase'); return; }
+  const ahora=Date.now();
+  if(ahora-lastVerifySent < 60000){ msg.innerText=tr('accVerifyWait'); return; }
+  lastVerifySent=ahora;
+  currentUser.sendEmailVerification()
+    .then(()=>{ msg.innerText=tr('accVerifySent'); })
+    .catch(err=>{ lastVerifySent=0; msg.innerText=translateFirebaseError(err); });
+}
+// Al volver a la app, Firebase puede tener ya el correo verificado: lo refrescamos.
+function refreshVerifiedState(){
+  if(!firebaseReady||!currentUser||currentUser.emailVerified!==false) return;
+  currentUser.reload().then(()=>{ currentUser=firebase.auth().currentUser; updateAccountUI(); }).catch(()=>{});
+}
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) refreshVerifiedState(); });
 
 function doRegister(){
   if(!firebaseReady) return showToast(tr('accNeedFirebase'));
