@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Página no encontrada | Pandy-Tap</title>
+<style>
+  :root {
+    --bg: #f4f7f5;
+    --card: #ffffff;
+    --text: #2c3a35;
+    --muted: #6b7a74;
+    --accent: #4f9d7f;
+    --accent-dark: #3d8267;
+    --border: #e1e8e4;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #151b19;
+      --card: #1e2623;
+      --text: #e6efeb;
+      --muted: #96a59e;
+      --accent: #6cbf9e;
+      --accent-dark: #86d1b3;
+      --border: #2c3733;
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.6;
+  }
+  main {
+    width: 100%;
+    max-width: 520px;
+    text-align: center;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 32px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  }
+  .code {
+    font-size: 4.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent);
+    margin: 0;
+    line-height: 1;
+  }
+  h1 {
+    font-size: 1.5rem;
+    margin: 16px 0 8px;
+  }
+  p {
+    margin: 0 0 8px;
+    color: var(--muted);
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 28px;
+  }
+  a.btn {
+    display: inline-block;
+    padding: 12px 22px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background 0.2s, transform 0.2s;
+  }
+  a.primary {
+    background: var(--accent);
+    color: #ffffff;
+  }
+  a.primary:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  a.secondary {
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  a.secondary:hover { border-color: var(--accent); transform: translateY(-1px); }
+  a.btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .en {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+<main>
+  <p class="code">404</p>
+  <h1>Esta página no existe</h1>
+  <p>Puede que el enlace esté mal escrito o que el artículo se haya movido o fusionado con otro.</p>
+  <div class="actions">
+    <a class="btn primary" href="/">Ir al inicio</a>
+    <a class="btn secondary" href="/blog">Ver el blog</a>
+  </div>
+  <div class="en">
+    <p>This page doesn't exist. <a href="/">Go home</a> or <a href="/blog-en">read the blog</a>.</p>
+  </div>
+</main>
+</body>
+</html>
